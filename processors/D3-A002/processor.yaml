@@ -1,0 +1,22 @@
+---
+containers:
+  - name: BASH
+    path: bash_latest.sif
+requirements:
+  walltime: 0-12
+  memory: 16G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - types: Baseline
+          assessors:
+            - types: fmri_rest_schaef_conn_v1
+              resources:
+                - resource: PREPROC
+                  fmatch: conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat
+command:
+  type: singularity_exec
+  container: BASH
+  args: /bin/bash /REPO/src/pre.sh
+description: Project-level RSFC with CONN toolbox.
