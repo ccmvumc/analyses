@@ -18,5 +18,5 @@ inputs:
 command:
   type: singularity_exec
   container: BASH
-  args: /bin/bash /REPO/src/pre.sh
+  args: bash /REPO/src/pre.sh
 description: Project-level RSFC with CONN toolbox.
