@@ -1,6 +1,7 @@
 import scipy.io
 import os
 import pandas as pd
+import glob
 
 ROOTDIR = '/OUTPUTS/DATA'
 
@@ -36,8 +37,11 @@ for subject in sorted(os.listdir(ROOTDIR)):
         record = {'SUBJECT': subject, 'SESSION': session}
 
         # Load the CONN data for subject/session
-        connfile = f'{ROOTDIR}/{subject}/{session}/conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat'
-        mat = scipy.io.loadmat(connfile)
+        try:
+            connfile = glob.glob(f'{ROOTDIR}/{subject}/{session}/assessors/*/conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat')[0]
+            mat = scipy.io.loadmat(connfile)
+        except Exception:
+            pass
 
         # Find the pairs and extract Z values
         r1count = len(mat['names'][0])
