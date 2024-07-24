@@ -19,7 +19,7 @@ pre:
   type: singularity_exec
   container: CONN
   args: bash /REPO/src/D3-A002/pre.sh
-main:
+command:
   type: singularity_exec
   container: CONN
   args: python /REPO/src/D3-A002/main.py
