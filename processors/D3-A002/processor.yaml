@@ -1,10 +1,10 @@
 ---
 containers:
-  - name: BASH
-    path: bash_latest.sif
+  - name: CONN
+    path: fmri_rest_schaef_conn_v1.0.0.simg 
 requirements:
-  walltime: 0-12
-  memory: 16G
+  walltime: 0-1
+  memory: 8G
 inputs:
   xnat:
     subjects:
@@ -15,8 +15,12 @@ inputs:
               resources:
                 - resource: PREPROC
                   fmatch: conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat
-command:
+pre:
   type: singularity_exec
-  container: BASH
+  container: CONN
   args: bash /REPO/src/D3-A002/pre.sh
+main:
+  type: singularity_exec
+  container: CONN
+  args: python /REPO/src/D3-A002/main.py
 description: Project-level RSFC with CONN toolbox.
