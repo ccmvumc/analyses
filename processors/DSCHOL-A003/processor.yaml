@@ -17,6 +17,6 @@ inputs:
             - resource: SUBJ
 command:
   type: singularity_exec
-  container: CONN
+  container: NILEARN
   args: python /REPO/src/DSCHOL-A003/main.py
 description: FEOBV vs PiB voxelwise
