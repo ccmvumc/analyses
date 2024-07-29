@@ -1,7 +1,8 @@
 ---
 containers:
-  - name: NILEARN
-    path: nilearn_v1.sif
+  - name: ANALYSES
+    path: ccmvumc_analyses_v1.sif
+    source: docker://bud42/ccmvumc_analyses:v1
 requirements:
   walltime: 0-2
   memory: 16G
@@ -17,6 +18,6 @@ inputs:
             - resource: SUBJ
 command:
   type: singularity_exec
-  container: NILEARN
-  args: python /REPO/src/DSCHOL-A003/main.py
+  container: ANALYSES
+  args: /bin/bash /REPO/src/DSCHOL-A003/main.sh
 description: FEOBV vs PiB voxelwise
