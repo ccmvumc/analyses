@@ -1,0 +1,21 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v1.sif
+    source: docker://bud42/ccmvumc_analyses:v1
+requirements:
+  walltime: 0-2
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        assessors:
+          - types: DnSeg_v1
+            resources:
+            - resource: DATA
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: /bin/bash /REPO/src/DnSeg/summary/post.sh
+description: Project-level summary stats
