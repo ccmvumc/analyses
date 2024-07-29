@@ -13,9 +13,11 @@ inputs:
           - types: FEOBVQA_v4
             resources:
             - resource: SUBJ
+              fmatch: mri/orig.mgz,gtmpvc.esupravwm.output/rbv.nii.gz
           - types: PIBQA_v2
             resources:
             - resource: SUBJ
+              fmatch: gtmpvc.cblmgmwm.output/rbv.nii.gz
 command:
   type: singularity_exec
   container: ANALYSES
