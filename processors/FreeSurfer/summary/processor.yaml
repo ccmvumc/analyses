@@ -1,0 +1,28 @@
+---
+containers:
+  - name: FS7
+    path: freesurfer_7.2.0.sif
+  - name: PREPOST
+    path: fs7_post_v2.sif
+requirements:
+  walltime: 0-2
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        assessors:
+          - types: FS7_v1
+            resources:
+            - resource: SUBJ
+              fmatch: stats/lh.aparc.stats,stats/rh.aparc.stats,stats/aseg.stats
+pre:
+  type: singularity_exec
+  container: PREPOST
+  args: /bin/bash /REPO/src/FreeSurfer/summary/pre.sh
+command:
+  type: singularity_exec
+  container: FS7
+  args: /bin/bash /REPO/src/FreeSurfer/summary/main.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
+description: Project-level summary stats
