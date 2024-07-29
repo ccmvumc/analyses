@@ -17,17 +17,20 @@ for subject in sorted(os.listdir(in_dir)):
 		# ignore hidden files and other junk
 		continue
 
-	subject_in = glob.glob(f'{in_dir}/{subject}/*/assessors/*/DATA')[0]
-	print(subject_in)
-	subject_in = f'{in_dir}/{subject}'
+	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_v4*/SUBJ')[0]
+	subject_pib = glob.glob(f'{in_dir}/{subject}/assessors/*PIBQA_v2*/SUBJ')[0]
+
+	print('FEOBV:', subject_feobv)
+	print('PIB:', subject_pib)
+
 	subject_out = f'{out_dir}/{subject}'
 
 	os.makedirs(subject_out)
 
 	# Get full file path to input images
-	orig_file = f'{subject_in}/orig.nii.gz'
-	pib_file =  f'{subject_in}/PIB.nii.gz'
-	feobv_file =  f'{subject_in}/FEOBV.nii.gz'
+	orig_file = f'{subject_feobv}/mri/orig.nii.gz'
+	feobv_file =  f'{subject_feobv}/gtmpvc.esupravwm.output/rbv.nii.gz'
+	pib_file =  f'{subject_pib}/gtmpvc.cblmgmwm.output/rbv.nii.gz'
 
 	# Load orig T1 image as moving image for registration
 	moving = ants.image_read(orig_file)
