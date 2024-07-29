@@ -11,7 +11,7 @@ inputs:
   xnat:
     subjects:
       sessions:
-        assessors:
+        - assessors:
           - types: FS7_v1
             resources:
             - resource: SUBJ
