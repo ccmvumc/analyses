@@ -14,6 +14,7 @@ inputs:
           - types: DnSeg_v1
             resources:
             - resource: DATA
+              fmatch: T1_seg_L.nii,T1_seg_R.nii
 command:
   type: singularity_exec
   container: ANALYSES
