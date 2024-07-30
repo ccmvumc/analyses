@@ -4,7 +4,7 @@ containers:
     path: ccmvumc_analyses_v1.sif
     source: docker://bud42/ccmvumc_analyses:v1
 requirements:
-  walltime: 0-2
+  walltime: 0-12
   memory: 16G
 inputs:
   xnat:
