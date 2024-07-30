@@ -28,7 +28,7 @@ for subject in sorted(os.listdir(in_dir)):
 	os.makedirs(subject_out)
 
 	# Get full file path to input images
-	orig_file = f'{subject_feobv}/mri/orig.nii.gz'
+	orig_file = f'{subject_feobv}/mri/orig.mgz'
 	feobv_file =  f'{subject_feobv}/gtmpvc.esupravwm.output/rbv.nii.gz'
 	pib_file =  f'{subject_pib}/gtmpvc.cblmgmwm.output/rbv.nii.gz'
 
