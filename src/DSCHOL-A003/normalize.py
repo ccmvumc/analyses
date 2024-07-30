@@ -17,8 +17,8 @@ for subject in sorted(os.listdir(in_dir)):
 		# ignore hidden files and other junk
 		continue
 
-	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_v4*/*')[0]
-	subject_pib = glob.glob(f'{in_dir}/{subject}/assessors/*PIBQA_v3*/*')[0]
+	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_v4*')[0]
+	subject_pib = glob.glob(f'{in_dir}/{subject}/assessors/*PIBQA_v3*')[0]
 
 	print('FEOBV:', subject_feobv)
 	print('PIB:', subject_pib)
