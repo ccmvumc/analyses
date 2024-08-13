@@ -1,1 +1,2 @@
-docker push bud42/ccmvumc_analyses:v1
+docker push bud42/ccmvumc_analyses:v2
+

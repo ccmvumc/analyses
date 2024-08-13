@@ -8,4 +8,5 @@ docker run \
 -v $TESTDIR/INPUTS:/INPUTS \
 -v $TESTDIR/OUTPUTS:/OUTPUTS \
 -v $REPODIR:/REPO \
-bud42/ccmvumc_analyses:v1
+bud42/ccmvumc_analyses:v2
+
