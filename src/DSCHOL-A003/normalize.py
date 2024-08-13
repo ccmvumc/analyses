@@ -13,6 +13,7 @@ out_dir = '/OUTPUTS/DATA'
 
 
 # Convert atlas_file to ants image fixed target for registration
+os.makedirs(out_dir)
 nib.save(atlas_ni, f'{out_dir}/atlasni.nii.gz')
 atlas=f'{out_dir}/atlasni.nii.gz'
 fixed = ants.image_read(atlas)
