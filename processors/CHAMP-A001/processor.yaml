@@ -1,0 +1,29 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.sif
+    source: docker://bud42/ccmvumc_analyses:v2
+requirements:
+  walltime: 0-8
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      assessors:
+          - types: FEOBVQA_v4
+            resources:
+              - resource: SUBJ
+                fmatch: gtmpvc.esupravwm.output/rbv.nii.gz
+          - types: PIBQA_v2
+            resources:
+              - resource: SUBJ
+                fmatch: gtmpvc.cblmgmwm.output/rbv.nii.gz
+      sessions:
+        - assessors:
+            - types: FS7_v1
+              resources:
+                - resource: SUBJ
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: /bin/bash -c "mkdir -p /OUTPUTS/DATA;cp -r /INPUTS/* /OUTPUTS/DATA/"
