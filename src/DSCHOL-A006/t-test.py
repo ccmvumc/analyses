@@ -65,7 +65,6 @@ cluster_thres = -np.log10(0.05)
 permutations = 10000
 
 # Load the study-specific whole brain mask 
-###NEED TO CHANGE, GM MASK FOR TEST###
 wbmask_path = 'Brain_mask_prob0_3.nii'
 
 

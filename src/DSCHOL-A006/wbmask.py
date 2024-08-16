@@ -18,7 +18,7 @@ import glob
 #Set path where data is stored
 data_path = '/OUTPUTS/DATA'
 
-### Need to update path to individual subject masks
+#path to individual subject masks
 FEOBV_files = glob.glob('/OUTPUTS/DATA/*/wbmask.nii.gz')
 
 os.chdir(data_path)
