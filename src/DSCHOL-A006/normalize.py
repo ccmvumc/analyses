@@ -24,10 +24,8 @@ for subject in sorted(os.listdir(in_dir)):
 		continue
 
 	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_v4*')[0]
-	subject_pib = glob.glob(f'{in_dir}/{subject}/assessors/*PIBQA_v3*')[0]
 
 	print('FEOBV:', subject_feobv)
-	print('PIB:', subject_pib)
 
 	subject_out = f'{out_dir}/{subject}'
 
@@ -36,7 +34,6 @@ for subject in sorted(os.listdir(in_dir)):
 	# Get full file path to input images
 	orig_file = f'{subject_feobv}/mri/orig.mgz'
 	feobv_file =  f'{subject_feobv}/gtmpvc.esupravwm.output/rbv.nii.gz'
-	pib_file =  f'{subject_pib}/gtmpvc.cblmgmwm.output/rbv.nii.gz'
 	
 	# Skull Strip Original T1
 	raw = ants.image_read(orig_file)
@@ -55,22 +52,11 @@ for subject in sorted(os.listdir(in_dir)):
 	warped_orig_file = f'{subject_out}/warped_orig.nii.gz'
 	ants.image_write(reg['warpedmovout'], warped_orig_file)
 
-	# Apply transform to PIB image which is already in same space
-	warped_pib_file = f'{subject_out}/warped_PIB.nii.gz'
-	pib = ants.image_read(pib_file)
-	warped_pib = ants.apply_transforms(fixed, pib, reg['fwdtransforms'])
-	ants.image_write(warped_pib, warped_pib_file)
-
 	# Apply transform to FEOBV image which is already in same space
 	warped_feobv_file = f'{subject_out}/warped_FEOBV.nii.gz'
 	feobv = ants.image_read(feobv_file)
 	warped_feobv = ants.apply_transforms(fixed, feobv, reg['fwdtransforms'])
 	ants.image_write(warped_feobv, warped_feobv_file)
-
-	# Smoothing PIB
-	smoothed_warped_pib_file = f'{subject_out}/smoothed_warped_PIB.nii.gz'
-	smoothed_pib = ants.smooth_image(warped_pib, 3)
-	ants.image_write(smoothed_pib, smoothed_warped_pib_file)
 
 	# Smoothing FEOBV
 	smoothed_warped_feobv_file = f'{subject_out}/smoothed_warped_FEOBV.nii.gz'

@@ -70,10 +70,10 @@ wbmask_path = 'Brain_mask_prob0_3.nii'
 
 
 # Load DS images to 4D nifti
-trcds_img = image.concat_imgs([os.path.join(data_path, img) for img in trcds_img_paths])
+trcds_img = image.concat_imgs(trcds_img_paths)
 
 # Load Control images to 4d nifti
-control_img = image.concat_imgs([os.path.join(data_path, img) for img in control_img_paths])
+control_img = image.concat_imgs(control_img_paths)
 
 
 # Count subjects for each group
