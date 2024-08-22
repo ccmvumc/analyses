@@ -28,6 +28,8 @@ control_img_paths = (glob.glob('/OUTPUTS/DATA/Sub*/smoothed_warped_FEOBV.nii.gz'
 				   glob.glob('/OUTPUTS/DATA/1*/smoothed_warped_FEOBV.nii.gz')
 				   )
 
+print("Data paths for t-test groups set")
+
 #Set path where data is stored
 data_path = '/OUTPUTS/DATA'
 
@@ -40,6 +42,8 @@ trcds_parts = trcds_img_paths.split(os.sep)
 for subject in trcds_img_paths:
 	sub_id = trcds_parts[-2]
 	subject_list_trcds.append(sub_id)
+	
+print(f'DS subject order: {subject_list_trcds}')
 
 subject_list_control=[]
 control_parts = trcds_img_paths.split(os.sep)
@@ -48,6 +52,7 @@ for subject in control_img_paths:
 	sub_id = trcds_parts[-2]
 	subject_list_control.append(sub_id)
 	
+print(f'Control subject order: {subject_list_control}')
 all_subs = subject_list_trcds + subject_list_control
 
 all_subs_array = np.array(all_subs)
@@ -86,6 +91,8 @@ sex_df_sorted = sex_df.set_index('id')
 sex_df_sorted = sex_df_sorted.loc[all_subs_array]
 
 sex_all, sex_all_key = pd.factorize(sex_df_sorted['dems_sex'])
+
+print("Covariates loaded")
 
 
 # Generate design matrix control for sex 
@@ -133,7 +140,10 @@ img_data_non_para_sex[img_data_non_para_sex < cluster_thres] = 0
 img_data_non_para_mask_sex = img_data_non_para_sex != 0
 thresholded_map_np_sex = np.where(img_data_non_para_mask_sex, img_data_non_para_sex, np.nan)
 
-thresholded_map_np_sex_ni = new_img_like('DST3050001/swFEOBV.nii', thresholded_map_np_sex)
+thresholded_map_np_sex_ni = new_img_like(
+	'DST3050001/smoothed_warped_FEOBV.nii.gz', 
+	thresholded_map_np_sex
+	)
 
 # Save non-parametric inference corrected map
 thresholded_map_np_sex_ni.to_filename(
@@ -185,7 +195,8 @@ img_data_non_para[img_data_non_para < cluster_thres] = 0
 img_data_non_para_mask = img_data_non_para != 0
 thresholded_map_np = np.where(img_data_non_para_mask, img_data_non_para, np.nan)
 
-thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np)
+thresholded_map_np_ni = new_img_like(
+	'DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np)
 
 # Save non-parametric inference corrected map
 thresholded_map_np_ni.to_filename(
