@@ -45,6 +45,8 @@ for subject in sorted(os.listdir(in_dir)):
 	
 	individual_mask.to_filename(f'{subject_out}/wbmask.nii.gz')
 	
+print("Individualized masks generated")
+	
 	
 
 
