@@ -19,6 +19,7 @@ from nilearn.image import math_img
 from nilearn.glm.second_level import non_parametric_inference
 from nilearn.image import new_img_like
 from matplotlib.backends.backend_pdf import PdfPages
+import glob
 
 
 #Set path where data is stored
@@ -55,7 +56,7 @@ for subject in FEOBV_img_paths:
 	sub_id = feobv_parts[-2]
 	subject_list.append(sub_id)
 	
-print(f'DS subject order: {subject_list_trcds}')
+print(f'DS subject order: {subject_list}')
 
 subject_array = np.array(subject_list)
 
@@ -63,7 +64,7 @@ subject_array = np.array(subject_list)
 FEOBV_imgs = image.concat_imgs([os.path.join(data_path, img) for img in FEOBV_img_paths])
 
 # Import braak data and sort
-braak_df = pd.read_csv('covariates.csv')
+braak_df = pd.read_csv('/INPUTS/covariates.csv')
 
 braak_df['id'] = braak_df['id'].astype(subject_array.dtype)
 braak_df_sorted = braak_df.set_index('id')
@@ -95,7 +96,7 @@ design_matrix56 = pd.DataFrame({
 })
 
 # Load the study-specific GM mask
-gmmask_path = 'study_specific_GM_mask_prob0.3.nii'
+gmmask_path = 'Brain_mask_prob0_3.nii.nii'
 
 #second level model
 second_level_model_b12 = SecondLevelModel(
