@@ -56,7 +56,7 @@ subject_list_control=[]
 for subject in control_img_paths:
 	path = os.path.normpath(subject)
 	control_parts = path.split(os.sep)
-	sub_id = trcds_parts[-2]
+	sub_id = control_parts[-2]
 	subject_list_control.append(sub_id)
 	
 print(f'Control subject order: {subject_list_control}')
