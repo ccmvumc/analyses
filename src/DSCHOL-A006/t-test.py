@@ -92,7 +92,7 @@ _, _, _, subjects_ds = trcds_img.shape
 _, _, _, subjects_cx = control_img.shape
 
 #import sex variables and check order matches order of image imports
-sex_df = pd.read_csv('covariates.csv')
+sex_df = pd.read_csv('/INPUTS/covariates.csv')
 sex_df['id'] = sex_df['id'].astype(all_subs_array.dtype)
 sex_df_sorted = sex_df.set_index('id')
 sex_df_sorted = sex_df_sorted.loc[all_subs_array]
