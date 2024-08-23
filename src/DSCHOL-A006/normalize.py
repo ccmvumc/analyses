@@ -22,6 +22,9 @@ for subject in sorted(os.listdir(in_dir)):
 	if subject.startswith('.'):
 		# ignore hidden files and other junk
 		continue
+	if subject.startswith('covariates'):
+		# ignore covariates csv
+		continue
 
 	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_USC_v4*')[0]
 

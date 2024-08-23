@@ -24,9 +24,13 @@ trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/smoothed_warped_FEOBV.nii.gz') 
 				   glob.glob('/OUTPUTS/DATA/DSCHOL*/smoothed_warped_FEOBV.nii.gz')
 				   )
 
+trcds_img_paths = sorted(trcds_img_paths)
+
 control_img_paths = (glob.glob('/OUTPUTS/DATA/Sub*/smoothed_warped_FEOBV.nii.gz') + 
 				   glob.glob('/OUTPUTS/DATA/1*/smoothed_warped_FEOBV.nii.gz')
 				   )
+
+control_img_paths = sorted(control_img_paths)
 
 print("Data paths for t-test groups set")
 
@@ -47,9 +51,11 @@ for subject in trcds_img_paths:
 print(f'DS subject order: {subject_list_trcds}')
 
 subject_list_control=[]
-control_parts = trcds_img_paths.split(os.sep)
+
 
 for subject in control_img_paths:
+	path = os.path.normpath(subject)
+	control_parts = path.split(os.sep)
 	sub_id = trcds_parts[-2]
 	subject_list_control.append(sub_id)
 	
@@ -94,6 +100,7 @@ sex_df_sorted = sex_df_sorted.loc[all_subs_array]
 sex_all, sex_all_key = pd.factorize(sex_df_sorted['dems_sex'])
 
 print("Covariates loaded")
+print(sex_df_sorted)
 
 
 # Generate design matrix control for sex 
