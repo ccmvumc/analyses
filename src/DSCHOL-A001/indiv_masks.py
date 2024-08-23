@@ -26,6 +26,10 @@ for subject in sorted(os.listdir(in_dir)):
 		# ignore hidden files and other junk
 		continue
 	
+	if subject.startswith('covariate'):
+		# ignore covariates.csv
+		continue
+	
 	subject_out = f'{out_dir}/{subject}'
 	
 	#resample MRI to same as PET images for mask generation

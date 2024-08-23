@@ -40,6 +40,18 @@ permutations = 10000
 # Load PET images
 FEOBV_img_paths = glob.glob('/OUTPUTS/DATA/*/smoothed_warped_FEOBV.nii.gz')
 
+FEOBV_img_paths = sorted(FEOBV_img_paths)
+
+subject_list=[]
+
+for subject in FEOBV_img_paths:
+	path = os.path.normpath(subject)
+	FEOBV_parts = path.split(os.sep)
+	sub_id = FEOBV_parts[-2]
+	subject_list.append(sub_id)
+	
+print(f'DS subject order: {subject_list}')
+
 # Load NIfTI images into a 4D image
 FEOBV_imgs = image.concat_imgs([os.path.join(data_path, img) for img in FEOBV_img_paths])
 
