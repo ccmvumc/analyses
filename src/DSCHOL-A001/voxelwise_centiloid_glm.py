@@ -58,7 +58,7 @@ subs_array = np.array(subject_list)
 FEOBV_imgs = image.concat_imgs([os.path.join(data_path, img) for img in FEOBV_img_paths])
 
 # Import centiloid data and sort
-centiloid_df = pd.read_csv('covariates.csv')
+centiloid_df = pd.read_csv('/INPUTS/covariates.csv')
 centiloid_df['id'] = centiloid_df['id'].astype(subs_array.dtype)
 centiloid_df_sorted = centiloid_df.set_index('id')
 centiloid_df_sorted = centiloid_df_sorted.loc[subs_array]
@@ -77,7 +77,7 @@ design_matrix = pd.DataFrame({
 
 
 # Load the study-specific GM mask
-gmmask_path = f'{data_path}/study_specific_GM_mask_prob0.3.nii'
+gmmask_path = f'{data_path}/study_specific_GM_mask_prob0_3.nii'
 
 #second level model
 second_level_model = SecondLevelModel(
