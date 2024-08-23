@@ -37,9 +37,10 @@ os.chdir(data_path)
 
 #generate subject list in order of import
 subject_list_trcds=[]
-trcds_parts = trcds_img_paths.split(os.sep)
 
 for subject in trcds_img_paths:
+	path = os.path.normpath(subject)
+	trcds_parts = path.split(os.sep)
 	sub_id = trcds_parts[-2]
 	subject_list_trcds.append(sub_id)
 	

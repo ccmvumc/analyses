@@ -6,7 +6,6 @@ Created on Fri Aug 16 10:13:11 2024
 @author: jason
 """
 
-import glob
 import os
 
 import ants
@@ -27,7 +26,6 @@ for subject in sorted(os.listdir(in_dir)):
 		# ignore hidden files and other junk
 		continue
 	
-	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_v4*')[0]
 	subject_out = f'{out_dir}/{subject}'
 	
 	#resample MRI to same as PET images for mask generation
