@@ -52,13 +52,20 @@ for subject in FEOBV_img_paths:
 	
 print(f'DS subject order: {subject_list}')
 
+subs_array = np.array(subject_list)
+
 # Load NIfTI images into a 4D image
 FEOBV_imgs = image.concat_imgs([os.path.join(data_path, img) for img in FEOBV_img_paths])
 
-# Import centiloid data
+# Import centiloid data and sort
 centiloid_df = pd.read_csv('covariates.csv')
+centiloid_df['id'] = centiloid_df['id'].astype(subs_array.dtype)
+centiloid_df_sorted = centiloid_df.set_index('id')
+centiloid_df_sorted = centiloid_df_sorted.loc[subs_array]
 
-centiloid = centiloid_df['Centiloid'].astype(float)
+centiloid = centiloid_df_sorted['Centiloid'].astype(float)
+
+print('Covariates loaded and sorted')
 
 dimx, dimy, dimz, subjects = FEOBV_imgs.shape
 
