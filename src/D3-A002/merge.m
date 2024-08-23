@@ -1,7 +1,7 @@
 % Merges all conn.mat files into a single conn.mat
 
 % Merged mat file to save
-fileoutput='/tmp/DrSarah_CONN/conn.mat';
+fileoutput='/OUTPUTS/conn.mat';
 
 % Load all conn.mat in /INPUTS
 dirfiles = dir('/INPUTS/**/conn.mat')

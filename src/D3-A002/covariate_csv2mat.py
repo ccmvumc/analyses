@@ -5,8 +5,8 @@ import numpy as np
 
 # Load covariates from csv and save to mat for loading into conn_batch()
 
-CSVFILE = 'covariates.csv'
-MATFILE = 'covariates.mat'
+CSVFILE = '/INPUTS/covariates.csv'
+MATFILE = '/OUTPUTS/covariates.mat'
 mat = {}
 
 df = pd.read_csv(CSVFILE)

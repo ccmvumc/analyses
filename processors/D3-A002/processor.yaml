@@ -1,7 +1,7 @@
 ---
 containers:
   - name: CONN
-    path: fmri_rest_schaef_conn_v1.0.0.simg 
+    path: all_conn_rsfc_v1.0.0.sif
 requirements:
   walltime: 0-1
   memory: 8G
@@ -22,5 +22,5 @@ pre:
 command:
   type: singularity_exec
   container: CONN
-  args: python /REPO/src/D3-A002/main.py
+  args: bash /REPO/src/D3-A002/main.sh
 description: Project-level RSFC with CONN toolbox.
