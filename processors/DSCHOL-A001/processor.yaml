@@ -18,4 +18,4 @@ command:
   type: singularity_exec
   container: ANALYSES
   args: /bin/bash /REPO/src/DSCHOL-A001/main.sh
-description: FEOBV T-test
+description: FEOBV vs Centiloid
