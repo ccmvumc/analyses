@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import glob
 
-ROOTDIR = '/OUTPUTS/DATA'
+ROOTDIR = '/INPUTS'
 
 # Map names as saved in CONN file to our shorter codes
 NAME2CODE = {

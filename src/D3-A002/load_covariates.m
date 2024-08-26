@@ -11,13 +11,13 @@
 clear batch;
 
 % Load from .mat file
-load('covariates.csv')
+load('/OUTPUTS/covariates.mat')
 
-batch.filename=fullfile(cwd, 'conn.mat');
+batch.filename=fullfile(cwd, '/OUTPUTS/conn.mat');
 batch.Setup.subjects.effect_names=effect_names;
 batch.Setup.subjects.effects=effects;
 batch.Setup.subjects.add=1;
 
-conn_batch(batch);
+disp(batch);
 
-% Save???
+conn_batch(batch);
