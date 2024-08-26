@@ -19,7 +19,7 @@ import glob
 data_path = '/OUTPUTS/DATA'
 
 #path to individual subject masks
-FEOBV_files = glob.glob('/OUTPUTS/DATA/*/gmmask.nii.gz')
+FEOBV_files = glob.glob('/OUTPUTS/DATA/*/wbmask.nii.gz')
 
 os.chdir(data_path)
 
@@ -44,16 +44,16 @@ for i in range(rsdim1):
                 prob_mask[i, j, k] = 0
                 
 
-dil_gm_mask = binary_dilation(prob_mask)
-dilero_gm_mask = binary_erosion(dil_gm_mask)
-dilerodil_gm_mask = binary_dilation(dilero_gm_mask)
-dilerodilero_gm_mask = binary_erosion(dilerodil_gm_mask)
+dil_mask = binary_dilation(prob_mask)
+dilero_mask = binary_erosion(dil_mask)
+dilerodil_mask = binary_dilation(dilero_mask)
+dilerodilero_mask = binary_erosion(dilerodil_mask)
 
-mask_gm_nii = new_img_like(
-    'DST3050001/smoothed_warped_FEOBV.nii.gz', dilerodilero_gm_mask.astype(int)
+mask_nii = new_img_like(
+    'DST3050001/smoothed_warped_FEOBV.nii.gz', dilerodilero_mask.astype(int)
 )
 
-nib.save(mask_gm_nii, "GM_Brain_mask_prob0_3.nii")
+nib.save(mask_nii, "WB_Brain_mask_prob0_3.nii")
             
 
 

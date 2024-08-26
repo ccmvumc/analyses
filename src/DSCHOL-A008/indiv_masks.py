@@ -41,12 +41,12 @@ for subject in sorted(os.listdir(in_dir)):
 	
 	
 	#apply nilearn mask
-	individual_mask = masking.compute_brain_mask(resampled_mr, mask_type='gm')
+	individual_mask = masking.compute_brain_mask(resampled_mr, mask_type='whole-brain')
 	
 	#output nilearn mask for specific subject for input into study specific mask
 	#script
 	
-	individual_mask.to_filename(f'{subject_out}/gmmask.nii.gz')
+	individual_mask.to_filename(f'{subject_out}/wbmask.nii.gz')
 	
 print("Individualized masks generated")
 	

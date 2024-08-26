@@ -89,18 +89,18 @@ design_matrix_sex = pd.DataFrame({
 
 
 # Load the study-specific GM mask
-gmmask_path = 'GM_Brain_mask_prob0_3.nii'
+mask_path = 'WB_Brain_mask_prob0_3.nii'
 
 #second level model
 second_level_model = SecondLevelModel(
-	mask_img=gmmask_path, n_jobs=1
+	mask_img=mask_path, n_jobs=1
 )
 second_level_model = second_level_model.fit(
 	FEOBV_img_paths, design_matrix=design_matrix)
 
 #second level model controlling for sex
 second_level_model_sex = SecondLevelModel(
-	mask_img=gmmask_path, n_jobs=1
+	mask_img=mask_path, n_jobs=1
 )
 second_level_model_sex = second_level_model.fit(
 	FEOBV_img_paths, design_matrix=design_matrix_sex)
@@ -138,7 +138,7 @@ corrected_map = non_parametric_inference(
 	FEOBV_img_paths,
 	design_matrix=design_matrix,
 	second_level_contrast=[1,0],
-	mask=gmmask_path,
+	mask=mask_path,
 	n_perm=permutations,
 	two_sided_test=True,
 	n_jobs=1,
@@ -150,7 +150,7 @@ corrected_map_sex = non_parametric_inference(
 	FEOBV_img_paths,
 	design_matrix=design_matrix_sex,
 	second_level_contrast=[1,0,0],
-	mask=gmmask_path,
+	mask=mask_path,
 	n_perm=permutations,
 	two_sided_test=True,
 	n_jobs=1,
