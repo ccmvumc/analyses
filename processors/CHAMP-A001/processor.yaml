@@ -14,7 +14,7 @@ inputs:
             resources:
               - resource: SUBJ
                 fmatch: gtmpvc.esupravwm.output/rbv.nii.gz
-          - types: PIBQA_v2
+          - types: AMYLOIDQA_v4
             resources:
               - resource: SUBJ
                 fmatch: gtmpvc.cblmgmwm.output/rbv.nii.gz
@@ -23,6 +23,33 @@ inputs:
             - types: FS7_v1
               resources:
                 - resource: SUBJ
+            - types: DnSeg_v1
+              resources:
+                - resource: DATA
+            - types: FS7HPCAMG_v1
+              resources:
+                - resource: SUBJ
+            - types: SAMSEG_v1
+              resources:
+                - resource: DATA
+        - scans:
+            - types: fMRI_REST1
+              nifti: fMRI_REST1.nii.gz
+              resources:
+                - resource: JSON
+                  fdest: fMRI_REST1.json
+            - types: fMRI_REST2
+              nifti: fMRI_REST2.nii.gz
+              resources:
+                - resource: JSON
+                  fdest: fMRI_REST2.json
+            - types: fMRI_NBACK
+              nifti: fMRI_NBACK.nii.gz
+              resources:
+                - resource: JSON
+                  fdest: fMRI_NBACK.json
+                - resource: EDAT
+                  fdest: fMRI_NBACK.txt
 command:
   type: singularity_exec
   container: ANALYSES
