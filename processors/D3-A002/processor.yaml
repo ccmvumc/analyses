@@ -1,7 +1,10 @@
 ---
 containers:
   - name: CONN
-    path: all_conn_rsfc_v1.0.0.sif
+    path: all_conn_rsfc_v1.0.0.sif 
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.sif
+    source: docker://bud42/ccmvumc_analyses:v2
 requirements:
   walltime: 0-1
   memory: 8G
@@ -17,7 +20,7 @@ inputs:
                   fmatch: conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat
 pre:
   type: singularity_exec
-  container: CONN
+  container: ANALYSES
   args: bash /REPO/src/D3-A002/pre.sh
 command:
   type: singularity_exec
