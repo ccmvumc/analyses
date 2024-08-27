@@ -50,7 +50,7 @@ dilerodil_gm_mask = binary_dilation(dilero_gm_mask)
 dilerodilero_gm_mask = binary_erosion(dilerodil_gm_mask)
 
 mask_gm_nii = new_img_like(
-    'DST3050001/smoothed_warped_FEOBV.nii.gz.nii', dilerodilero_gm_mask.astype(int)
+    'DST3050001/smoothed_warped_FEOBV.nii.gz', dilerodilero_gm_mask.astype(int)
 )
 
 nib.save(mask_gm_nii, "study_specific_GM_mask_prob0_3.nii")

@@ -12,6 +12,7 @@ import ants
 from nilearn import datasets
 from nilearn import masking
 from nilearn import image
+from nilearn.image import math_img
 
 in_dir = '/INPUTS'
 atlas_ni = datasets.load_mni152_template()
@@ -41,15 +42,23 @@ for subject in sorted(os.listdir(in_dir)):
 	
 	
 	#apply nilearn mask
-	individual_mask = masking.compute_brain_mask(resampled_mr, mask_type='whole-brain')
+	wb_mask = masking.compute_brain_mask(resampled_mr, mask_type='whole-brain')
+	
+	#apply wm mask
+	wm_mask = masking.compute_brain_mask(resampled_mr, mask_type='wm')
+	
+	#invert wm_mask
+	
+	inverted_wm_mask = math_img('1 - img', img=wm_mask)
+	
+	whole_brain_without_wm = math_img('img1 * img2', img1=wb_mask, img2=inverted_wm_mask)
 	
 	#output nilearn mask for specific subject for input into study specific mask
 	#script
 	
-	individual_mask.to_filename(f'{subject_out}/wbmask.nii.gz')
+	whole_brain_without_wm.to_filename(f'{subject_out}/wbmask.nii.gz')
 	
 print("Individualized masks generated")
-	
-	
+
 
 
