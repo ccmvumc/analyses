@@ -25,13 +25,16 @@ NAMES = list(NAME2CODE.keys())
 CODES = list(NAME2CODE.values())
 
 # Get the unique pairs
-PAIRS = [f'{x}-{y}' for i, x in enumerate(CODES) for y in CODES[i+1:]]
+PAIRS = [f'{x}-{y}' for i, x in enumerate(CODES) for y in CODES[i + 1:]]
 
 # Initialize list of records
 data = []
 
 # Load CONN file for each subject/session
 for subject in sorted(os.listdir(ROOTDIR)):
+    if not os.path.isdir(f'{ROOTDIR}/{subject}'):
+        continue
+
     for session in sorted(os.listdir(os.path.join(ROOTDIR, subject))):
         # Initialze new record for subject/session
         record = {'SUBJECT': subject, 'SESSION': session}
@@ -57,14 +60,14 @@ for subject in sorted(os.listdir(ROOTDIR)):
 
                 if roi2 not in NAMES:
                     continue
-            
+
                 pair = f'{NAME2CODE.get(roi1)}-{NAME2CODE.get(roi2)}'
-        
+
                 if pair not in PAIRS:
                     continue
 
                 # Found a pair we want so save it
-                record[pair] =  mat['Z'][i][j]
+                record[pair] = mat['Z'][i][j]
 
         # Append record
         data.append(record)
