@@ -66,9 +66,9 @@ all_subs_array = np.array(all_subs)
 
 #set signficant thresholds for different tests
 #significance (p-val) for initial test at cluster threshold 50
-threshold_1 = 0.005
+threshold_1 = 0.001
 #significance for voxel-level significance, non-paramteric inference
-threshold_non_para = 0.005
+threshold_non_para = 0.001
 #significance of clusters following non-parametric inference
 cluster_thres = -np.log10(0.05)
 
@@ -213,6 +213,11 @@ thresholded_map_np_ni.to_filename(
 # Generate pdf report
 pdf_filename = "Groupwise T-test FEOBV.pdf"
 
+#significance (p-val) for initial test at cluster threshold 50
+threshold_1 = 0.001
+#significance for voxel-level significance, non-paramteric inference
+threshold_non_para = 0.001
+
 with PdfPages(pdf_filename) as pdf:
 
 	fig, axs = plt.subplots(3,1, figsize=(10,14))
@@ -224,7 +229,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < 0.005, cluster size 50 (z-scores)",
+		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[0]
 	)
 	
@@ -236,7 +241,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < 0.005, non-parametic inference, cluster size (cluster logP)",
+		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster size (cluster logP)",
 		axes=axs[1]
 	)
 	
@@ -248,7 +253,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < 0.005, non-parametic inference, cluster mass (cluster logP)",
+		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster mass (cluster logP)",
 		axes=axs[2]
 	)
 	
@@ -267,7 +272,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < 0.005, cluster size 50 (z-scores)",
+		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[0]
 	)
 	
@@ -279,7 +284,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < 0.005, non-parametic inference, cluster size (cluster logP)",
+		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster size (cluster logP)",
 		axes=axs[1]
 	)
 	
@@ -291,7 +296,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < 0.005, non-parametic inference, cluster mass (cluster logP)",
+		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster mass (cluster logP)",
 		axes=axs[2]
 	)
 	
