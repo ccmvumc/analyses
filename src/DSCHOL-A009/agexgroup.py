@@ -89,7 +89,7 @@ covariates_df['id'] = covariates_df['id'].astype(all_subs_array.dtype)
 covariates_df_sorted = covariates_df.set_index('id')
 covariates_df_sorted = covariates_df_sorted.loc[all_subs_array]
 
-age_all = covariates_df_sorted['age_dems']
+age_all = covariates_df_sorted['dems_age']
 
 # Load DS images to 4D nifti
 trcds_img = image.concat_imgs(trcds_img_paths)
