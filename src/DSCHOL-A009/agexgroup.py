@@ -20,10 +20,10 @@ from nilearn.image import new_img_like
 import glob
 
 #Set path where data is stored
-data_path = 'OUTPUTS/DATA'
+data_path = '/OUTPUTS/DATA'
 
 os.chdir(data_path)
-output_path = 'OUTPUTS/DATA'
+output_path = '/OUTPUTS/DATA'
 
 #set signficant thresholds for different tests
 #significance (p-val) for initial test at cluster threshold 50
