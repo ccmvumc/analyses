@@ -1,6 +1,6 @@
 # rois.py
 echo "Extracting ROI data"
-python /REPO/src/rois.py
+python /REPO/src/D3-A002/rois.py
 
 # merge
 echo "Merging CONN projects"
