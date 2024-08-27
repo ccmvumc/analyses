@@ -96,7 +96,7 @@ design_matrix56 = pd.DataFrame({
 })
 
 # Load the study-specific GM mask
-gmmask_path = 'Brain_mask_prob0_3.nii.nii'
+gmmask_path = 'Brain_mask_prob0_3.nii'
 
 #second level model
 second_level_model_b12 = SecondLevelModel(
