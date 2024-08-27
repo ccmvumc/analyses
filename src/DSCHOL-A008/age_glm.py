@@ -60,7 +60,7 @@ subs_array = np.array(subject_list)
 FEOBV_imgs = image.concat_imgs([os.path.join(data_path, img) for img in FEOBV_img_paths])
 
 # Import age data and sex
-covariate_df = pd.read_csv('/INPUT/covariates.csv')
+covariate_df = pd.read_csv('/INPUTS/covariates.csv')
 covariate_df['id'] = covariate_df['id'].astype(subs_array.dtype)
 covariate_df_sorted = covariate_df.set_index('id')
 covariate_df_sorted = covariate_df_sorted.loc[subs_array]
