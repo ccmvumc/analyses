@@ -127,7 +127,7 @@ thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', 
 thresholded_map_np_ni.to_filename(f'{output_path}/Centiloid_glm_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = "Centiloid_FEOBV_GLM.pdf"
+pdf_filename = "report.pdf"
 
 fig, axs = plt.subplots(3,1, figsize=(10,14))
 
