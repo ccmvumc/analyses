@@ -98,6 +98,7 @@ sex_df_sorted = sex_df.set_index('id')
 sex_df_sorted = sex_df_sorted.loc[all_subs_array]
 
 sex_all, sex_all_key = pd.factorize(sex_df_sorted['dems_sex'])
+age = sex_df_sorted['dems_sex']
 
 print("Covariates loaded")
 print(sex_df_sorted)
@@ -116,13 +117,13 @@ second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
 	)
 
 # calculate contrast
-z_map = second_level_model.compute_contrast(
+z_map_sex = second_level_model.compute_contrast(
 	second_level_contrast=[1, 0, 0],
 	output_type="z_score",
 )
 
 # Perform statsmap, correct for multiple comparisons
-thresholded_map_sex, threshold_sex = threshold_stats_img(z_map, 
+thresholded_map_sex, threshold_sex = threshold_stats_img(z_map_sex, 
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
@@ -156,6 +157,62 @@ thresholded_map_np_sex_ni = new_img_like(
 # Save non-parametric inference corrected map
 thresholded_map_np_sex_ni.to_filename(
 	'Ttest_non_parametric_inference_corrected_sex_control_logP_map.nii')
+
+
+#repeat controlling for sex and age 
+unpaired_design_matrix_sexage = pd.DataFrame({
+	"Down Syndrome": np.concatenate([np.ones(subjects_ds), np.zeros(subjects_cx)]),
+	"Sex": sex_all,
+	"Age": age,
+	"Intercept:": np.ones(subjects_ds + subjects_cx)
+})
+
+# second level model
+second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
+	trcds_img_paths + control_img_paths, design_matrix=unpaired_design_matrix_sexage
+	)
+
+# calculate contrast
+z_map_sexage = second_level_model.compute_contrast(
+	second_level_contrast=[1, 0, 0, 0],
+	output_type="z_score",
+)
+
+# Perform statsmap, correct for multiple comparisons
+thresholded_map_sexage, threshold_sexage = threshold_stats_img(z_map_sexage, 
+												 alpha=threshold_1,
+												 cluster_threshold=50)
+
+# Save the thresholded z-map to a NIfTI file
+thresholded_map_sexage.to_filename(
+	'thresholded_groupwise_comparison_z_map_sex_age_corrected.nii')
+
+#perform non parametric inference
+corrected_map_sexage = non_parametric_inference(
+	trcds_img_paths + control_img_paths,
+	design_matrix=unpaired_design_matrix_sexage,
+	second_level_contrast=[1,0,0,0],
+	mask=wbmask_path,
+	n_perm=permutations,
+	two_sided_test=True,
+	n_jobs=1,
+	threshold=threshold_non_para
+	)
+
+# extract cluster significance <0.05
+img_data_non_para_sexage = corrected_map_sexage['logp_max_size'].get_fdata()
+img_data_non_para_sexage[img_data_non_para_sexage < cluster_thres] = 0
+img_data_non_para_mask_sexage = img_data_non_para_sexage != 0
+thresholded_map_np_sexage = np.where(img_data_non_para_mask_sexage, img_data_non_para_sexage, np.nan)
+
+thresholded_map_np_sexage_ni = new_img_like(
+	'DST3050001/smoothed_warped_FEOBV.nii.gz', 
+	thresholded_map_np_sexage
+	)
+
+# Save non-parametric inference corrected map
+thresholded_map_np_sexage_ni.to_filename(
+	'Ttest_non_parametric_inference_corrected_sex_age_control_logP_map.nii')
 
 
 
@@ -211,7 +268,7 @@ thresholded_map_np_ni.to_filename(
 	'Ttest_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = "Groupwise T-test FEOBV.pdf"
+pdf_filename = "report.pdf"
 
 #significance (p-val) for initial test at cluster threshold 50
 threshold_1 = 0.001
@@ -224,6 +281,49 @@ with PdfPages(pdf_filename) as pdf:
 	
 	plotting.plot_stat_map(
 		thresholded_map_sex,
+		threshold=threshold_1,
+		colorbar=True,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores)",
+		axes=axs[0]
+	)
+	
+	plotting.plot_stat_map(
+		corrected_map_sexage['logp_max_size'],
+		colorbar=True,
+		vmax=-np.log10(1 / permutations),
+		threshold = cluster_thres,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster size (cluster logP)",
+		axes=axs[1]
+	)
+	
+	plotting.plot_stat_map(
+		corrected_map_sexage['logp_max_mass'],
+		colorbar=True,
+		vmax=-np.log10(1 / permutations),
+		threshold = cluster_thres,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster mass (cluster logP)",
+		axes=axs[2]
+	)
+	
+	fig.suptitle("Groupwise T-test adjusting for Sex and Age", fontsize=16,
+				 weight='bold')
+	
+	pdf.savefig(fig, dpi=300)
+	plt.close()
+	
+	fig, axs = plt.subplots(3,1, figsize=(10,14))
+	
+	plotting.plot_stat_map(
+		thresholded_map_sexage,
 		threshold=threshold_1,
 		colorbar=True,
 		cut_coords=6,

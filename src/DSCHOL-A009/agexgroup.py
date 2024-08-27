@@ -203,7 +203,7 @@ thresholded_map_np_ni.to_filename(
 	f'{output_path}/Ttest_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = f"{output_path}/Group x age interaction FEOBV.pdf"
+pdf_filename = f"{output_path}/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
 
