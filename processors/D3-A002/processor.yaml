@@ -17,7 +17,6 @@ inputs:
             - types: fmri_rest_schaef_conn_v1
               resources:
                 - resource: PREPROC
-                  fmatch: conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat
 pre:
   type: singularity_exec
   container: ANALYSES
