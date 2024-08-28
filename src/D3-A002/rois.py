@@ -41,10 +41,11 @@ for subject in sorted(os.listdir(ROOTDIR)):
 
         # Load the CONN data for subject/session
         try:
-            connfile = glob.glob(f'{ROOTDIR}/{subject}/{session}/assessors/*/conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat')[0]
+            connfile = glob.glob(f'{ROOTDIR}/{subject}/{session}/assessors/*/*/out/PREPROC/conn/results/firstlevel/SBC_01/resultsROI_Subject001_Condition001.mat')[0]
             mat = scipy.io.loadmat(connfile)
-        except Exception:
-            pass
+        except Exception as err:
+            print(f'failed to load connfile:{connfile}:{err}')
+            continue
 
         # Find the pairs and extract Z values
         r1count = len(mat['names'][0])
