@@ -179,7 +179,7 @@ thresholded_map_np_ni.to_filename(f'{output_path}/Age_glm_non_parametric_inferen
 thresholded_map_np_ni_sex.to_filename(f'{output_path}/Age_glm_sex_correct_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = "report.pdf"
+pdf_filename = "/OUTPUTS/report.pdf"
 
 
 with PdfPages(pdf_filename) as pdf:

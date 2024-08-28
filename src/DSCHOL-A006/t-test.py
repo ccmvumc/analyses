@@ -268,7 +268,7 @@ thresholded_map_np_ni.to_filename(
 	'Ttest_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = "report.pdf"
+pdf_filename = "/OUTPUTS/report.pdf"
 
 #significance (p-val) for initial test at cluster threshold 50
 threshold_1 = 0.001
