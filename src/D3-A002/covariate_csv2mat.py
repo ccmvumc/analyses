@@ -10,8 +10,11 @@ MATFILE = '/OUTPUTS/covariates.mat'
 mat = {}
 
 df = pd.read_csv(CSVFILE)
-names = df.columns
-effects = df[names]
+
+# Filter out non-numeric data and force float
+effects = df.select_dtypes(include=[np.number])
+effects = effects.astype(float)
+names = effects.columns
 
 np_vectors = np.empty((len(names),), dtype=object)
 for i in range(len(names)):
