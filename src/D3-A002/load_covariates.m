@@ -13,7 +13,7 @@ clear batch;
 % Load from .mat file
 load('/OUTPUTS/covariates.mat')
 
-batch.filename=fullfile(cwd, '/OUTPUTS/conn.mat');
+batch.filename='/OUTPUTS/conn.mat';
 batch.Setup.subjects.effect_names=effect_names;
 batch.Setup.subjects.effects=effects;
 batch.Setup.subjects.add=1;
