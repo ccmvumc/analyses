@@ -66,6 +66,7 @@ centiloid_df_sorted = centiloid_df_sorted.loc[subs_array]
 centiloid = centiloid_df_sorted['Centiloid'].astype(float)
 
 print('Covariates loaded and sorted')
+print(centiloid_df_sorted)
 
 dimx, dimy, dimz, subjects = FEOBV_imgs.shape
 
@@ -127,7 +128,7 @@ thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', 
 thresholded_map_np_ni.to_filename(f'{output_path}/Centiloid_glm_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = "report.pdf"
+pdf_filename = "/OUTPUTS/report.pdf"
 
 fig, axs = plt.subplots(3,1, figsize=(10,14))
 
