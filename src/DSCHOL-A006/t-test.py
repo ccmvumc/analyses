@@ -98,7 +98,7 @@ sex_df_sorted = sex_df.set_index('id')
 sex_df_sorted = sex_df_sorted.loc[all_subs_array]
 
 sex_all, sex_all_key = pd.factorize(sex_df_sorted['dems_sex'])
-age = sex_df_sorted['dems_sex']
+age = sex_df_sorted['dems_sex'].astype(float)
 
 print("Covariates loaded")
 print(sex_df_sorted)
