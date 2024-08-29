@@ -65,9 +65,9 @@ covariate_df['id'] = covariate_df['id'].astype(subs_array.dtype)
 covariate_df_sorted = covariate_df.set_index('id')
 covariate_df_sorted = covariate_df_sorted.loc[subs_array]
 
-age = covariate_df['dems_age'].astype(float)
+age = covariate_df_sorted['dems_age'].astype(float)
 
-sex = covariate_df['dems_sex']
+sex = covariate_df_sorted['dems_sex']
 
 #set order of sex and age to match image uploads in cluster version
 
@@ -112,7 +112,7 @@ z_map = second_level_model.compute_contrast(
 	output_type="z_score",
 )
 
-z_map_sex = second_level_model.compute_contrast(
+z_map_sex = second_level_model_sex.compute_contrast(
 	second_level_contrast=[1, 0, 0],
 	output_type="z_score",
 )
