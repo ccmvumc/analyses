@@ -280,7 +280,7 @@ with PdfPages(pdf_filename) as pdf:
 	fig, axs = plt.subplots(3,1, figsize=(10,14))
 	
 	plotting.plot_stat_map(
-		thresholded_map_sex,
+		thresholded_map_sexage,
 		threshold=threshold_1,
 		colorbar=True,
 		cut_coords=6,
