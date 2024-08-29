@@ -169,9 +169,9 @@ img_data_non_para_sex[img_data_non_para_sex < cluster_thres] = 0
 img_data_non_para_mask_sex = img_data_non_para_sex != 0
 thresholded_map_np_sex = np.where(img_data_non_para_mask_sex, img_data_non_para_sex, np.nan)
 
-thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz.nii', thresholded_map_np)
+thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np)
 
-thresholded_map_np_ni_sex = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz.nii', thresholded_map_np_sex)
+thresholded_map_np_ni_sex = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np_sex)
 
 # Save non-parametric inference corrected map
 thresholded_map_np_ni.to_filename(f'{output_path}/Age_glm_non_parametric_inference_corrected_logP_map.nii')
