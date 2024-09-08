@@ -3,8 +3,8 @@
 % Merged mat file to save
 fileoutput='/OUTPUTS/conn.mat';
 
-% Load all conn.mat in /INPUTS
-dirfiles = dir('/INPUTS/**/conn.mat')
+% Load all conn.mat
+dirfiles = dir('/OUTPUTS/**/conn.mat')
 
 % Get a list of full paths
 fileinputs = fullfile({dirfiles.folder}, {dirfiles.name});
