@@ -1,5 +1,7 @@
-# unzip the conn projects
-for i in /INPUTS/*/*/CONN/;do unzip ${i}CONN/conn_project.zip -d ${i}CONN/;done
 
-# convert covars
-python /REPO/src/CONN/covariate_csv2mat.py
+# convert covars to mat file for CONN
+if [ -f "/INPUTS/covariates.csv" ]; then
+	python /REPO/src/CONN/covariate_csv2mat.py
+else
+	echo "File not found /INPUTS/covariates.csv"
+fi
