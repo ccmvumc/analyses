@@ -18,6 +18,14 @@ xvfb-run \
 /REPO/src/CONN/merge.m
 
 
+# Delete individual subjects to prevent uploading
+cd /INPUTS
+for i in */;do
+	echo $i
+	rm -r /OUTPUTS/${i}
+done
+
+
 # covars
 if [ -f "/OUTPUTS/covariates.mat" ]; then
 	echo "Loading covariates to CONN project"
