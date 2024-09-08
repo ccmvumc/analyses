@@ -1,10 +1,10 @@
 # copy to outputs, unzip the conn projects
 cd /INPUTS
-for i in *;do
+for i in */;do
 	echo $i
 	mkdir /OUTPUTS/$i
-	unzip ${i}/*/CONN/conn_project.zip -d /OUTPUTS/${i}
-	cp ${i}/*/CONN/conn_project.mat /OUTPUTS/${i}
+	unzip /INPUTS/${i}assessors/*/*/CONN/conn_project.zip -d /OUTPUTS/${i}
+	cp /INPUTS/${i}assessors/*/*/CONN/conn_project.mat /OUTPUTS/${i}
 done
 
 
