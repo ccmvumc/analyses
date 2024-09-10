@@ -9,9 +9,12 @@ requirements:
 inputs:
   xnat:
     subjects:
-        scans:
-          - types: MRI_T1
-            nifti: MRI_T1.nii.gz
+        sessions:
+          - scans:	
+            - types: T1
+              nifti: MRI_T1.nii.gz
+            - types: PET
+              nifti: PET_PiB.nii.gz
 command:
   type: singularity_exec
   container: ANALYSES
