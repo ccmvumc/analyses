@@ -1,0 +1,18 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.sif
+    source: docker://bud42/ccmvumc_analyses:v2
+requirements:
+  walltime: 0-12
+  memory: 16G
+inputs:
+  xnat:
+    subjects:
+        assessors:
+          - types: GAAIN????
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: /bin/bash /REPO/src/GAAIN-A001/main.sh
+description: Standard Centiloid SUVRs
