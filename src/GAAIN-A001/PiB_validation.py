@@ -20,7 +20,7 @@ os.chdir(data_path)
 
 #: Import CSV
 pib_gaain_df = pd.read_csv("standard_centiloid_suvrs.csv")
-validation_df = pd.read_csv("validation dataset.csv")
+validation_df = pd.read_csv("/INPUTS/covariates.csv")
 
 #Split df to young and AD
 pib_hc_df = pib_gaain_df[pib_gaain_df['ID'].str.contains('YC')].copy()
@@ -43,7 +43,7 @@ CLs=[]
 
 #Calculate individual CL values
 for x in range(pib_gaain_df['ID']):
-    cl = 100*(pib_gaain_df.iloc[x,2] - hc_mean_suvr)/(ad_hc_dif)
+    cl = 100*(pib_gaain_df['SUVR'].iloc[x] - hc_mean_suvr)/(ad_hc_dif)
     CLs.append(cl)
     
 pib_gaain_df["Calculated CLs"]=CLs

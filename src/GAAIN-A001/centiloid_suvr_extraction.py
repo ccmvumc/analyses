@@ -40,13 +40,24 @@ fixed = mni
 output_df = pd.DataFrame(columns=['ID', 'SUVR'])
 
 # Generate pdf report
-pdf_filename = f"{out_dir}/Centiloid warping validation.pdf"
+pdf_filename = "OUTPUTS/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
 	for subject in sorted(os.listdir(in_dir)):
 		if subject.startswith('.'):
 			# ignore hidden files and other junk
 			continue
+		
+		if subject.startswith('cov'):
+			# ignore covariates
+			continue
+		
+		#ignore atlases
+		if subject.startswith('spm'):
+			continue
+		if subject.startswith('centiloid'):
+			continue
+	
 	
 		subject_amyloid = glob.glob(f'{in_dir}/{subject}/*PiB*')
 		subject_mr = glob.glob(f'{in_dir}/{subject}/*MR*')
