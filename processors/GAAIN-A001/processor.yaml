@@ -9,8 +9,9 @@ requirements:
 inputs:
   xnat:
     subjects:
-        assessors:
-          - types: GAAIN????
+        scans:
+          - types: MRI_T1
+            nifti: MRI_T1.nii.gz
 command:
   type: singularity_exec
   container: ANALYSES
