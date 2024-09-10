@@ -12,7 +12,7 @@ import ants
 from nilearn import datasets
 from nilearn import masking
 from nilearn import image
-from nilearn import math_img
+from nilearn.image import math_img
 
 in_dir = '/INPUTS'
 atlas_ni = datasets.load_mni152_template()
