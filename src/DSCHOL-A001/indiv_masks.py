@@ -40,7 +40,7 @@ for subject in sorted(os.listdir(in_dir)):
 	resampled_mr = image.resample_to_img(mr, pet)
 	
 	#import cerebellar segmentation
-	cblm = image.load_img('/OUTPUTS/DATA/{subject}/cerebellum_mask_deep_atropos.nii.gz')
+	cblm = image.load_img(f'/OUTPUTS/DATA/{subject}/cerebellum_mask_deep_atropos.nii.gz')
 	
 	#invert
 	inverted_cblm = math_img('1 - img', img=cblm)
