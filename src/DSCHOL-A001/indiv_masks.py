@@ -50,7 +50,7 @@ for subject in sorted(os.listdir(in_dir)):
 	
 	#combine masks
 	
-	individual_mask = math_img('img1 * img2)', img1=gm_mask, img2=inverted_cblm)
+	individual_mask = math_img('img1 * img2', img1=gm_mask, img2=inverted_cblm)
 	
 	#output nilearn mask for specific subject for input into study specific mask
 	#script
