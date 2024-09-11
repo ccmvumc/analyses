@@ -84,4 +84,4 @@ for subject in sorted(os.listdir(in_dir)):
 	)
 	
 	# Save the cerebellum mask
-	cerebellum_mask.to_filename(f'{out_dir}/cerebellum_mask_deep_atropos.nii.gz')
+	cerebellum_mask.to_filename(f'{subject_out}/cerebellum_mask_deep_atropos.nii.gz')
