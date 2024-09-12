@@ -173,7 +173,7 @@ fig.suptitle("Association Between Centiloid Value and FEOBV uptake", fontsize=16
 			 weight='bold')
 
 
-pdf.savefig(f'{output_path}/{pdf_filename}', dpi=300)
+pdf.savefig(f'{pdf_filename}', dpi=300)
 plt.close()
 
 
