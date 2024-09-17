@@ -10,7 +10,7 @@ inputs:
   xnat:
     subjects:
         sessions:
-          - type: baseline
+          - type: Baseline
             scans:	
             - types: T1
               nifti: MRI_T1.nii.gz
