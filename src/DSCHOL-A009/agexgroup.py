@@ -90,6 +90,9 @@ covariates_df_sorted = covariates_df.set_index('id')
 covariates_df_sorted = covariates_df_sorted.loc[all_subs_array]
 
 age_all = covariates_df_sorted['dems_age']
+sex_all = covariates_df_sorted['dems_sex']
+
+sex_fact, sex_fact_key = pd.factorize(sex_all)
 
 # Load DS images to 4D nifti
 trcds_img = image.concat_imgs(trcds_img_paths)
@@ -112,15 +115,32 @@ design_matrix = pd.DataFrame({
 	"Intercept": np.ones(subjects_ds + subjects_cx)
 })
 
+design_matrix_sex = pd.DataFrame({
+	"Down Syndrome": DS,
+	"Age":age_all,
+	"Interaction": interaction,
+	"Sex": sex_fact,
+	"Intercept": np.ones(subjects_ds + subjects_cx)
+})
+
 
 #second level model
 second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
 	trcds_img_paths + control_img_paths, design_matrix=design_matrix
 	)
 
+second_level_model_sex = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
+	trcds_img_paths + control_img_paths, design_matrix=design_matrix_sex
+	)
+
 # calculate contrast
 z_map = second_level_model.compute_contrast(
 	second_level_contrast=[0, 0, 1, 0],
+	output_type="z_score"
+)
+
+z_map_sex = second_level_model.compute_contrast(
+	second_level_contrast=[0, 0, 1, 0, 0],
 	output_type="z_score"
 )
 
@@ -130,9 +150,14 @@ thresholded_map, threshold = threshold_stats_img(z_map,
 												 alpha=threshold_1,
 												 cluster_threshold = 50)
 
+thresholded_map_sex, threshold_sex = threshold_stats_img(z_map_sex, 
+												 alpha=threshold_1,
+												 cluster_threshold = 50)
+
 # Save the statistical map
 # Save the thresholded z-map to a NIfTI file
 thresholded_map.to_filename(f'{output_path}/age_x_group_z_map.nii')
+thresholded_map_sex.to_filename(f'{output_path}/age_x_group_sex_covariate_z_map.nii')
 
 #perform glm to extract betas from age associations to understand direction
 #of interaction effect
@@ -140,6 +165,12 @@ thresholded_map.to_filename(f'{output_path}/age_x_group_z_map.nii')
 #split covariates df to DS and Control
 age_ds_df = covariates_df_sorted[covariates_df_sorted['group'] == 'ds']
 age_cx_df = covariates_df_sorted[covariates_df_sorted['group'] == 'control']
+
+sex_ds = age_ds_df['dems_sex']
+sex_cx = age_cx_df['dems_sex']
+
+sex_fact_ds, sex_fact_ds_key = pd.factorize(sex_ds)
+sex_fact_cx, sex_fact_cx_key = pd.factorize(sex_cx)
 
 #select just ds or control age
 design_matrix_age_ds = pd.DataFrame({
@@ -152,9 +183,26 @@ design_matrix_age_control = pd.DataFrame({
 	"intercept": np.ones(subjects_cx)
 })
 
+#select just ds or control age controlling for sex
+design_matrix_age_ds_sex = pd.DataFrame({
+	"age": age_ds_df['dems_age'],
+	"sex": sex_fact_ds,
+	"intercept": np.ones(subjects_ds)
+})
+
+design_matrix_age_control_sex = pd.DataFrame({
+	"age": age_cx_df['dems_age'],
+	"sex": sex_fact_cx,
+	"intercept": np.ones(subjects_cx)
+})
+
 #calculate model ds
 second_level_model_ds = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
 	trcds_img_paths, design_matrix=design_matrix_age_ds
+	)
+
+second_level_model_ds_sex = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
+	trcds_img_paths, design_matrix=design_matrix_age_ds_sex
 	)
 
 # calculate contrast ds and save to file
@@ -163,12 +211,23 @@ stat_map_ds = second_level_model_ds.compute_contrast(
 	output_type="effect_size"
 )
 
+stat_map_ds_sex = second_level_model_ds_sex.compute_contrast(
+	second_level_contrast=[1, 0, 0],
+	output_type="effect_size"
+)
+
 stat_map_ds.to_filename(f'{output_path}/ds_age_effect_size_map.nii')
+stat_map_ds_sex.to_filename(f'{output_path}/ds_age_effect_size_map_sex_controlled.nii')
 
 #calculate model control
 second_level_model_cx = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
 	control_img_paths, design_matrix=design_matrix_age_control
 	)
+
+second_level_model_cx_sex = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
+	control_img_paths, design_matrix=design_matrix_age_control_sex
+	)
+
 
 # calculate contrast control and save to file
 stat_map_cx = second_level_model_cx.compute_contrast(
@@ -176,7 +235,13 @@ stat_map_cx = second_level_model_cx.compute_contrast(
 	output_type="effect_size"
 )
 
+stat_map_cx_sex = second_level_model_cx_sex.compute_contrast(
+	second_level_contrast=[1, 0, 0],
+	output_type="effect_size"
+)
+
 stat_map_cx.to_filename(f'{output_path}/control_age_effect_size_map.nii')
+stat_map_cx_sex.to_filename(f'{output_path}/control_age_effect_size_map_sex_controlled.nii')
 
 #perform non parametric inference
 corrected_map = non_parametric_inference(
@@ -278,7 +343,44 @@ with PdfPages(pdf_filename) as pdf:
 	pdf.savefig(fig, dpi=300)
 	plt.close()
 	
-
+	fig, axs = plt.subplots(3,1, figsize=(10,14))
+	
+	plotting.plot_stat_map(
+		thresholded_map_sex,
+		threshold=threshold_1,
+		colorbar=True,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores)",
+		axes=axs[0]
+	)
+	
+	plotting.plot_stat_map(
+		stat_map_ds_sex,
+		colorbar=True,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title = "DS age FEOBV association beta values",
+		axes=axs[1]
+	)
+	
+	plotting.plot_stat_map(
+		stat_map_cx_sex,
+		colorbar=True,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title = "Control age FEOBV association beta values",
+		axes=axs[2]
+	)
+	
+	fig.suptitle("Beta values and interaction sex controlled", fontsize=16,
+				 weight='bold')
+	
+	pdf.savefig(fig, dpi=300)
+	plt.close()
 
 
 
