@@ -4,7 +4,7 @@
 """
 Spyder Editor
 Author: Jason Russell.
-Script to perform Voxel-wise linear regression between FEOBV and centiloid
+Script to perform Voxel-wise linear regression between FEOBV and BfVol
 """
 
 import glob
@@ -57,7 +57,7 @@ subs_array = np.array(subject_list)
 # Load NIfTI images into a 4D image
 FEOBV_imgs = image.concat_imgs([os.path.join(data_path, img) for img in FEOBV_img_paths])
 
-# Import centiloid data and sort
+# Import BFVol data and sort
 bfvol_df = pd.read_csv('/INPUTS/covariates.csv')
 bfvol_df['id'] = bfvol_df['id'].astype(subs_array.dtype)
 bfvol_df_sorted = bfvol_df.set_index('id')
@@ -75,12 +75,12 @@ dimx, dimy, dimz, subjects = FEOBV_imgs.shape
 
 
 design_matrix_scl = pd.DataFrame({
-	"centiloid": sclimbic,
+	"ScLimbic": sclimbic,
 	"intercept": np.ones(subjects)
 })
 
 design_matrix_dnseg = pd.DataFrame({
-	"centiloid": dnseg,
+	"DnSeg": dnseg,
 	"intercept": np.ones(subjects)
 })
 
