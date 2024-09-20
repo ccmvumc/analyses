@@ -139,7 +139,7 @@ z_map = second_level_model.compute_contrast(
 	output_type="z_score"
 )
 
-z_map_sex = second_level_model.compute_contrast(
+z_map_sex = second_level_model_sex.compute_contrast(
 	second_level_contrast=[0, 0, 1, 0, 0],
 	output_type="z_score"
 )
