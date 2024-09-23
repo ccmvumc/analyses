@@ -381,8 +381,6 @@ with PdfPages(pdf_filename) as pdf:
 	
 	pdf.savefig(fig, dpi=300)
 	plt.close()
-	
-
 
 
 

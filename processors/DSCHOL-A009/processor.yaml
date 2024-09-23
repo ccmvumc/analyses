@@ -13,7 +13,7 @@ inputs:
           - types: FEOBVQA_USC_v4
             resources:
             - resource: SUBJ
-              fmatch: mri/orig.mgz,gtmpvc.esupravwm.output/rbv.nii.gz
+              fmatch: mri/orig.mgz,gtmpvc.esupravwm.output/input.rescaled.nii.gz
 command:
   type: singularity_exec
   container: ANALYSES
