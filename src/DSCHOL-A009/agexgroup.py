@@ -83,6 +83,8 @@ all_subs = subject_list_trcds + subject_list_control
 
 all_subs_array = np.array(all_subs)
 
+print(f'All Subjects: {all_subs_array}')
+
 
 #check order of covariates matches order of image imports
 covariates_df['id'] = covariates_df['id'].astype(all_subs_array.dtype)
@@ -91,6 +93,8 @@ covariates_df_sorted = covariates_df_sorted.loc[all_subs_array]
 
 age_all = covariates_df_sorted['dems_age']
 sex_all = covariates_df_sorted['dems_sex']
+
+print(f'Covariates dataframe: {covariates_df_sorted}')
 
 sex_fact, sex_fact_key = pd.factorize(sex_all)
 
@@ -115,6 +119,8 @@ design_matrix = pd.DataFrame({
 	"Intercept": np.ones(subjects_ds + subjects_cx)
 })
 
+print(f'Design Matrix: {design_matrix}')
+
 design_matrix_sex = pd.DataFrame({
 	"Down Syndrome": DS,
 	"Age":age_all,
@@ -123,14 +129,20 @@ design_matrix_sex = pd.DataFrame({
 	"Intercept": np.ones(subjects_ds + subjects_cx)
 })
 
+print(f'Design Matrix (sex controlled): {design_matrix_sex}')
+
+all_subjects_paths = trcds_img_paths + control_img_paths
+
+print(f'Order of all subjects image paths: {all_subjects_paths}')
+
 
 #second level model
 second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
-	trcds_img_paths + control_img_paths, design_matrix=design_matrix
+	all_subjects_paths, design_matrix=design_matrix
 	)
 
 second_level_model_sex = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
-	trcds_img_paths + control_img_paths, design_matrix=design_matrix_sex
+	all_subjects_paths, design_matrix=design_matrix_sex
 	)
 
 # calculate contrast
@@ -168,6 +180,9 @@ age_cx_df = covariates_df_sorted[covariates_df_sorted['group'] == 'control']
 
 sex_ds = age_ds_df['dems_sex']
 sex_cx = age_cx_df['dems_sex']
+
+print(f'DS only covariates: {age_ds_df}')
+print(f'Control only covariates: {age_cx_df}')
 
 sex_fact_ds, sex_fact_ds_key = pd.factorize(sex_ds)
 sex_fact_cx, sex_fact_cx_key = pd.factorize(sex_cx)
@@ -244,28 +259,28 @@ stat_map_cx.to_filename(f'{output_path}/control_age_effect_size_map.nii')
 stat_map_cx_sex.to_filename(f'{output_path}/control_age_effect_size_map_sex_controlled.nii')
 
 #perform non parametric inference
-corrected_map = non_parametric_inference(
-	trcds_img_paths + control_img_paths,
-	design_matrix=design_matrix,
-	second_level_contrast=[0, 0, 1, 0],
-	mask=wbmask_path,
-	n_perm=permutations,
-	two_sided_test=True,
-	n_jobs=1,
-	threshold=threshold_non_para
-	)
+# corrected_map = non_parametric_inference(
+# 	trcds_img_paths + control_img_paths,
+# 	design_matrix=design_matrix,
+# 	second_level_contrast=[0, 0, 1, 0],
+# 	mask=wbmask_path,
+# 	n_perm=permutations,
+# 	two_sided_test=True,
+# 	n_jobs=1,
+# 	threshold=threshold_non_para
+# 	)
 
 # extract cluster significance <0.05
-img_data_non_para = corrected_map['logp_max_size'].get_fdata()
-img_data_non_para[img_data_non_para < cluster_thres] = 0
-img_data_non_para_mask = img_data_non_para != 0
-thresholded_map_np = np.where(img_data_non_para_mask, img_data_non_para, np.nan)
+# img_data_non_para = corrected_map['logp_max_size'].get_fdata()
+# img_data_non_para[img_data_non_para < cluster_thres] = 0
+# img_data_non_para_mask = img_data_non_para != 0
+# thresholded_map_np = np.where(img_data_non_para_mask, img_data_non_para, np.nan)
 
-thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np)
+# thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np)
 
 # Save non-parametric inference corrected map
-thresholded_map_np_ni.to_filename(
-	f'{output_path}/Ttest_non_parametric_inference_corrected_logP_map.nii')
+# thresholded_map_np_ni.to_filename(
+# 	f'{output_path}/Ttest_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
 pdf_filename = "/OUTPUTS/report.pdf"
@@ -285,37 +300,37 @@ with PdfPages(pdf_filename) as pdf:
 		axes=axs[0]
 	)
 	
-	plotting.plot_stat_map(
-		corrected_map['logp_max_size'],
-		colorbar=True,
-		vmax=-np.log10(1 / permutations),
-		threshold = cluster_thres,
-		cut_coords=6,
-		display_mode="x",
-		figure=fig,
-		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster size, p < {cluster_thres} (cluster logP)",
-		axes=axs[1]
-	)
-	
-	plotting.plot_stat_map(
-		corrected_map['logp_max_mass'],
-		colorbar=True,
-		vmax=-np.log10(1 / permutations),
-		threshold = cluster_thres,
-		cut_coords=6,
-		display_mode="x",
-		figure=fig,
-		title = "GLM output p < {threshold_non_para}, non-parametic inference, cluster mass, p < {cluster_thres} (cluster logP)",
-		axes=axs[2]
-	)
-	
-	fig.suptitle("Group x age interaction", fontsize=16,
-				 weight='bold')
-	
-	pdf.savefig(fig, dpi=300)
-	plt.close()
-	
-	fig, axs = plt.subplots(2,1, figsize=(10,14))
+# 	plotting.plot_stat_map(
+# 		corrected_map['logp_max_size'],
+# 		colorbar=True,
+# 		vmax=-np.log10(1 / permutations),
+# 		threshold = cluster_thres,
+# 		cut_coords=6,
+# 		display_mode="x",
+# 		figure=fig,
+# 		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster size, p < {cluster_thres} (cluster logP)",
+# 		axes=axs[1]
+# 	)
+# 	
+# 	plotting.plot_stat_map(
+# 		corrected_map['logp_max_mass'],
+# 		colorbar=True,
+# 		vmax=-np.log10(1 / permutations),
+# 		threshold = cluster_thres,
+# 		cut_coords=6,
+# 		display_mode="x",
+# 		figure=fig,
+# 		title = "GLM output p < {threshold_non_para}, non-parametic inference, cluster mass, p < {cluster_thres} (cluster logP)",
+# 		axes=axs[2]
+# 	)
+# 	
+# 	fig.suptitle("Group x age interaction", fontsize=16,
+# 				 weight='bold')
+# 	
+# 	pdf.savefig(fig, dpi=300)
+# 	plt.close()
+# 	
+# 	fig, axs = plt.subplots(2,1, figsize=(10,14))
 	
 	plotting.plot_stat_map(
 		stat_map_ds,
@@ -324,7 +339,7 @@ with PdfPages(pdf_filename) as pdf:
 		display_mode="x",
 		figure=fig,
 		title = "DS age FEOBV association beta values",
-		axes=axs[0]
+		axes=axs[1]
 	)
 	
 	plotting.plot_stat_map(
@@ -334,7 +349,7 @@ with PdfPages(pdf_filename) as pdf:
 		display_mode="x",
 		figure=fig,
 		title = "Control age FEOBV association beta values",
-		axes=axs[1]
+		axes=axs[2]
 	)
 	
 	fig.suptitle("Age association beta values, no threshold", fontsize=16,
