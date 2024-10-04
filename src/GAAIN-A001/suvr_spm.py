@@ -5,8 +5,11 @@ import ants
 import os
 from os.path import join as opj
 from nipype import IdentityInterface
-from nipype.interfaces.fsl import ImageStats
 import glob
+from nilearn import image, masking, plotting
+import pandas as pd
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.pyplot as plt
 
 from nipype.interfaces.matlab import MatlabCommand
 MatlabCommand.set_default_paths('/home/jason/matlab_pkg/spm8')
@@ -18,9 +21,9 @@ else:
 
 in_dir = '/home/jason/INPUTS/gaain_sample'
 out_dir = '/home/jason/OUTPUTS/gaain_validation'
-atlas = f'{in_dir}/atlases/spm8_MNI_avg152T1.nii'
-ctx_voi = f'{in_dir}/atlases/centiloid_ctx_2mm.nii'
-wcbm_voi = f'{in_dir}/atlases/centiloid_WhlCbl_2mm.nii'
+atlas = f'{in_dir}/atlases/avg152T1.nii'
+ctx_voi = f'{in_dir}/atlases/voi_ctx_2mm.nii'
+wcbm_voi = f'{in_dir}/atlases/voi_WhlCbl_2mm.nii'
 
 #import ants atlas
 mni = ants.image_read(atlas)
@@ -64,25 +67,25 @@ for subject in sorted(os.listdir(f'{in_dir}/scans')):
 		# Skull Strip Original T1 and mask
 		raw = ants.image_read(orig_file)
 		raw_pet = ants.image_read(amyloid_file)
-		#mri_strip_mask = brain_extraction(raw, modality='t1')
 		
-		# Load orig T1 image as moving image for registration
 		moving = raw
 		
-		#move MR to atlas
-		reorient_mr = ants.registration(moving, mni, type_of_transform = 'Rigid')
-		
-		#move PET to MR
-		reorient_pet = ants.registration(raw_pet, reorient_mr['warpedmovout'], type_of_transform='Rigid')
-		
-		# Save reorient mr
-		warped_mr_file = f'{subject_out}/reorient_mr.nii'
-		ants.image_write(reorient_mr['warpedmovout'], warped_mr_file)
-		
-		# Save reorient PET
-		warped_pet_file = f'{subject_out}/reorient_pet.nii'
-		ants.image_write(reorient_pet['warpedmovout'], warped_pet_file)
+		#warp PET to MR
+		warp_pet = ants.registration(moving, raw_pet, type_of_transform='Rigid')
 	
+		# Do Registration of Moving to Fixed
+		reg = ants.registration(mni, moving, type_of_transform='Rigid')
+	
+		# Save warped orig
+		warped_orig_file = f'{subject_out}/reorient_mr.nii'
+		ants.image_write(reg['warpedmovout'], warped_orig_file)
+	
+		# Apply transform to amyloid image which is already in same space
+		warped_amyloid_file = f'{subject_out}/reorient_pet.nii'
+		amyloid = warp_pet['warpedmovout']
+		warped_amyloid = ants.apply_transforms(mni, amyloid, reg['fwdtransforms'])
+		ants.image_write(warped_amyloid, warped_amyloid_file)
+		
 
 
 infosource = Node(IdentityInterface(fields=['subject_id']), name="infosource")
@@ -100,25 +103,6 @@ selectfiles = Node(SelectFiles(templates,
 							   base_directory= out_dir),
 				   name="selectfiles")
 
-# #initially overlay images
-# overlay_mr = Node(Registration(), name = 'overlay_mr')
-# overlay_mr.inputs.fixed_image = atlas
-# overlay_mr.inputs.metric = ['CC']
-# overlay_mr.inputs.transforms = ['Rigid']
-# overlay_mr.inputs.transform_parameters = [(0.1,)]
-# overlay_mr.inputs.smoothing_sigmas = [[4.0, 2.0, 1.0, 0.0]]
-# overlay_mr.inputs.shrink_factors = [[8, 4, 2, 1]]
-# overlay_mr.inputs.convergence_threshold = [1e-6]
-# overlay_mr.inputs.number_of_iterations = [[1000, 500, 250, 100]] 
-
-# overlay_pet = Node(Registration(), name = 'overlay_pet')
-# overlay_pet.inputs.metric = ['MeanSquares']
-# overlay_pet.inputs.transforms = ['Rigid']
-# overlay_mr.inputs.transform_parameters = [(0.1,)]
-# overlay_pet.inputs.smoothing_sigmas = [[4.0, 2.0, 1.0, 0.0]]
-# overlay_pet.inputs.shrink_factors = [[8, 4, 2, 1]]
-# overlay_pet.inputs.convergence_threshold = [1e-6]
-# overlay_pet.inputs.number_of_iterations = [[1000, 500, 250, 100]] 
 
 # coreg
 coreg_mr = Node(Coregister(), name="coreg_mr")
@@ -129,38 +113,25 @@ coreg_pet = Node(Coregister(), name='coreg_pet')
 coreg_pet.jobtype = 'estwrite'
 coreg_pet.nonlinear_regularization = 1
 
-# segmentation
-#tpm_csf = '/home/jason/matlab_pkg/spm8/tpm/csf.nii'
-#tpm_gm = '/home/jason/matlab_pkg/spm8/tpm/grey.nii'
-#tpm_wm = '/home/jason/matlab_pkg/spm8/tpm/white.nii'
-#tissue1 = ((tpm_gm, 1), 1, (True, False), (False, False))  # Gray matter
-#tissue2 = ((tpm_wm, 1), 1, (True, False), (False, False))  # White matter
-#tissue3 = ((tpm_csf, 1), 1, (True, False), (False, False))  # CSF
-#tissues = [tissue1, tissue2, tissue3]
-
+#segmentation
 segmentation = Node(Segment(), name="segmentation")
 
 
 #normalization
 norm_write = Node(Normalize(), name = "norm_write")
-norm_write.jobtype = 'write'
-norm_write.source_image_smoothing = 8
-norm_write.affine_regularization = 'mni'
-norm_write.DCT_period_cutoff = 25
-norm_write.nonlinear_iterations = 16
-norm_write.nonlinear_regularization = 1
-norm_write.write_bounding_box = [[-90, -126, -72], [91, 91, 109]]
-norm_write.write_voxel_sizes = [2, 2, 2]
+norm_write.inputs.jobtype = 'write'
+norm_write.inputs.write_bounding_box = [[-90, -126, -72], [91, 91, 109]]
+norm_write.inputs.write_voxel_sizes = [2, 2, 2]
+#norm_write.run()
 
+# #calculate SUVRs in each VOI
+# ctx_stats = Node(ImageStats(), name = 'ctx_stats')
+# ctx_stats.inputs.mask_file = ctx_voi
+# ctx_stats.inputs.op_string = '-M'
 
-#calculate SUVRs in each VOI
-ctx_stats = Node(ImageStats(), name = 'ctx_stats')
-ctx_stats.mask_file = ctx_voi
-ctx_stats.op_string = '-M'
-
-wcbm_stats = Node(ImageStats(), name = 'wcbm_stats')
-wcbm_stats.mask_file = wcbm_voi
-wcbm_stats.op_string = '-M'
+# wcbm_stats = Node(ImageStats(), name = 'wcbm_stats')
+# wcbm_stats.inputs.mask_file = wcbm_voi
+# wcbm_stats.inputs.op_string = '-M'
 
 #datasink
 datasink = Node(DataSink(base_directory='/home/jason/OUTPUTS/gaain_validation'),
@@ -179,8 +150,6 @@ cl_preproc.connect([
 	(coreg_mr, segmentation, [('coregistered_files', 'data')]),
 	(segmentation, norm_write, [('transformation_mat', 'parameter_file')]),
 	(coreg_pet, norm_write, [('coregistered_files', 'apply_to_files')]),
-	(norm_write, ctx_stats, [('normalized_files', 'in_file' )]),
-	(norm_write, wcbm_stats, [('normalized_files', 'in_file')]),
 	(coreg_mr, datasink, [('coregistered_files', 'normalized_mr1')]),
 	(coreg_pet, datasink, [('coregistered_files', 'normalized_pet1')]),
 	(norm_write, datasink, [('normalized_files', 'normalized_final')])
@@ -190,7 +159,63 @@ cl_preproc.run('MultiProc', plugin_args={'n_procs': 8})
 
 #calculate SUVR and apply to df
 
-suvr_value = ctx_stats.result.outputs.out_stat / wcbm_stats.result.outputs.out_stat
+# suvr_value = ctx_stats.result.outputs.out_stat / wcbm_stats.result.outputs.out_stat
+output_df = pd.DataFrame(columns=['ID', 'SUVR'])
 
+for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
+	#apply masks
+	pet_mni = f'{out_dir}/normalized_final/{subject}/wrreorient_pet.nii'
+	
+	ctx_masked = masking.apply_mask(pet_mni, ctx_voi)
+	wcbm_masked = masking.apply_mask(pet_mni, wcbm_voi)
+	
+	# Calculate the mean uptake in the VOIs
+	mean_uptake_voi = ctx_masked.mean()
+	mean_uptake_ref = wcbm_masked.mean()
+	
+	suvr = mean_uptake_voi/mean_uptake_ref
+	
+	subject_name = subject.split('_')[-1]
+	row = [subject_name, suvr]
+	
+	output_df.loc[len(output_df)] = row
+	
+# Generate pdf report
+pdf_filename = f"{out_dir}/report.pdf"
+
+with PdfPages(pdf_filename) as pdf:
+	for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
+		fig, axs = plt.subplots(3, 1, figsize=(10,14))
+		subject_name = subject.split('_')[-1]
+		
+		img = image.load_img(f'{out_dir}/normalized_final/{subject}/wrreorient_pet.nii')
+		
+		plotting.plot_roi(
+			img,
+			figure=fig,
+			title = f"{subject_name} PET transform to MNI",
+			axes=axs[0]
+		)
+		
+		plotting.plot_roi(
+			ctx_voi,
+			img,
+			figure=fig,
+			title = f"{subject_name} PET transform with ctx VOI overlay",
+			axes=axs[1]
+		)
+		
+		plotting.plot_roi(
+			wcbm_voi,
+			img,
+			figure=fig,
+			title = f"{subject_name} PET transform with cblm VOI overlay",
+			axes=axs[2]
+		)
+		
+		pdf.savefig(fig, dpi=300)
+		plt.close(fig)
+	
+output_df.to_csv(f'{out_dir}/standard_centiloid_suvrs.csv', index=False)
 
 

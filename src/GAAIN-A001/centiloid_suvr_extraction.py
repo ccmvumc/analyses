@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 in_dir = '/INPUTS'
-atlas = '/REPO/spm8_MNI_avg152T1.nii'
+atlas = '/REPO/avg152T1.nii
 out_dir = '/OUTPUTS/DATA'
 
 
@@ -27,11 +27,11 @@ mni = ants.image_read(atlas)
 
 # Import gaain masks 
 ctx_voi = image.load_img(
-	'/REPO/centiloid_ctx_2mm.nii'
+	'/REPO/voi_ctx_2mm.nii'
 	)
 
 wcbm_voi = image.load_img(
-	'/REPO/centiloid_WhlCbl_2mm.nii'
+	'/REPO/voi_WhlCbl_2mm.nii'
 	)
 
 
