@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 in_dir = '/INPUTS'
-atlas = '/REPO/avg152T1.nii
+atlas = '/REPO/avg152T1.nii'
 out_dir = '/OUTPUTS/DATA'
 
 
@@ -40,7 +40,7 @@ fixed = mni
 output_df = pd.DataFrame(columns=['ID', 'SUVR'])
 
 # Generate pdf report
-pdf_filename = "OUTPUTS/report.pdf"
+pdf_filename = "/OUTPUTS/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
 	for subject in sorted(os.listdir(in_dir)):

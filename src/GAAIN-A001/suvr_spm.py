@@ -19,11 +19,11 @@ if not os.path.exists('/home/jason/OUTPUTS/gaain_validation'):
 else:
 	print('Directory exists, continue')
 
-in_dir = '/home/jason/INPUTS/gaain_sample'
-out_dir = '/home/jason/OUTPUTS/gaain_validation'
-atlas = f'{in_dir}/atlases/avg152T1.nii'
-ctx_voi = f'{in_dir}/atlases/voi_ctx_2mm.nii'
-wcbm_voi = f'{in_dir}/atlases/voi_WhlCbl_2mm.nii'
+in_dir = '/INPUTS'
+out_dir = '/OUTPUTS/data'
+atlas = '/REPO/atlases/avg152T1.nii'
+ctx_voi = '/REPO/atlases/voi_ctx_2mm.nii'
+wcbm_voi = '/REPO/atlases/voi_WhlCbl_2mm.nii'
 
 #import ants atlas
 mni = ants.image_read(atlas)
@@ -31,7 +31,7 @@ mni = ants.image_read(atlas)
 subject_list = []
 
 
-for subject in sorted(os.listdir(f'{in_dir}/scans')):
+for subject in sorted(os.listdir(in_dir)):
 		if subject.startswith('.'):
 			# ignore hidden files and other junk
 			continue
@@ -48,8 +48,8 @@ for subject in sorted(os.listdir(f'{in_dir}/scans')):
 		
 		subject_list.append(subject)
 		
-		subject_amyloid = glob.glob(f'{in_dir}/scans/{subject}/PET/*PiB*')[0]
-		subject_mr = glob.glob(f'{in_dir}/scans/{subject}/MR/*MR*')[0]
+		subject_amyloid = glob.glob(f'{in_dir}/{subject}/*PiB*')[0]
+		subject_mr = glob.glob(f'{in_dir}/{subject}/*MR*')[0]
 	
 		print('Amyloid:', subject_amyloid)
 	
@@ -122,23 +122,13 @@ norm_write = Node(Normalize(), name = "norm_write")
 norm_write.inputs.jobtype = 'write'
 norm_write.inputs.write_bounding_box = [[-90, -126, -72], [91, 91, 109]]
 norm_write.inputs.write_voxel_sizes = [2, 2, 2]
-#norm_write.run()
-
-# #calculate SUVRs in each VOI
-# ctx_stats = Node(ImageStats(), name = 'ctx_stats')
-# ctx_stats.inputs.mask_file = ctx_voi
-# ctx_stats.inputs.op_string = '-M'
-
-# wcbm_stats = Node(ImageStats(), name = 'wcbm_stats')
-# wcbm_stats.inputs.mask_file = wcbm_voi
-# wcbm_stats.inputs.op_string = '-M'
 
 #datasink
-datasink = Node(DataSink(base_directory='/home/jason/OUTPUTS/gaain_validation'),
+datasink = Node(DataSink(base_directory=out_dir),
 				name = 'datasink')
 
 #make workflow
-cl_preproc = Workflow(name='cl_preproc', base_dir = '/home/jason/OUTPUTS/gaain_validation')
+cl_preproc = Workflow(name='cl_preproc', base_dir = out_dir)
 
 cl_preproc.connect([
 	(infosource, selectfiles, [('subject_id', 'subject_id')]),
@@ -181,7 +171,7 @@ for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
 	output_df.loc[len(output_df)] = row
 	
 # Generate pdf report
-pdf_filename = f"{out_dir}/report.pdf"
+pdf_filename = "/OUTPUTS/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
 	for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
