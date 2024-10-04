@@ -60,5 +60,5 @@ plt.annotate(f"Intercept (target: -2<m<2) = {np.round(intercept,5)}",
              xy=(50, 15), xycoords='axes points', fontsize=8, color='red')
 plt.annotate(f"R2 (target: >0.98) = {np.round(coefficient_of_dermination, 10)}",
              xy=(50, 25), xycoords='axes points', fontsize=8, color='red')
-plt.savefig("PiB Centiloid validation with GAAIN data.png")
+plt.savefig(f"{data_path}/PiB Centiloid validation with GAAIN data.png")
 plt.clf()
