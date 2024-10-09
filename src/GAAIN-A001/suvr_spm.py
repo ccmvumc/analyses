@@ -145,7 +145,7 @@ cl_preproc.connect([
 	(norm_write, datasink, [('normalized_files', 'normalized_final')])
 ])
 
-cl_preproc.run('MultiProc')
+cl_preproc.run()
 
 cl_preproc.write_graph(graph2use='exec', format='png', simple_form=False)
 
