@@ -40,23 +40,23 @@ for subject in sorted(os.listdir(in_dir)):
 	mr = image.load_img(f'/OUTPUTS/DATA/{subject}/warped_orig.nii.gz')
 	resampled_mr = image.resample_to_img(mr, pet)
 	
-     #import cerebellar segmentation
-    cblm = image.load_img(f'/OUTPUTS/DATA/{subject}/cerebellum_mask_deep_atropos.nii.gz')
-    
-    #invert
-    inverted_cblm = math_img('1 - img', img=cblm)
+	#import cerebellar segmentation
+	cblm = image.load_img(f'/OUTPUTS/DATA/{subject}/cerebellum_mask_deep_atropos.nii.gz')
 	
-	    #apply nilearn mask
-    gm_mask = masking.compute_brain_mask(resampled_mr, mask_type='gm')
-    
-    #combine masks
-    
-    individual_mask = math_img('img1 * img2', img1=gm_mask, img2=inverted_cblm)
-    
-    #output nilearn mask for specific subject for input into study specific mask
-    #script
-    
-    individual_mask.to_filename(f'{subject_out}/gmmask.nii.gz')
+	#invert
+	inverted_cblm = math_img('1 - img', img=cblm)
+	
+	#apply nilearn mask
+	gm_mask = masking.compute_brain_mask(resampled_mr, mask_type='gm')
+	
+	#combine masks
+	
+	individual_mask = math_img('img1 * img2', img1=gm_mask, img2=inverted_cblm)
+	
+	#output nilearn mask for specific subject for input into study specific mask
+	#script
+	
+	individual_mask.to_filename(f'{subject_out}/gmmask.nii.gz')
 	
 print("Individualized masks generated")
 	
