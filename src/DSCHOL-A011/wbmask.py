@@ -36,13 +36,13 @@ prob_mask = np.zeros((rsdim1, rsdim2, rsdim3))
 #Itterate through array calculating probability of voxel being GM
 # Perform linear regression for each cell
 for i in range(rsdim1):
-    for j in range(rsdim2):
-        for k in range(rsdim3):
-            if (np.sum(ind_masks[i, j, k, :]))/subjects >= 0.3:
-                prob_mask[i, j, k] = 1
-            else:
-                prob_mask[i, j, k] = 0
-                
+	for j in range(rsdim2):
+		for k in range(rsdim3):
+			if (np.sum(ind_masks[i, j, k, :]))/subjects >= 0.3:
+				prob_mask[i, j, k] = 1
+			else:
+				prob_mask[i, j, k] = 0
+				
 
 dil_gm_mask = binary_dilation(prob_mask)
 dilero_gm_mask = binary_erosion(dil_gm_mask)
@@ -50,11 +50,11 @@ dilerodil_gm_mask = binary_dilation(dilero_gm_mask)
 dilerodilero_gm_mask = binary_erosion(dilerodil_gm_mask)
 
 mask_gm_nii = new_img_like(
-    'DST3050001/smoothed_warped_FEOBV.nii.gz', dilerodilero_gm_mask.astype(int)
+	'DST3050001/smoothed_warped_FEOBV.nii.gz', dilerodilero_gm_mask.astype(int)
 )
 
 nib.save(mask_gm_nii, "Brain_mask_prob0_3.nii")
-            
+			
 
 
-            
+
