@@ -61,7 +61,7 @@ covariate_df_sorted = covariate_df_sorted.loc[subs_array]
 
 kbit = covariate_df_sorted['kbit'].astype(float)
 mcrt_free = covariate_df_sorted['mcrt_free'].astype(float)
-dsmse_total = covariate_df_sorted['dsmse_total'].astype(float)
+dsmse_total = covariate_df_sorted['dsmse_total_score'].astype(float)
 dsmse_memory_composite = covariate_df_sorted['dsmse_memory_composite'].astype(float)
 dsmse_non_memory_composite = covariate_df_sorted['dsmse_non_memory_composite'].astype(float)
 stroop = covariate_df_sorted['stroop'].astype(float)
