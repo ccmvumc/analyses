@@ -71,31 +71,31 @@ dimx, dimy, dimz, subjects = FEOBV_imgs.shape
 
 design_matrix_mcrt = pd.DataFrame({
 	"mCRT": mcrt_free,
-	"intercept": np.ones(subjects)
+	"intercept": np.ones(subjects),
 	"kbit": kbit
 })
 
 design_matrix_dsmse_total = pd.DataFrame({
 	"dsmse_tot": dsmse_total,
-	"intercept": np.ones(subjects)
+	"intercept": np.ones(subjects),
 	"kbit": kbit
 })
 
 design_matrix_dsmse_non_memory_composite = pd.DataFrame({
 	"dsmse_non_mem": dsmse_non_memory_composite,
-	"intercept": np.ones(subjects)
+	"intercept": np.ones(subjects),
 	"kbit": kbit
 })
 
 design_matrix_dsmse_memory_composite = pd.DataFrame({
 	"dsmse_mem": dsmse_memory_composite,
-	"intercept": np.ones(subjects)
+	"intercept": np.ones(subjects),
 	"kbit": kbit
 })
 
 design_matrix_stroop = pd.DataFrame({
 	"stroop": stroop,
-	"intercept": np.ones(subjects)
+	"intercept": np.ones(subjects),
 	"kbit": kbit
 })
 
