@@ -208,7 +208,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM mCRT output p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM mCRT output p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[0]
 	)
 
@@ -219,7 +219,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM DSMSE total output p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM DSMSE total output p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[1]
 	)
 	
@@ -230,7 +230,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM DSMSE non-memory output p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM DSMSE non-memory output p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[2]
 	)
 	
@@ -249,7 +249,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM DSMSE memory composite, p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM DSMSE memory composite, p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[0]
 	)
 	
@@ -260,7 +260,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM Stroop cats & Dogs output p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM Stroop cats & Dogs output p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[1]
 	)
 	

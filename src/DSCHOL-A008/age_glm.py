@@ -192,7 +192,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[0]
 	)
 	
@@ -235,7 +235,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output, sex controlled, p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM output, sex controlled, p < {threshold_1}, cluster size 50 (z-scores)",
 		axes=axs[0]
 	)
 	
