@@ -27,7 +27,7 @@ trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/smoothed_warped_FEOBV.nii.gz') 
 trcds_img_paths = sorted(trcds_img_paths)
 
 control_img_paths = (glob.glob('/OUTPUTS/DATA/Sub*/smoothed_warped_FEOBV.nii.gz') + 
-				   glob.glob('/OUTPUTS/DATA/1*/smoothed_warped_FEOBV.nii.gz')
+				   glob.glob('/OUTPUTS/DATA/2*/smoothed_warped_FEOBV.nii.gz')
 				   )
 
 control_img_paths = sorted(control_img_paths)
