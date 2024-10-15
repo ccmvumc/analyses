@@ -240,7 +240,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = "GLM output p < {threshold_non_para}, non-parametic inference, cluster mass, p < {cluster_thres} (cluster logP)",
+		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster mass, p < {cluster_thres} (cluster logP)",
 		axes=axs[2]
 	)
 	
