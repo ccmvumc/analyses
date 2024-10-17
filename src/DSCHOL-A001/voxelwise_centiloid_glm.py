@@ -64,6 +64,9 @@ centiloid_df_sorted = centiloid_df.set_index('id')
 centiloid_df_sorted = centiloid_df_sorted.loc[subs_array]
 
 centiloid = centiloid_df_sorted['Centiloid'].astype(float)
+age = centiloid_df_sorted['dems_age'].astype(float)
+
+sex_all, sex_all_key = pd.factorize(centiloid_df_sorted['dems_sex'])
 
 print('Covariates loaded and sorted')
 print(centiloid_df_sorted)
@@ -74,6 +77,25 @@ dimx, dimy, dimz, subjects = FEOBV_imgs.shape
 design_matrix = pd.DataFrame({
 	"centiloid": centiloid,
 	"intercept": np.ones(subjects)
+})
+
+design_matrix_age = pd.DataFrame({
+	"centiloid": centiloid,
+	"intercept": np.ones(subjects),
+	"age": age
+})
+
+design_matrix_sex = pd.DataFrame({
+	"centiloid": centiloid,
+	"intercept": np.ones(subjects),
+	"sex": sex_all
+})
+
+design_matrix_sexage = pd.DataFrame({
+	"centiloid": centiloid,
+	"intercept": np.ones(subjects),
+	"sex": sex_all
+	"age": age
 })
 
 
@@ -87,6 +109,26 @@ second_level_model = SecondLevelModel(
 second_level_model = second_level_model.fit(
 	FEOBV_img_paths, design_matrix=design_matrix)
 
+#second level model_sex
+second_level_model_sex = SecondLevelModel(
+	mask_img=gmmask_path, n_jobs=1
+)
+second_level_model_sex = second_level_model_sex.fit(
+	FEOBV_img_paths, design_matrix=design_matrix_sex)
+
+#second level model_age
+second_level_model_age = SecondLevelModel(
+	mask_img=gmmask_path, n_jobs=1
+)
+second_level_model_age = second_level_model_age.fit(
+	FEOBV_img_paths, design_matrix=design_matrix_age)
+	
+#second level model_sexage
+second_level_model_sexage = SecondLevelModel(
+	mask_img=gmmask_path, n_jobs=1
+)
+second_level_model_sexage = second_level_model_sexage.fit(
+	FEOBV_img_paths, design_matrix=design_matrix_sexage)
 
 #calculate zmaps
 z_map = second_level_model.compute_contrast(
@@ -94,15 +136,46 @@ z_map = second_level_model.compute_contrast(
 	output_type="z_score",
 )
 
+z_map_sex = second_level_model_sex.compute_contrast(
+	second_level_contrast=[1, 0, 0],
+	output_type="z_score",
+)
+
+z_map_age = second_level_model_age.compute_contrast(
+	second_level_contrast=[1, 0, 0],
+	output_type="z_score",
+)
+
+z_map_sexage = second_level_model_sexage.compute_contrast(
+	second_level_contrast=[1, 0, 0, 0],
+	output_type="z_score",
+)
+
+
 
 # Perform statsmap, correct for multiple comparisons
 thresholded_map, threshold = threshold_stats_img(z_map,
+												 alpha=threshold_1,
+												 cluster_threshold=50)
+												 
+thresholded_map_sex, threshold_sex = threshold_stats_img(z_map_sex,
+												 alpha=threshold_1,
+												 cluster_threshold=50)
+											
+thresholded_map_age, threshold_age = threshold_stats_img(z_map_age,
+												 alpha=threshold_1,
+												 cluster_threshold=50)
+												 
+thresholded_map_sexage, threshold_sexage = threshold_stats_img(z_map_sexage,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
 # Save the statistical map
 # Save the thresholded z-map to a NIfTI file
 thresholded_map.to_filename(f'{output_path}/Centiloid_glm_zmap.nii')
+thresholded_map_sex.to_filename(f'{output_path}/Centiloid_glm_zmap_sex.nii')
+thresholded_map_age.to_filename(f'{output_path}/Centiloid_glm_zmap_age.nii')
+thresholded_map_sexage.to_filename(f'{output_path}/Centiloid_glm_zmap_sex+age.nii')
 
 #perform non parametric inference
 corrected_map = non_parametric_inference(
@@ -167,6 +240,45 @@ plotting.plot_stat_map(
 	axes=axs[2]
 )
 
+
+
+fig.suptitle("Association Between Centiloid Value and FEOBV uptake", fontsize=16,
+			 weight='bold')
+
+fig, axs = plt.subplots(3,1, figsize=(10,14))
+
+plotting.plot_stat_map(
+	thresholded_map_sex,
+	threshold=threshold_sex,
+	colorbar=True,
+	cut_coords=6,
+	display_mode="x",
+	figure=fig,
+	title = "GLM output, sex controlled p < 0.005, cluster size 50 (z-scores)",
+	axes=axs[0]
+)
+
+plotting.plot_stat_map(
+	thresholded_map_age,
+	threshold=threshold_age,
+	colorbar=True,
+	cut_coords=6,
+	display_mode="x",
+	figure=fig,
+	title = "GLM output, age controlled p < 0.005, cluster size 50 (z-scores)",
+	axes=axs[1]
+)
+
+plotting.plot_stat_map(
+	thresholded_map_sexage,
+	threshold=threshold_sexage,
+	colorbar=True,
+	cut_coords=6,
+	display_mode="x",
+	figure=fig,
+	title = "GLM output, sex and age controlled p < 0.005, cluster size 50 (z-scores)",
+	axes=axs[2]
+)
 
 
 fig.suptitle("Association Between Centiloid Value and FEOBV uptake", fontsize=16,
