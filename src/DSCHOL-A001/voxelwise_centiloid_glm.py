@@ -94,7 +94,7 @@ design_matrix_sex = pd.DataFrame({
 design_matrix_sexage = pd.DataFrame({
 	"centiloid": centiloid,
 	"intercept": np.ones(subjects),
-	"sex": sex_all
+	"sex": sex_all,
 	"age": age
 })
 
