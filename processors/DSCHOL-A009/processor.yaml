@@ -4,7 +4,7 @@ containers:
     path: ccmvumc_analyses_v2.sif
     source: docker://bud42/ccmvumc_analyses:v2
 requirements:
-  walltime: 0-24
+  walltime: 0-30
   memory: 16G
 inputs:
   xnat:
@@ -18,4 +18,4 @@ command:
   type: singularity_exec
   container: ANALYSES
   args: /bin/bash /REPO/src/DSCHOL-A009/main.sh
-description: Age x Group Interaction
+description: agexgroup
