@@ -26,7 +26,7 @@ for subject in sorted(os.listdir(in_dir)):
 		# ignore covariates csv
 		continue
 
-	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_USC_v4*')[0]
+	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_USC_NOPVC_v4*')[0]
 
 	print('FEOBV:', subject_feobv)
 
@@ -36,7 +36,7 @@ for subject in sorted(os.listdir(in_dir)):
 
 	# Get full file path to input images
 	orig_file = f'{subject_feobv}/mri/orig.mgz'
-	feobv_file =  f'{subject_feobv}/gtmpvc.esupravwm.output/rbv.nii.gz'
+	feobv_file =  f'{subject_feobv}/gtmpvc.esupravwm.output/gtmpvc.esupravwm.output/rinput.rescaled.nii.gz'
 	
 	# Skull Strip Original T1
 	raw = ants.image_read(orig_file)

@@ -10,10 +10,10 @@ inputs:
   xnat:
     subjects:
         assessors:
-          - types: FEOBVQA_USC_v4
+          - types: FEOBVQA_USC_NOPVC_v4
             resources:
             - resource: SUBJ
-              fmatch: mri/orig.mgz,gtmpvc.esupravwm.output/rbv.nii.gz
+              fmatch: mri/orig.mgz,gtmpvc.esupravwm.output/rinput.rescaled.nii.gz
 command:
   type: singularity_exec
   container: ANALYSES
