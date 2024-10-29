@@ -124,11 +124,12 @@ coreg_pet.nonlinear_regularization = 1
 #segmentation
 segmentation = Node(Segment(), name="segmentation")
 
+nan = float('nan')
 
 #normalization
 norm_write = Node(Normalize(), name = "norm_write")
 norm_write.inputs.jobtype = 'write'
-norm_write.inputs.write_bounding_box = [[-90, -126, -72], [91, 91, 109]]
+norm_write.inputs.write_bounding_box = [[nan, nan, nan], [nan, nan, nan]]
 norm_write.inputs.write_voxel_sizes = [2, 2, 2]
 
 #datasink
