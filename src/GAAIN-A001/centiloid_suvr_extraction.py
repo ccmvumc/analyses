@@ -15,23 +15,26 @@ import glob
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
-in_dir = '/INPUTS'
-atlas = '/REPO/avg152T1.nii'
-out_dir = '/OUTPUTS/DATA'
+if not os.path.exists('/Users/jasonrussell/Documents/OUTPUTS/gaain_validation_nonspm'):
+	os.mkdir('/Users/jasonrussell/Documents/OUTPUTS/gaain_validation_nonspm')
+else:
+	print('Directory exists, continue')
 
+in_dir = '/Users/jasonrussell/Documents/INPUTS/gaain'
+atlas = f'{in_dir}/atlases/avg152T1.nii'
+out_dir = '/Users/jasonrussell/Documents/OUTPUTS/gaain_validation_nonspm'
 
-os.makedirs(out_dir)
 
 #Open atlas
 mni = ants.image_read(atlas)
 
 # Import gaain masks 
 ctx_voi = image.load_img(
-	'/REPO/voi_ctx_2mm.nii'
+	f'{in_dir}/atlases/voi_ctx_2mm.nii'
 	)
 
 wcbm_voi = image.load_img(
-	'/REPO/voi_WhlCbl_2mm.nii'
+	f'{in_dir}/atlases/voi_WhlCbl_2mm.nii'
 	)
 
 
@@ -40,10 +43,10 @@ fixed = mni
 output_df = pd.DataFrame(columns=['ID', 'SUVR'])
 
 # Generate pdf report
-pdf_filename = "/OUTPUTS/report.pdf"
+pdf_filename = f"{out_dir}/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
-	for subject in sorted(os.listdir(in_dir)):
+	for subject in sorted(os.listdir(f'{in_dir}/scans')):
 		if subject.startswith('.'):
 			# ignore hidden files and other junk
 			continue
@@ -59,14 +62,17 @@ with PdfPages(pdf_filename) as pdf:
 			continue
 	
 	
-		subject_amyloid = glob.glob(f'{in_dir}/{subject}/*PiB*')
-		subject_mr = glob.glob(f'{in_dir}/{subject}/*MR*')
+		subject_amyloid = glob.glob(f'{in_dir}/scans/{subject}/PET/*PiB*')[0]
+		subject_mr = glob.glob(f'{in_dir}/scans/{subject}/MR/*MR*')[0]
 	
 		print('Amyloid:', subject_amyloid)
 	
 		subject_out = f'{out_dir}/{subject}'
 	
-		os.makedirs(subject_out)
+		if not os.path.exists(subject_out):
+			os.mkdir(subject_out)
+		else:
+			print('Directory exists, continue')
 	
 		# Get full file path to input images
 		orig_file = subject_mr
@@ -91,10 +97,10 @@ with PdfPages(pdf_filename) as pdf:
 		moving = raw
 		
 		#warp PET to MR
-		warp_pet = ants.registration(moving, raw_pet, type_of_transform='SyN')
+		warp_pet = ants.registration(moving, raw_pet, type_of_transform='Rigid')
 	
 		# Do Registration of Moving to Fixed
-		reg = ants.registration(fixed, moving, type_of_transform='SyN')
+		reg = ants.registration(fixed, moving, type_of_transform='Rigid')
 	
 		# Save warped orig
 		warped_orig_file = f'{subject_out}/warped_orig.nii.gz'

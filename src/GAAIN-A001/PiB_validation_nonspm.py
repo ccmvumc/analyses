@@ -15,7 +15,7 @@ import os
 
 
 #Set path where data is stored
-data_path = '/Users/jasonrussell/Documents/OUTPUTS/gaain_validation'
+data_path = '/Users/jasonrussell/Documents/OUTPUTS/gaain_validation_nonspm'
 os.chdir(data_path)
 
 #: Import CSV

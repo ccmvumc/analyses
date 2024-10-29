@@ -1,5 +1,5 @@
 from nipype.interfaces.io import SelectFiles, DataSink
-from nipype.interfaces.spm import Segment, Normalize, Coregister
+from nipype.interfaces.spm import NewSegment, Normalize12, Coregister
 from nipype import Node, Workflow
 import ants
 import os
@@ -12,17 +12,18 @@ from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 import multiprocessing
 from antspynet import brain_extraction
+from nilearn.image import resample_to_img
 
 from nipype.interfaces.matlab import MatlabCommand
 MatlabCommand.set_default_paths('/Users/jasonrussell/Documents/MATLAB/spm12')
 
-if not os.path.exists('/Users/jasonrussell/Documents/OUTPUTS/gaain_validation'):
-	os.mkdir('/Users/jasonrussell/Documents/OUTPUTS/gaain_validation')
+if not os.path.exists('/Users/jasonrussell/Documents/OUTPUTS/gaain_validation_spm12'):
+	os.mkdir('/Users/jasonrussell/Documents/OUTPUTS/gaain_validation_spm12')
 else:
 	print('Directory exists, continue')
 
 in_dir = '/Users/jasonrussell/Documents/INPUTS/gaain'
-out_dir = '/Users/jasonrussell/Documents/OUTPUTS/gaain_validation'
+out_dir = '/Users/jasonrussell/Documents/OUTPUTS/gaain_validation_spm12'
 atlas = f'{in_dir}/atlases/avg152T1.nii'
 ctx_voi = f'{in_dir}/atlases/voi_ctx_2mm.nii'
 wcbm_voi = f'{in_dir}/atlases/voi_WhlCbl_2mm.nii'
@@ -122,14 +123,25 @@ coreg_pet.jobtype = 'estwrite'
 coreg_pet.nonlinear_regularization = 1
 
 #segmentation
-segmentation = Node(Segment(), name="segmentation")
 
+
+tpm_img = '/Users/jasonrussell/Documents/MATLAB/spm12/tpm/TPM.nii'
+tissue1 = ((tpm_img, 1), 1, (True, False), (False, False))
+tissue2 = ((tpm_img, 2), 1, (True, False), (False, False))
+tissue3 = ((tpm_img, 3), 2, (True, False), (False, False))
+tissue4 = ((tpm_img, 4), 3, (False, False), (False, False))
+tissue5 = ((tpm_img, 5), 4, (False, False), (False, False))
+tissue6 = ((tpm_img, 6), 2, (False, False), (False, False))
+tissues = [tissue1, tissue2, tissue3, tissue4, tissue5, tissue6]
+
+segmentation = Node(NewSegment(tissues=tissues, write_deformation_fields=[True, True]), name="segmentation")
+
+nan = float('nan')
 
 #normalization
-norm_write = Node(Normalize(), name = "norm_write")
+norm_write = Node(Normalize12(), name = "norm_write")
 norm_write.inputs.jobtype = 'write'
-norm_write.inputs.write_bounding_box = [[-90, -126, -72], [91, 91, 109]]
-norm_write.inputs.write_voxel_sizes = [2, 2, 2]
+norm_write.inputs.write_bounding_box = [[nan, nan, nan], [nan, nan, nan]]
 
 #datasink
 datasink = Node(DataSink(base_directory=out_dir),
@@ -145,8 +157,9 @@ cl_preproc.connect([
 	(selectfiles, coreg_pet, [('func', 'source')]),
 	(selectfiles, coreg_pet, [('func', 'apply_to_files')]),
 	(coreg_mr, coreg_pet, [('coregistered_files', 'target')]),
-	(coreg_mr, segmentation, [('coregistered_files', 'data')]),
-	(segmentation, norm_write, [('transformation_mat', 'parameter_file')]),
+	(coreg_mr, segmentation, [('coregistered_files', 'channel_files')]),
+	(segmentation, norm_write, [('forward_deformation_field', 'deformation_file')]),
+	#(coreg_pet, norm_write, [('coregistered_files', 'image_to_align')]),
 	(coreg_pet, norm_write, [('coregistered_files', 'apply_to_files')]),
 	(coreg_mr, datasink, [('coregistered_files', 'normalized_mr1')]),
 	(coreg_pet, datasink, [('coregistered_files', 'normalized_pet1')]),
@@ -168,8 +181,12 @@ for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
 	#apply masks
 	pet_mni = f'{out_dir}/normalized_final/{subject}/wrreorient_pet.nii'
 	
-	ctx_masked = masking.apply_mask(pet_mni, ctx_voi)
-	wcbm_masked = masking.apply_mask(pet_mni, wcbm_voi)
+	# Resample the mask to match the image affine
+	resampled_ctx_voi = resample_to_img(ctx_voi, pet_mni, interpolation='nearest')
+	resampled_wcbm_voi = resample_to_img(wcbm_voi, pet_mni, interpolation='nearest')
+	
+	ctx_masked = masking.apply_mask(pet_mni, resampled_ctx_voi)
+	wcbm_masked = masking.apply_mask(pet_mni, resampled_wcbm_voi)
 	
 	# Calculate the mean uptake in the VOIs
 	mean_uptake_voi = ctx_masked.mean()
