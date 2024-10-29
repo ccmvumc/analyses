@@ -12,7 +12,7 @@ inputs:
   xnat:
     subjects:
         assessors:
-          - types: fmri_conn_roi_DM2_v1
+          - types: fmri_conn_Schaefer200_DM2_v1
             resources:
               - resource: CONN
 pre:
