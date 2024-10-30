@@ -18,7 +18,6 @@ os.makedirs(out_dir)
 nib.save(atlas_ni, f'{out_dir}/atlasni.nii.gz')
 atlas=f'{out_dir}/atlasni.nii.gz'
 fixed = ants.image_read(atlas)
-
 #set cerebellum label
 cerebellum_label = 6
 
@@ -26,8 +25,9 @@ for subject in sorted(os.listdir(in_dir)):
 	if subject.startswith('.'):
 		# ignore hidden files and other junk
 		continue
-	if subject.startswith('covariates'):
-		# ignore covariates csv
+	
+	if subject.startswith('covariate'):
+		# ignore hidden files and other junk
 		continue
 
 	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_v4*')[0]
@@ -88,3 +88,4 @@ for subject in sorted(os.listdir(in_dir)):
 	
 	# Save the cerebellum mask
 	cerebellum_mask.to_filename(f'{subject_out}/cerebellum_mask_deep_atropos.nii.gz')
+
