@@ -84,6 +84,7 @@ for subject in sorted(os.listdir(in_dir)):
 		direction=segmentation['segmentation_image'].direction
 	)
 	
+	cerebellum_mask = cerebellum_mask.astype(bool)
 	cerebellum_mask = binary_dilation(cerebellum_mask)
 	
 	# Save the cerebellum mask

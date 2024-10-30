@@ -201,6 +201,7 @@ thresholded_map_sexage, threshold_sexage = threshold_stats_img(z_map_sexage,
 # Generate design matrix control for sex 
 unpaired_design_matrix = pd.DataFrame({
 	"Amyloid": amyloid
+	})
 
 # second level model
 second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
