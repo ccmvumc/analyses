@@ -44,7 +44,7 @@ for subject in trcds_img_paths:
 	
 print(f'DS subject order: {subject_list_trcds}')
 
-subject_list_control=[]
+subjects_array = np.array(subject_list_trcds)
 
 #set signficant thresholds for different tests
 #significance (p-val) for initial test at cluster threshold 50
@@ -70,9 +70,9 @@ _, _, _, subjects_ds = trcds_img.shape
 
 #import sex variables and check order matches order of image imports
 centiloid_df = pd.read_csv('/INPUTS/covariates.csv')
-centiloid_df['id'] = centiloid_df['id'].astype(all_subs_array.dtype)
+centiloid_df['id'] = centiloid_df['id'].astype(subjects_array.dtype)
 centiloid_df_sorted = centiloid_df.set_index('id')
-centiloid_df_sorted = centiloid_df_sorted.loc[all_subs_array]
+centiloid_df_sorted = centiloid_df_sorted.loc[subjects_array]
 
 sex_all, sex_all_key = pd.factorize(centiloid_df_sorted['dems_sex'])
 age = sex_df_sorted['dems_age'].astype(float)
