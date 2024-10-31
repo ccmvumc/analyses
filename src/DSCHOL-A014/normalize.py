@@ -76,6 +76,8 @@ for subject in sorted(os.listdir(in_dir)):
 	cerebellum_mask_data = (segmentation['segmentation_image'].numpy() == cerebellum_label).astype(int)
 	
 	
+	cerebellum_mask_data = binary_dilation(cerebellum_mask_data)
+	
 	# Re-create the cerebellum mask image with correct spatial metadata
 	cerebellum_mask = ants.from_numpy(
 		cerebellum_mask_data,
@@ -84,7 +86,6 @@ for subject in sorted(os.listdir(in_dir)):
 		direction=segmentation['segmentation_image'].direction
 	)
 	
-	cerebellum_mask = cerebellum_mask.astype('uint8')
 	cerebellum_mask = binary_dilation(cerebellum_mask)
 	
 	# Save the cerebellum mask

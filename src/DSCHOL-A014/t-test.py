@@ -75,14 +75,14 @@ centiloid_df_sorted = centiloid_df.set_index('id')
 centiloid_df_sorted = centiloid_df_sorted.loc[subjects_array]
 
 sex_all, sex_all_key = pd.factorize(centiloid_df_sorted['dems_sex'])
-age = sex_df_sorted['dems_age'].astype(float)
+age = centiloid_df_sorted['dems_age'].astype(float)
 amyloid, amyloid_key = pd.factorize(centiloid_df_sorted['group'])
 
 print(amyloid)
 print(amyloid_key)
 
 print("Covariates loaded")
-print(sex_df_sorted)
+print(centiloid_df_sorted)
 
 
 # Generate design matrix control for sex 
