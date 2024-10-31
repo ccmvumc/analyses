@@ -86,8 +86,6 @@ for subject in sorted(os.listdir(in_dir)):
 		direction=segmentation['segmentation_image'].direction
 	)
 	
-	cerebellum_mask = binary_dilation(cerebellum_mask)
-	
 	# Save the cerebellum mask
 	cerebellum_mask.to_filename(f'{subject_out}/cerebellum_mask_deep_atropos.nii.gz')
 
