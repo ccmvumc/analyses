@@ -1,7 +1,7 @@
 ---
 containers:
   - name: CONN
-    path: all_conn_rsfc_v1.3.0.sif
+    path: all_conn_rsfc_v1.2.0.sif
   - name: ANALYSES
     path: ccmvumc_analyses_v2.sif
     source: docker://bud42/ccmvumc_analyses:v2
