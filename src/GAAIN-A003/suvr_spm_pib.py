@@ -16,13 +16,13 @@ from antspynet import brain_extraction
 from nipype.interfaces.matlab import MatlabCommand
 MatlabCommand.set_default_paths('/Users/jasonrussell/Documents/MATLAB/spm12')
 
-if not os.path.exists('/Users/jasonrussell/Documents/OUTPUTS/gaain_A002'):
-	os.mkdir('/Users/jasonrussell/Documents/OUTPUTS/gaain_A002')
+if not os.path.exists('/Users/jasonrussell/Documents/OUTPUTS/gaain_A003/pib'):
+	os.mkdir('/Users/jasonrussell/Documents/OUTPUTS/gaain_A003/pib')
 else:
 	print('Directory exists, continue')
 
-in_dir = '/Users/jasonrussell/Documents/INPUTS/gaain_A002'
-out_dir = '/Users/jasonrussell/Documents/OUTPUTS/gaain_A002'
+in_dir = '/Users/jasonrussell/Documents/INPUTS/gaain_A003'
+out_dir = '/Users/jasonrussell/Documents/OUTPUTS/gaain_A003'
 atlas = f'{in_dir}/atlases/avg152T1.nii'
 ctx_voi = f'{in_dir}/atlases/voi_ctx_2mm.nii'
 wcbm_voi = f'{in_dir}/atlases/voi_WhlCbl_2mm.nii'
@@ -33,7 +33,7 @@ mni = ants.image_read(atlas)
 subject_list = []
 
 
-for subject in sorted(os.listdir(f'{in_dir}/scans')):
+for subject in sorted(os.listdir(out_dir)):
 		if subject.startswith('.'):
 			# ignore hidden files and other junk
 			continue
@@ -53,29 +53,33 @@ for subject in sorted(os.listdir(f'{in_dir}/scans')):
 		if subject.startswith('pib'):
 			continue
 		
-		
 		subject_list.append(subject)
 		
-		subject_amyloid = glob.glob(f'{out_dir}/{subject}/mean_pet.nii.gz')[0]
-		subject_mr = glob.glob(f'{in_dir}/scans/{subject}/MR/*MPRAGE*')[0]
-		
+		subject_amyloid = f'{out_dir}/{subject}/pib/mean_pet_pib.nii.gz'
+		subject_mr = glob.glob(f'{out_dir}/{subject}/mr/*mr.nii')[0]
+	
 		print('Amyloid:', subject_amyloid)
-		
-		subject_out = f'{out_dir}/{subject}'
+	
+		subject_out = f'{out_dir}/pib/{subject}'
 		
 		if not os.path.exists(subject_out):
 			os.mkdir(subject_out)
 		else:
 			print('Directory exists, continue')
-		
+	
 		# Get full file path to input images
 		orig_file = subject_mr
 		amyloid_file = subject_amyloid
 		
-		
 		# Skull Strip Original T1 and mask
 		raw = ants.image_read(orig_file)
 		raw_pet = ants.image_read(amyloid_file)
+		
+		# Skull Strip Original T1
+		#extracted_mask = brain_extraction(raw, modality='t1')
+		
+		#Apply mask with skull stripped
+		#masked_image = ants.mask_image(raw, extracted_mask)
 		
 		moving = raw
 		
@@ -96,6 +100,7 @@ for subject in sorted(os.listdir(f'{in_dir}/scans')):
 		ants.image_write(warped_amyloid, warped_amyloid_file)
 		
 
+
 infosource = Node(IdentityInterface(fields=['subject_id']), name="infosource")
 infosource.iterables = [('subject_id', subject_list)]
 
@@ -106,9 +111,11 @@ templates = {
 	'anat': anat_file,
 	'func': func_file
 	}
+	
+base_dir = f'{out_dir}/pib'
 
 selectfiles = Node(SelectFiles(templates, 
-							   base_directory= out_dir),
+							   base_directory= base_dir),
 				   name="selectfiles")
 
 
@@ -133,11 +140,11 @@ norm_write.inputs.write_bounding_box = [[nan, nan, nan], [nan, nan, nan]]
 norm_write.inputs.write_voxel_sizes = [2, 2, 2]
 
 #datasink
-datasink = Node(DataSink(base_directory=out_dir),
+datasink = Node(DataSink(base_directory=f'{out_dir}/pib'),
 				name = 'datasink')
 
 #make workflow
-cl_preproc = Workflow(name='cl_preproc', base_dir = out_dir)
+cl_preproc = Workflow(name='cl_preproc', base_dir = f'{out_dir}/pib')
 
 cl_preproc.connect([
 	(infosource, selectfiles, [('subject_id', 'subject_id')]),
@@ -165,9 +172,9 @@ cl_preproc.write_graph(graph2use='exec', format='png', simple_form=False)
 # suvr_value = ctx_stats.result.outputs.out_stat / wcbm_stats.result.outputs.out_stat
 output_df = pd.DataFrame(columns=['ID', 'SUVR'])
 
-for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
+for subject in sorted(os.listdir(f'{out_dir}/pib/normalized_final')):
 	#apply masks
-	pet_mni = f'{out_dir}/normalized_final/{subject}/wrreorient_pet.nii'
+	pet_mni = f'{out_dir}/pib/normalized_final/{subject}/wrreorient_pet.nii'
 	
 	ctx_masked = masking.apply_mask(pet_mni, ctx_voi)
 	wcbm_masked = masking.apply_mask(pet_mni, wcbm_voi)
@@ -178,20 +185,20 @@ for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
 	
 	suvr = mean_uptake_voi/mean_uptake_ref
 	
-	subject_name = subject.split('_')[-1]
+	subject_name = subject.split('_subject_id_')[1]
 	row = [subject_name, suvr]
 	
 	output_df.loc[len(output_df)] = row
 	
 # Generate pdf report
-pdf_filename = f"{out_dir}/report.pdf"
+pdf_filename = f"{out_dir}/pib/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
-	for subject in sorted(os.listdir(f'{out_dir}/normalized_final')):
+	for subject in sorted(os.listdir(f'{out_dir}/pib/normalized_final')):
 		fig, axs = plt.subplots(3, 1, figsize=(10,14))
-		subject_name = subject.split('_')[-1]
+		subject_name = subject.split('_subject_id_')[1]
 		
-		img = image.load_img(f'{out_dir}/normalized_final/{subject}/wrreorient_pet.nii')
+		img = image.load_img(f'{out_dir}/pib/normalized_final/{subject}/wrreorient_pet.nii')
 		
 		plotting.plot_roi(
 			img,
@@ -219,6 +226,6 @@ with PdfPages(pdf_filename) as pdf:
 		pdf.savefig(fig, dpi=300)
 		plt.close(fig)
 	
-output_df.to_csv(f'{out_dir}/standard_centiloid_suvrs.csv', index=False)
+output_df.to_csv(f'{out_dir}/pib_centiloid_suvrs.csv', index=False)
 
 
