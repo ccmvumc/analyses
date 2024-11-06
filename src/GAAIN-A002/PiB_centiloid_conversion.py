@@ -21,7 +21,7 @@ out_dir = '/Users/jasonrussell/Documents/OUTPUTS/gaain_A002'
 
 #: Import CSV
 suvr_df = pd.read_csv("standard_centiloid_suvrs.csv")
-pib_gaain_df  = pd.read_csv("/Users/jasonrussell/Documents/Covariates for pipelines/GAAIN-A002-centiloid_calculation/covariates.csv")
+pib_gaain_df  = pd.read_csv("/Users/jasonrussell/Documents/Covariates for pipelines/GAAIN-A002-centiloid_calculation/gaain_validation.csv")
 
 #Split df to young and AD
 pib_hc_df = pib_gaain_df[pib_gaain_df['ID'].str.contains('YC')].copy()
