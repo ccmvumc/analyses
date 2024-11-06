@@ -43,9 +43,6 @@ if [ -f "/OUTPUTS/covariates.mat" ]; then
 
 	rm /OUTPUTS/xvfb.*
 
-	# Create the contrasts file
-	python /REPO/src/CONN/make_contrasts.py
-
 	# Run the results
 	echo "Running 2nd level contrasts in CONN"
 	xvfb-run \

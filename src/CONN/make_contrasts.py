@@ -1,5 +1,7 @@
-import scipy.io
+import glob
 import os
+
+import scipy.io
 import pandas as pd
 import numpy as np
 
@@ -24,12 +26,14 @@ groups = [x for x in columns if x.startswith('GROUP_')]
 print(f'{groups=}')
 
 # load conditions
-m = loadmat(f'{ROOTDIR}/results/preprocessing/_list_conditions.mat')
+_file = glob.glob('/OUTPUTS/*/conn_project/results/preprocessing/_list_conditions.mat')[0]
+m = loadmat(_file)
 conditions = [x[0] for x in m['allnames'][0]]
 print(f'{conditions=}')
 
 # load regions
-m = loadmat(f'{ROOTDIR}/results/firstlevel/SBC_01/_list_sources.mat')
+_file = glob.glob('/OUTPUTS/*/conn_project/results/firstlevel/SBC_01/_list_sources.mat')[0]
+m = loadmat(_file)
 sources =  [x[0] for x in m['sourcenames'][0]]
 print(f'{sources=}')
 
