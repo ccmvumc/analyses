@@ -63,7 +63,7 @@ contrasts.append({
         'between_subjects': {
             'effect_names': ['SEX_M', 'SEX_F'],
             'contrast': [1, -1],
-        }
+        },
         'between_conditions': {
             'effect_names': conditions[0:1],
             'contrast': [1],
