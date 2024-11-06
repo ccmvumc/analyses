@@ -12,6 +12,14 @@ mat = {}
 # Load subject data
 df = pd.read_csv(CSVFILE)
 
+if os.path.exists('/OUTPUTS/subjects.txt'):
+    # Load subjects
+    with open(f'{ROOTDIR}/subjects.txt', 'r') as f:
+        subjects = f.read().splitlines()
+    
+    # Filter by subject list    
+    df = df[df.ID.isin(subjects)]
+
 # Mean center age
 df['AGE'] = df['AGE'].astype(float)
 df['AGE'] = (df['AGE'] - df['AGE'].mean()) / df['AGE'].std()
