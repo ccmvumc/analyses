@@ -36,11 +36,13 @@ print(f'{sources=}')
 # Compare groups
 contrasts.append({
     'Results': {
+        'done': 1,
+        'overwrite': 1,
         'analysis_number': [1],
         'between_subjects': {
             'effect_names': groups[0:2],
             'contrast': [1, -1],
-        }
+        },
         'between_conditions': {
             'effect_names': conditions[0:1],
             'contrast': [1],
