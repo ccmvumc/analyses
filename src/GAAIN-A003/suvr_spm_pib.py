@@ -140,11 +140,11 @@ norm_write.inputs.write_bounding_box = [[nan, nan, nan], [nan, nan, nan]]
 norm_write.inputs.write_voxel_sizes = [2, 2, 2]
 
 #datasink
-datasink = Node(DataSink(base_directory=f'{out_dir}/pib'),
+datasink = Node(DataSink(base_directory=base_dir),
 				name = 'datasink')
 
 #make workflow
-cl_preproc = Workflow(name='cl_preproc', base_dir = f'{out_dir}/pib')
+cl_preproc = Workflow(name='cl_preproc', base_dir = base_dir)
 
 cl_preproc.connect([
 	(infosource, selectfiles, [('subject_id', 'subject_id')]),

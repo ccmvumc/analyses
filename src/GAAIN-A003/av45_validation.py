@@ -21,11 +21,11 @@ os.chdir(data_path)
 #: Import CSV
 pib_gaain_df = pd.read_csv("pib_centiloid_suvrs.csv")
 fbp_gaain_df = pd.read_csv("av45_centiloid_suvrs.csv")
-validation_df = pd.read_csv("/Users/jasonrussell/Documents/Covariates for pipelines/GAAIN-A001-centiloid_validation/covariates.csv")
+validation_df = pd.read_csv("/Users/jasonrussell/Documents/Covariates for pipelines/GAAIN-A003-av45_validation/covariates.csv")
 
 #Split df to young and AD
-pib_hc_df = pib_gaain_df[pib_gaain_df['ID'].str.contains('YC')].copy()
-pib_AD_df = pib_gaain_df[pib_gaain_df['ID'].str.contains('AD')].copy()
+pib_hc_df = validation_df[validation_df['ID'].str.contains('YC')].copy()
+pib_AD_df = validation_df[validation_df['ID'].str.contains('AD')].copy()
 
 # Average SUVR for HC
 hc_mean_suvr = pib_hc_df["SUVR"].mean()
@@ -43,17 +43,17 @@ print(f"Healthy control mean SUVr: {hc_mean_suvr} \nAD mean SUVr: {AD_mean_suvr}
 CLs=[]
 
 #Calculate individual CL values
-for index, row in pib_gaain_df.iterrows():
+for index, row in validation_df.iterrows():
     cl = 100 * (row['SUVR'] - hc_mean_suvr) / ad_hc_dif
     CLs.append(cl)
     
-pib_gaain_df["Calculated CLs"]=CLs
-pib_gaain_df["Klunk CLs"] = validation_df["Cls"]
+validation_df["Calculated CLs"]=CLs
+
 
 # Plot individual CL values against SUVR and establish slope (0.98<c<1.02), intercept (-2<m<2), and R2>0.98
-fig = sns.lmplot(data=pib_gaain_df, x="Klunk CLs", y="Calculated CLs")
-slope, intercept, r_value, p_value, std_err = stats.linregress(pib_gaain_df['Klunk CLs'],pib_gaain_df['Calculated CLs'])
-coefficient_of_dermination = r2_score(pib_gaain_df["Calculated CLs"], pib_gaain_df['Klunk CLs'])
+fig = sns.lmplot(data=validation_df, x="Klunk CLs", y="Calculated CLs")
+slope, intercept, r_value, p_value, std_err = stats.linregress(validation_df['Klunk CLs'],validation_df['Calculated CLs'])
+coefficient_of_dermination = r2_score(validation_df["Calculated CLs"], validation_df['Klunk CLs'])
 
 plt.annotate(f"Slope (target: 0.98<c<1.02) = {np.round(slope, 5)}",
              xy=(50, 5), xycoords='axes points', fontsize=8, color='red')
