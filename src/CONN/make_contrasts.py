@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 
-COVFILE = '/OUTPUTS/covariates.txt'
+COVFILE = '/OUTPUTS/covariates.csv'
 OUTFILE = '/OUTPUTS/contrasts.mat'
 mat = {}
 contrasts = []
