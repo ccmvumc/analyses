@@ -6,9 +6,8 @@ import pandas as pd
 import numpy as np
 
 
-ROOTDIR = '/OUTPUTS/conn'
+COVFILE = '/OUTPUTS/covariates.txt'
 OUTFILE = '/OUTPUTS/contrasts.mat'
-COVFILE = '/OUTPUTS/covariates.mat'
 mat = {}
 contrasts = []
 groups = []
