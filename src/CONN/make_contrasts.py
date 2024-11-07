@@ -108,6 +108,65 @@ batch_data = np.array([
     (group_contrast)
 ], dtype=dtype)
 
+
+conn_batch = {
+    "Results": np.array([
+        {
+            "between_subjects": {
+                "effect_names": np.array(["GROUP_Depress", "GROUP_Control"], dtype=object),
+                "contrast": np.array([1, -1])
+            },
+            "conditions": {
+                "effect_names": np.array(["rest-Baseline"], dtype=object),
+                "contrast": np.array([1])
+            },
+            "analysis_number": np.array([1]),
+            "overwrite": np.array([True]),
+            "done": np.array([1])
+        },
+        {
+            "between_subjects": {
+                "effect_names": np.array(["SEX_M", "SEX_F"], dtype=object),
+                "contrast": np.array([1, -1])
+            },
+            "conditions": {
+                "effect_names": np.array(["rest-Baseline"], dtype=object),
+                "contrast": np.array([1])
+            },
+            "analysis_number": np.array([1]),
+            "overwrite": np.array([True]),
+            "done": np.array([1])
+        },
+        {
+            "between_subjects": {
+                "effect_names": np.array(["AGE"], dtype=object),
+                "contrast": np.array([1])
+            },
+            "conditions": {
+                "effect_names": np.array(["rest-Baseline"], dtype=object),
+                "contrast": np.array([1])
+            },
+            "analysis_number": np.array([1]),
+            "overwrite": np.array([True]),
+            "done": np.array([1])
+        },
+        {
+            "between_subjects": {
+                "effect_names": np.array(["GROUP_Depress", "GROUP_Control", "AGE"], dtype=object),
+                "contrast": np.array([1, -1, 0.5])
+            },
+            "conditions": {
+                "effect_names": np.array(["rest-Baseline"], dtype=object),
+                "contrast": np.array([1])
+            },
+            "analysis_number": np.array([1]),
+            "overwrite": np.array([True]),
+            "done": np.array([1])
+        }
+    ], dtype=object)
+}
+
 # Create file
-mat['contrasts'] = batch_data
+#mat['contrasts'] = batch_data
+mat['contrasts'] = conn_batch
 savemat(OUTFILE, mat)
