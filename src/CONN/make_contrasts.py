@@ -25,11 +25,10 @@ conditions = []
 
 # Load subject data
 df = pd.read_csv(COVFILE)
-columns = df.columns
-print(columns)
 
 # Find groups
-groups = [x for x in columns if x.startswith('GROUP_')]
+groups = df.GROUP.unique()
+groups = [f'GROUP_{x}' for x in groups]
 print(f'{groups=}')
 
 # load conditions
