@@ -4,7 +4,7 @@ import os, shutil
 
 subjects = [x for x in os.listdir('/INPUTS') if os.path.isdir(f'/INPUTS/{x}')]
 
-for subj in subjects:
+for subj in sorted(subjects):
     print(f'Prep {subj}')
 
     subj_dir = f'/OUTPUTS/{subj}'
