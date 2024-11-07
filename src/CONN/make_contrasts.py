@@ -47,18 +47,18 @@ print(f'{sources=}')
 group_contrast = {
     'done': 1,
     'overwrite': 1,
-    'analysis_number': [1],
+    'analysis_number': 1,
     'between_subjects': {
         'effect_names': np.array(groups[0:2], dtype=object),
-        'contrast': [1, -1],
+        'contrast': np.array([1, -1], dtype=np.double),
     },
     'between_conditions': {
         'effect_names': np.array(conditions[0:1], dtype=object),
-        'contrast': [1],
+        'contrast': np.array([1], dtype=np.double),
     },
     'between_sources': {
         'effect_names': np.array(sources, dtype=object),
-        'contrast': [1],
+        'contrast': np.array([1], dtype=np.double),
     }
 }
 
@@ -66,18 +66,18 @@ group_contrast = {
 sex_contrast = {
     'done': 1,
     'overwrite': 1,
-    'analysis_number': [2],
+    'analysis_number': 2
     'between_subjects': {
         'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
-        'contrast': [1, -1],
+        'contrast': np.array([1, -1], type=np.double),
     },
     'between_conditions': {
         'effect_names': np.array(conditions[0:1], dtype=object),
-        'contrast': [1],
+        'contrast':  np.array([1], dtype=np.double),
     },
     'between_sources': {
         'effect_names': np.array(sources, dtype=object),
-        'contrast': [1],
+        'contrast': np.array([1], dtype=np.double),
     }
 }
 
@@ -85,18 +85,18 @@ sex_contrast = {
 age_contrast = {
     'done': 1,
     'overwrite': 1,
-    'analysis_number': [3],
+    'analysis_number':  3,
     'between_subjects': {
         'effect_names': np.array(['AGE'], dtype=object),
-        'contrast': [1],
+        'contrast': np.array([1], dtype=np.double),
     },
     'between_conditions': {
         'effect_names': np.array(conditions[0:1], dtype=object),
-        'contrast': [1],
+        'contrast': np.array([1], dtype=np.double),
     },
     'between_sources': {
         'effect_names': np.array(sources, dtype=object),
-        'contrast': [1],
+        'contrast': np.array([1], dtype=np.double),
     }
 }
 
