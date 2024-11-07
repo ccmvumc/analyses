@@ -16,4 +16,4 @@ for subj in subjects:
     with zipfile.ZipFile(subj_zip, "r") as z:
         z.extractall(subj_dir)
 
-    shutil.copyfile(subj_mat, subj_dir)
+    shutil.copy(subj_mat, subj_dir)
