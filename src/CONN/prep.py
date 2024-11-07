@@ -8,8 +8,8 @@ for subj in subjects:
     print(f'Prep {subj}')
 
     subj_dir = f'/OUTPUTS/{subj}'
-    subj_mat = glob('/INPUTS/{subj}/assessors/*/*/CONN/conn_project.mat')[0]
-    subj_zip = glob('/INPUTS/{subj}/assessors/*/*/CONN/conn_project.zip')[0]
+    subj_mat = glob(f'/INPUTS/{subj}/assessors/*/*/CONN/conn_project.mat')[0]
+    subj_zip = glob(f'/INPUTS/{subj}/assessors/*/*/CONN/conn_project.zip')[0]
 
     os.makedirs(subj_dir, exist_ok=True)
 
