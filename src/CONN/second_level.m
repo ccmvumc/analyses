@@ -2,7 +2,9 @@ clear batch;
 fileoutput='/OUTPUTS/conn.mat';
 
 % Load from .mat file into results
-load('/OUTPUTS/contrasts.mat')
+%load('/OUTPUTS/contrasts.mat')
+%batch = contrasts;
+load('/REPO/src/CONN/test/batch.mat')
 
 %batch.filename = fileoutput;
 %batch.Results.between_subjects.effect_names = ;
@@ -12,7 +14,6 @@ load('/OUTPUTS/contrasts.mat')
 %batch.Results.between_sources.effect_names = ;
 %batch.Results.between_sources.contrast = ;
 
-batch = contrasts;
 disp(batch);
 
 conn_batch(batch);
