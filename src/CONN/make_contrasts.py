@@ -166,6 +166,22 @@ conn_batch = {
     ], dtype=object)
 }
 
+# Convert each Results dictionary to a structured array
+conn_batch["Results"] = np.array([{
+    "between_subjects": {
+        "effect_names": r["between_subjects"]["effect_names"],
+        "contrast": r["between_subjects"]["contrast"]
+    },
+    "conditions": {
+        "effect_names": r["conditions"]["effect_names"],
+        "contrast": r["conditions"]["contrast"]
+    },
+    "analysis_number": r["analysis_number"],
+    "overwrite": r["overwrite"],
+    "done": r["done"]
+} for r in conn_batch["Results"]], dtype=object)
+
+
 # Create file
 #mat['contrasts'] = batch_data
 mat['contrasts'] = conn_batch
