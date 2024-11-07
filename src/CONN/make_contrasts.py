@@ -6,13 +6,21 @@ import pandas as pd
 import numpy as np
 
 
-COVFILE = '/OUTPUTS/covariates.csv'
+COVFILE = '/INPUTS/covariates.csv'
 OUTFILE = '/OUTPUTS/contrasts.mat'
 mat = {}
 contrasts = []
 groups = []
 sources = []
 conditions = []
+
+
+# TODO: handle 3 group comparison by adding B vs C, A vs C, and f test
+# TODO: site effects
+# TODO: control for site, sex, age
+# TODO: multiple sources
+# TODO: age only
+# TODO: multiple conditions
 
 
 # Load subject data
@@ -77,6 +85,29 @@ contrasts.append({
         }
     }
 })
+
+
+# Age only
+contrasts.append({
+    'Results': {
+        'done': 1,
+        'overwrite': 1,
+        'analysis_number': [3],
+        'between_subjects': {
+            'effect_names': ['AGE'],
+            'contrast': [1],
+        },
+        'between_conditions': {
+            'effect_names': conditions[0:1],
+            'contrast': [1],
+        },
+        'between_sources': {
+            'effect_names': sources,
+            'contrast': [1],
+        }
+    }
+})
+
 
 mat['contrasts'] = contrasts
 
