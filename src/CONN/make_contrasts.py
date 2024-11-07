@@ -1,9 +1,9 @@
 import glob
 import os
 
-import scipy.io
 import pandas as pd
 import numpy as np
+from scipy.io import loadmat, savemat
 
 
 COVFILE = '/INPUTS/covariates.csv'
@@ -112,4 +112,4 @@ contrasts.append({
 mat['contrasts'] = contrasts
 
 # Create file
-scipy.io.savemat(OUTFILE, mat)
+savemat(OUTFILE, mat)

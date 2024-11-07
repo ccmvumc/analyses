@@ -1,6 +1,6 @@
 import zipfile
 from glob import glob
-import os
+import os, shutil
 
 subjects = [x for x in os.listdir('/INPUTS') if os.path.isdir(f'/INPUTS/{x}')]
 
