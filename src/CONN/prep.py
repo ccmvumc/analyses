@@ -2,8 +2,9 @@ import zipfile
 from glob import glob
 import os
 
+subjects = [x for x in os.listdir('/INPUTS') if os.path.isdir(f'/INPUTS/{x}')]
 
-for subj in filter(os.path.isdir, os.listdir('/INPUTS')):
+for subj in subjects:
     print(f'Prep {subj}')
 
     subj_dir = f'/OUTPUTS/{subj}'
