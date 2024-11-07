@@ -66,7 +66,7 @@ group_contrast = {
 sex_contrast = {
     'done': 1,
     'overwrite': 1,
-    'analysis_number': 2
+    'analysis_number': 2,
     'between_subjects': {
         'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
         'contrast': np.array([1, -1], type=np.double),
