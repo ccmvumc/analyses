@@ -1,11 +1,4 @@
-# copy to outputs, unzip the conn projects
-cd /INPUTS
-for i in */;do
-	echo $i
-	mkdir /OUTPUTS/$i
-	unzip /INPUTS/${i}assessors/*/*/CONN/conn_project.zip -d /OUTPUTS/${i}
-	cp /INPUTS/${i}assessors/*/*/CONN/conn_project.mat /OUTPUTS/${i}
-done
+python /REPO/src/CONN/prep.py
 
 # Make mat files for covariates and contrasts
 if [ -f "/INPUTS/covariates.csv" ]; then
