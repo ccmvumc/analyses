@@ -69,7 +69,7 @@ sex_contrast = {
     'analysis_number': 2,
     'between_subjects': {
         'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
-        'contrast': np.array([1, -1], type=np.double),
+        'contrast': np.array([1, -1], dtype=np.double),
     },
     'between_conditions': {
         'effect_names': np.array(conditions[0:1], dtype=object),
