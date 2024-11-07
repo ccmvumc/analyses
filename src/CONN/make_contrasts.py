@@ -44,71 +44,70 @@ sources =  [x[0] for x in m['sourcenames'][0]]
 print(f'{sources=}')
 
 # Compare groups
-contrasts.append({
-    'Results': {
-        'done': 1,
-        'overwrite': 1,
-        'analysis_number': [1],
-        'between_subjects': {
-            'effect_names': groups[0:2],
-            'contrast': [1, -1],
-        },
-        'between_conditions': {
-            'effect_names': conditions[0:1],
-            'contrast': [1],
-        },
-        'between_sources': {
-            'effect_names': sources,
-            'contrast': [1],
-        }
+group_contrast = {
+    'done': 1,
+    'overwrite': 1,
+    'analysis_number': [1],
+    'between_subjects': {
+        'effect_names': np.array(groups[0:2], dtype=object),
+        'contrast': [1, -1],
+    },
+    'between_conditions': {
+        'effect_names': np.array(conditions[0:1], dtype=object),
+        'contrast': [1],
+    },
+    'between_sources': {
+        'effect_names': np.array(sources, dtype=object),
+        'contrast': [1],
     }
-})
+}
 
 # Compare sexes
-contrasts.append({
-    'Results': {
-        'done': 1,
-        'overwrite': 1,
-        'analysis_number': [2],
-        'between_subjects': {
-            'effect_names': ['SEX_M', 'SEX_F'],
-            'contrast': [1, -1],
-        },
-        'between_conditions': {
-            'effect_names': conditions[0:1],
-            'contrast': [1],
-        },
-        'between_sources': {
-            'effect_names': sources,
-            'contrast': [1],
-        }
+sex_contrast = {
+    'done': 1,
+    'overwrite': 1,
+    'analysis_number': [2],
+    'between_subjects': {
+        'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
+        'contrast': [1, -1],
+    },
+    'between_conditions': {
+        'effect_names': np.array(conditions[0:1], dtype=object),
+        'contrast': [1],
+    },
+    'between_sources': {
+        'effect_names': np.array(sources, dtype=object),
+        'contrast': [1],
     }
-})
-
+}
 
 # Age only
-contrasts.append({
-    'Results': {
-        'done': 1,
-        'overwrite': 1,
-        'analysis_number': [3],
-        'between_subjects': {
-            'effect_names': ['AGE'],
-            'contrast': [1],
-        },
-        'between_conditions': {
-            'effect_names': conditions[0:1],
-            'contrast': [1],
-        },
-        'between_sources': {
-            'effect_names': sources,
-            'contrast': [1],
-        }
+age_contrast = {
+    'done': 1,
+    'overwrite': 1,
+    'analysis_number': [3],
+    'between_subjects': {
+        'effect_names': np.array(['AGE'], dtype=object),
+        'contrast': [1],
+    },
+    'between_conditions': {
+        'effect_names': np.array(conditions[0:1], dtype=object),
+        'contrast': [1],
+    },
+    'between_sources': {
+        'effect_names': np.array(sources, dtype=object),
+        'contrast': [1],
     }
-})
+}
 
-
-mat['contrasts'] = contrasts
+# Build the batch in a format that will load correctly in matlab
+dtype = [('Results', 'O')]
+batch_data = np.array([
+    (sex_contrast),
+    (age_contrast), 
+    (group_contrast)
+], dtype=dtype)
 
 # Create file
+mat['contrasts'] = batch_data
 savemat(OUTFILE, mat)
