@@ -4,9 +4,9 @@ clear batch;
 load('/OUTPUTS/contrasts.mat');
 disp(contrasts);
 
-% Create batch
+% Create batch for seed 2 voxel type
 batch = contrasts;
-batch.Analysis.measure = 1;
+batch.Analysis.type = 2;
 batch.filename = '/OUTPUTS/conn.mat';
 disp(batch);
 
