@@ -4,7 +4,7 @@
 fileoutput='/OUTPUTS/conn.mat';
 
 % Load all conn.mat
-dirfiles = dir('/OUTPUTS/**/conn_project.mat')
+dirfiles = dir('/OUTPUTS/**/conn_project.mat');
 
 % Get a list of full paths
 fileinputs = fullfile({dirfiles.folder}, {dirfiles.name});
