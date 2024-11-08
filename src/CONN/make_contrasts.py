@@ -55,7 +55,7 @@ group_contrast = {
         'contrast': np.array([1], dtype=np.double),
     },
     'between_sources': {
-        'effect_names': np.array(sources, dtype=object),
+        'effect_names': np.array(sources[0:1], dtype=object),
         'contrast': np.array([1], dtype=np.double),
     }
 }
@@ -72,7 +72,7 @@ sex_contrast = {
         'contrast':  np.array([1], dtype=np.double),
     },
     'between_sources': {
-        'effect_names': np.array(sources, dtype=object),
+        'effect_names': np.array(sources[0:1], dtype=object),
         'contrast': np.array([1], dtype=np.double),
     }
 }
@@ -89,7 +89,7 @@ age_contrast = {
         'contrast': np.array([1], dtype=np.double),
     },
     'between_sources': {
-        'effect_names': np.array(sources, dtype=object),
+        'effect_names': np.array(sources[0:1], dtype=object),
         'contrast': np.array([1], dtype=np.double),
     }
 }
