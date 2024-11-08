@@ -47,7 +47,7 @@ print(f'{sources=}')
 group_contrast = {
     'done': 1,
     'overwrite': 1,
-    'analysis_number': 1,
+    'analysis_number': np.array([1]),
     'between_subjects': {
         'effect_names': np.array(groups[0:2], dtype=object),
         'contrast': np.array([1, -1], dtype=np.double),
@@ -61,6 +61,8 @@ group_contrast = {
         'contrast': np.array([1], dtype=np.double),
     }
 }
+print(group_contrast)
+
 
 # Compare sexes
 sex_contrast = {
@@ -103,9 +105,9 @@ age_contrast = {
 # Build the batch in a format that will load correctly in matlab
 dtype = [('Results', 'O')]
 batch_data = np.array([
-    (sex_contrast),
-    (age_contrast), 
-    (group_contrast)
+    #(sex_contrast),
+    #(age_contrast), 
+    group_contrast
 ], dtype=dtype)
 
 # Create file
