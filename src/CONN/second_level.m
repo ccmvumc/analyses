@@ -21,8 +21,8 @@ for i=1:length(filelist)
     h = conn_display(mat_file, 1, 1);
 
     % Print views
-    conn_display(h, 'volume_print', ['/OUTPUTS/volume_print-' num2str(i)  '.pdf']);        
-    conn_display(h, 'slice_print', ['/OUTPUTS/slice_print-' num2str(i) '.pdf']);
+    conn_display(h, 'volume_print', ['/OUTPUTS/volume_print-' num2str(i)  '.png']);        
+    conn_display(h, 'slice_print', ['/OUTPUTS/slice_print-' num2str(i) '.png']);
 
     % close it
     disp('closing display');
