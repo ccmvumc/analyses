@@ -23,6 +23,7 @@ for i=1:length(filelist)
 
     % Load result, contrast 1, presets 1
     % presets of 1 is CONN default for volume-based
+    disp('open display');
     h = conn_display(mat_file, 1, 1);
 
     % Print views
@@ -30,4 +31,6 @@ for i=1:length(filelist)
     conn_display(h, 'slice_print', ['/OUTPUTS/slice_print-' num2str(i) '.pdf']);
 
     % close it
+    disp('closing display');
     conn_display(h, 'close');
+end
