@@ -66,7 +66,7 @@ group_contrast = {
 sex_contrast = {
     'done': 1,
     'overwrite': 1,
-    'analysis_number': 2,
+    'analysis_number': 1,
     'between_subjects': {
         'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
         'contrast': np.array([1, -1], dtype=np.double),
@@ -85,10 +85,10 @@ sex_contrast = {
 age_contrast = {
     'done': 1,
     'overwrite': 1,
-    'analysis_number':  3,
+    'analysis_number':  1,
     'between_subjects': {
-        'effect_names': np.array(['AGE'], dtype=object),
-        'contrast': np.array([1], dtype=np.double),
+        'effect_names': np.array(['AllSubjects', 'AGE'], dtype=object),
+        'contrast': np.array([0, 1], dtype=np.double),
     },
     'between_conditions': {
         'effect_names': np.array(conditions[0:1], dtype=object),
@@ -108,81 +108,6 @@ batch_data = np.array([
     (group_contrast)
 ], dtype=dtype)
 
-
-conn_batch = {
-    "Results": np.array([
-        {
-            "between_subjects": {
-                "effect_names": np.array(["GROUP_Depress", "GROUP_Control"], dtype=object),
-                "contrast": np.array([1, -1])
-            },
-            "conditions": {
-                "effect_names": np.array(["rest-Baseline"], dtype=object),
-                "contrast": np.array([1])
-            },
-            "analysis_number": np.array([1]),
-            "overwrite": np.array([True]),
-            "done": np.array([1])
-        },
-        {
-            "between_subjects": {
-                "effect_names": np.array(["SEX_M", "SEX_F"], dtype=object),
-                "contrast": np.array([1, -1])
-            },
-            "conditions": {
-                "effect_names": np.array(["rest-Baseline"], dtype=object),
-                "contrast": np.array([1])
-            },
-            "analysis_number": np.array([1]),
-            "overwrite": np.array([True]),
-            "done": np.array([1])
-        },
-        {
-            "between_subjects": {
-                "effect_names": np.array(["AGE"], dtype=object),
-                "contrast": np.array([1])
-            },
-            "conditions": {
-                "effect_names": np.array(["rest-Baseline"], dtype=object),
-                "contrast": np.array([1])
-            },
-            "analysis_number": np.array([1]),
-            "overwrite": np.array([True]),
-            "done": np.array([1])
-        },
-        {
-            "between_subjects": {
-                "effect_names": np.array(["GROUP_Depress", "GROUP_Control", "AGE"], dtype=object),
-                "contrast": np.array([1, -1, 0.5])
-            },
-            "conditions": {
-                "effect_names": np.array(["rest-Baseline"], dtype=object),
-                "contrast": np.array([1])
-            },
-            "analysis_number": np.array([1]),
-            "overwrite": np.array([True]),
-            "done": np.array([1])
-        }
-    ], dtype=object)
-}
-
-# Convert each Results dictionary to a structured array
-conn_batch["Results"] = np.array([{
-    "between_subjects": {
-        "effect_names": r["between_subjects"]["effect_names"],
-        "contrast": r["between_subjects"]["contrast"]
-    },
-    "conditions": {
-        "effect_names": r["conditions"]["effect_names"],
-        "contrast": r["conditions"]["contrast"]
-    },
-    "analysis_number": r["analysis_number"],
-    "overwrite": r["overwrite"],
-    "done": r["done"]
-} for r in conn_batch["Results"]], dtype=object)
-
-
 # Create file
-#mat['contrasts'] = batch_data
-mat['contrasts'] = conn_batch
+mat['contrasts'] = batch_data
 savemat(OUTFILE, mat)
