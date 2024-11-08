@@ -45,65 +45,83 @@ print(f'{sources=}')
 
 # Compare groups
 group_contrast = {
+    'filename': '/OUTPUTS/conn.mat',
     'done': 1,
-    'between_subjects': {
-        'effect_names': np.array(groups[0:2], dtype=object),
-        'contrast': np.array([1, -1], dtype=np.double),
+    'Analysis': {
+        'type': 2,
     },
-    'between_conditions': {
-        'effect_names': np.array(conditions[0:1], dtype=object),
-        'contrast': np.array([1], dtype=np.double),
-    },
-    'between_sources': {
-        'effect_names': np.array(sources[0:1], dtype=object),
-        'contrast': np.array([1], dtype=np.double),
+    'Results': {
+        'between_subjects': {
+            'effect_names': np.array(groups[0:2], dtype=object),
+            'contrast': np.array([1, -1], dtype=np.double),
+        },
+        'between_conditions': {
+            'effect_names': np.array(conditions[0:1], dtype=object),
+            'contrast': np.array([1], dtype=np.double),
+        },
+        'between_sources': {
+            'effect_names': np.array(sources[0:1], dtype=object),
+            'contrast': np.array([1], dtype=np.double),
+        }
     }
-}
+}   
 
 # Compare sexes
 sex_contrast = {
-    'done': 1,
-    'between_subjects': {
-        'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
-        'contrast': np.array([1, -1], dtype=np.double),
+    'filename': '/OUTPUTS/conn.mat',
+    'Analysis': {
+        'type': 2,
     },
-    'between_conditions': {
-        'effect_names': np.array(conditions[0:1], dtype=object),
-        'contrast':  np.array([1], dtype=np.double),
-    },
-    'between_sources': {
-        'effect_names': np.array(sources[0:1], dtype=object),
-        'contrast': np.array([1], dtype=np.double),
+    'Results': {
+        'done': 1,
+        'between_subjects': {
+            'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
+            'contrast': np.array([1, -1], dtype=np.double),
+        },
+        'between_conditions': {
+            'effect_names': np.array(conditions[0:1], dtype=object),
+            'contrast':  np.array([1], dtype=np.double),
+        },
+        'between_sources': {
+            'effect_names': np.array(sources[0:1], dtype=object),
+            'contrast': np.array([1], dtype=np.double),
+        }
     }
 }
 
 # Age only
 age_contrast = {
-    'done': 1,
-    'between_subjects': {
-        'effect_names': np.array(['AllSubjects', 'AGE'], dtype=object),
-        'contrast': np.array([0, 1], dtype=np.double),
+    'filename': '/OUTPUTS/conn.mat',
+    'Analysis': {
+        'type': 2,
     },
-    'between_conditions': {
-        'effect_names': np.array(conditions[0:1], dtype=object),
-        'contrast': np.array([1], dtype=np.double),
-    },
-    'between_sources': {
-        'effect_names': np.array(sources[0:1], dtype=object),
-        'contrast': np.array([1], dtype=np.double),
+    'Results': {
+        'done': 1,
+        'between_subjects': {
+            'effect_names': np.array(['AllSubjects', 'AGE'], dtype=object),
+            'contrast': np.array([0, 1], dtype=np.double),
+        },
+        'between_conditions': {
+            'effect_names': np.array(conditions[0:1], dtype=object),
+            'contrast': np.array([1], dtype=np.double),
+        },
+        'between_sources': {
+            'effect_names': np.array(sources[0:1], dtype=object),
+            'contrast': np.array([1], dtype=np.double),
+        }
     }
 }
 
 # Build the batch in a format that will load correctly in matlab
-dtype = [('Results', 'O')]
+#dtype = [('Results', 'O')]
 batch_data = np.array([
     sex_contrast,
     age_contrast, 
     group_contrast
-], dtype=dtype)
+])
 
 print(batch_data)
 
 # Create file
-mat['contrasts'] = batch_data
+mat['batch'] = batch_data
 savemat(OUTFILE, mat)
