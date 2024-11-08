@@ -18,7 +18,7 @@ filelist = dir(fullfile('/OUTPUTS/conn/results/secondlevel', '**', 'SPM.mat'));
 
 % Load and save each
 for i=1:length(filelist)
-    matfile = fullfile(filelist(i).folder, 'SPM.mat'));
+    matfile = fullfile(filelist(i).folder, 'SPM.mat');
     disp(mat_file);
 
     % Load result, contrast 1, presets 1
