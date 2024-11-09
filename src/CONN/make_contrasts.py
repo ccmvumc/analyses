@@ -18,8 +18,6 @@ conditions = []
 # TODO: handle 3 group comparison by adding B vs C, A vs C, and f test
 # TODO: site effects
 # TODO: control for site, sex, age
-# TODO: multiple sources
-# TODO: age only
 # TODO: multiple conditions
 
 
@@ -43,85 +41,45 @@ m = loadmat(_file)
 sources =  [x[0] for x in m['sourcenames'][0]]
 print(f'{sources=}')
 
-# Compare groups
-group_contrast = {
-    'filename': '/OUTPUTS/conn.mat',
-    'done': 1,
-    'Analysis': {
-        'type': 2,
-    },
-    'Results': {
-        'between_subjects': {
-            'effect_names': np.array(groups[0:2], dtype=object),
-            'contrast': np.array([1, -1], dtype=np.double),
-        },
-        'between_conditions': {
-            'effect_names': np.array(conditions[0:1], dtype=object),
-            'contrast': np.array([1], dtype=np.double),
-        },
-        'between_sources': {
-            'effect_names': np.array(sources[0:1], dtype=object),
-            'contrast': np.array([1], dtype=np.double),
-        }
-    }
-}   
 
-# Compare sexes
-sex_contrast = {
-    'filename': '/OUTPUTS/conn.mat',
-    'Analysis': {
-        'type': 2,
-    },
-    'Results': {
+def make_contrast(subjects, subjectc, conditions, conditionc, sources, sourcec):
+    return {
+        'filename': '/OUTPUTS/conn.mat',
         'done': 1,
-        'between_subjects': {
-            'effect_names': np.array(['SEX_M', 'SEX_F'], dtype=object),
-            'contrast': np.array([1, -1], dtype=np.double),
-        },
-        'between_conditions': {
-            'effect_names': np.array(conditions[0:1], dtype=object),
-            'contrast':  np.array([1], dtype=np.double),
-        },
-        'between_sources': {
-            'effect_names': np.array(sources[0:1], dtype=object),
-            'contrast': np.array([1], dtype=np.double),
+        'Analysis': {'type': 2},
+        'Results': {
+            'between_subjects': {
+                'effect_names': np.array(subjects, dtype=object),
+                'contrast': np.array(subjectc, dtype=np.double),
+            },
+            'between_conditions': {
+                'effect_names': np.array(conditions, dtype=object),
+                'contrast': np.array(conditionc, dtype=np.double),
+            },
+            'between_sources': {
+                'effect_names': np.array(sources, dtype=object),
+                'contrast': np.array(sourcec, dtype=np.double),
+            }
         }
     }
-}
-
-# Age only
-age_contrast = {
-    'filename': '/OUTPUTS/conn.mat',
-    'Analysis': {
-        'type': 2,
-    },
-    'Results': {
-        'done': 1,
-        'between_subjects': {
-            'effect_names': np.array(['AllSubjects', 'AGE'], dtype=object),
-            'contrast': np.array([0, 1], dtype=np.double),
-        },
-        'between_conditions': {
-            'effect_names': np.array(conditions[0:1], dtype=object),
-            'contrast': np.array([1], dtype=np.double),
-        },
-        'between_sources': {
-            'effect_names': np.array(sources[0:1], dtype=object),
-            'contrast': np.array([1], dtype=np.double),
-        }
-    }
-}
 
 # Build the batch in a format that will load correctly in matlab
-#dtype = [('Results', 'O')]
-batch_data = np.array([
-    sex_contrast,
-    age_contrast, 
-    group_contrast
-])
+batch_data = [
+    make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
+    make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
+    make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+
+    make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:1], [1]),
+    make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[1:2], [1]),
+    make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+
+    make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
+    make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
+    make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+]
 
 print(batch_data)
 
 # Create file
-mat['batch'] = batch_data
+mat['batch'] = np.array(batch_data)
 savemat(OUTFILE, mat)
