@@ -27,9 +27,6 @@ for i=1:length(filelist)
     disp('slice_print');
     conn_display(h, 'slice_print', fullfile(filelist(i).folder, 'slice_print.png'));
 
-    disp('glass_print');
-    conn_display(h, 'glass_print', fullfile(filelist(i).folder, 'glass_print.png'));
-
     % close it
     disp('closing display');
     conn_display(h, 'close');
