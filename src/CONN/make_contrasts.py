@@ -65,14 +65,23 @@ def make_contrast(subjects, subjectc, conditions, conditionc, sources, sourcec):
 
 # Build the batch in a format that will load correctly in matlab
 batch_data = [
+    # Main effect
+    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:1], [1]),
+    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[1:2], [1]),
+    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:2], [1, -1]),
+
+    # Group comparison
     make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
     make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
     make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
 
+    # Age effect
     make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:1], [1]),
     make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[1:2], [1]),
     make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
 
+    # Sex comparison
     make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
     make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
     make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
