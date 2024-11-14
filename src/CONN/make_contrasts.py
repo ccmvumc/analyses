@@ -29,6 +29,9 @@ groups = df.GROUP.unique()
 groups = [f'GROUP_{x}' for x in groups]
 print(f'{groups=}')
 
+# Sexes
+sexes = df.SEX.unique()
+
 # load conditions
 _file = glob.glob('/OUTPUTS/*/conn_project/results/preprocessing/_list_conditions.mat')[0]
 m = loadmat(_file)
@@ -103,7 +106,7 @@ batch_data.extend([
 ])
 
 # Sex comparison
-if df['SEX_M'].sum() > 0 and df['SEX_F'].sum() > 0:
+if len(sexes) > 1:
     batch_data.extend([
         make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
         make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
