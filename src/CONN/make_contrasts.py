@@ -15,7 +15,7 @@ sources = []
 conditions = []
 batch_data = []
 
-# TODO: handle 3 group comparison by adding B vs C, A vs C, and f test
+
 # TODO: site effects
 # TODO: control for site, sex, age
 # TODO: multiple conditions
@@ -74,11 +74,13 @@ batch_data.extend([
 ])
 
 # Group comparison
-batch_data.extend([
-    make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
-    make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
-    make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-])
+if len(groups) > 1:
+    batch_data.extend([
+        make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
+        make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
+        make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+    ])
+
 if len(groups) > 2:
     _groups = [group[0], group[2]]
     batch_data.extend([
