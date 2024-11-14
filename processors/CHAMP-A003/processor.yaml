@@ -1,8 +1,8 @@
 ---
 containers:
   - name: CONN
-    path: all_conn_rsfc_v1.4.0.sif
-    source: docker://bud42/all_conn_rsfc:v1.4.0
+    path: all_conn_rsfc_v1.2.0.sif
+    source: docker://bud42/all_conn_rsfc:v1.2.0
   - name: ANALYSES
     path: ccmvumc_analyses_v2.sif
     source: docker://bud42/ccmvumc_analyses:v2
