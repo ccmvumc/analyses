@@ -50,7 +50,7 @@ dilerodil_mask = binary_dilation(dilero_mask)
 dilerodilero_mask = binary_erosion(dilerodil_mask)
 
 mask_nii = new_img_like(
-    'DST3050001/smoothed_warped_FEOBV.nii.gz', dilerodilero_mask.astype(int)
+    '2001/smoothed_warped_FEOBV.nii.gz', dilerodilero_mask.astype(int)
 )
 
 nib.save(mask_nii, "WB_Brain_mask_prob0_3.nii")
