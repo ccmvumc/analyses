@@ -13,7 +13,7 @@ contrasts = []
 groups = []
 sources = []
 conditions = []
-
+batch_data = []
 
 # TODO: handle 3 group comparison by adding B vs C, A vs C, and f test
 # TODO: site effects
@@ -64,28 +64,48 @@ def make_contrast(subjects, subjectc, conditions, conditionc, sources, sourcec):
     }
 
 # Build the batch in a format that will load correctly in matlab
-batch_data = [
-    # Main effect
+
+# Main effect
+batch_data.extend([
     make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:1], [1]),
     make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[1:2], [1]),
     make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
     make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:2], [1, -1]),
+])
 
-    # Group comparison
+# Group comparison
+batch_data.extend([
     make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
     make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
     make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+])
+if len(groups) > 2:
+    _groups = [group[0], group[2]]
+    batch_data.extend([
+        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:1], [1]),
+        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[1:2], [1]),
+        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+    ])
+    _groups = [group[1], group[2]]
+    batch_data.extend([
+        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:1], [1]),
+        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[1:2], [1]),
+        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+    ])
 
-    # Age effect
+# Age effect
+batch_data.extend([
     make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:1], [1]),
     make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[1:2], [1]),
     make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
+])
 
-    # Sex comparison
+# Sex comparison
+batch_data.extend([
     make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
     make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
     make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-]
+])
 
 print(batch_data)
 
