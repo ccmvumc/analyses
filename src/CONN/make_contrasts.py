@@ -85,13 +85,13 @@ if len(groups) > 1:
     ])
 
 if len(groups) > 2:
-    _groups = [group[0], group[2]]
+    _groups = [groups[0], groups[2]]
     batch_data.extend([
         make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:1], [1]),
         make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[1:2], [1]),
         make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
     ])
-    _groups = [group[1], group[2]]
+    _groups = [groups[1], groups[2]]
     batch_data.extend([
         make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:1], [1]),
         make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[1:2], [1]),
