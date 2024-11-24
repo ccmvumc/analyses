@@ -18,7 +18,7 @@ inputs:
 pre:
   type: singularity_exec
   container: ANALYSES
-  args: bash /REPO/src/CONN/merge-pre.sh
+  args: bash /REPO/src/CONN/merge-pre-roi_only.sh
 command:
   type: singularity_exec
   container: CONN
