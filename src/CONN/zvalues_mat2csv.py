@@ -2,7 +2,7 @@ import pandas as pd
 from scipy.io import loadmat
 
 # Outputs csv file with these columns:
-#id,condition,region1,region2,zvalue
+#id,condition,region1num,region2num,region1name,region2name,zvalue
 
 ROOTDIR = '/OUTPUTS'
 data = []
@@ -13,7 +13,15 @@ conditions = [x[0] for x in m['allnames'][0]]
 
 # load regions
 m = loadmat(f'{ROOTDIR}/conn/results/firstlevel/SBC_01/_list_sources.mat')
-sources =  [x[0] for x in m['sourcenames'][0]]
+if len(m['sourcenames'][0]) > 0:
+    sources = [x[0] for x in m['sourcenames'][0]]
+else:
+    # Load from main conn mat file 
+    m = loadmat(f'{ROOTDIR}/conn.mat')
+    sources = m['CONN_x']['Analyses'][0][0][0][0]['sources']
+    sources = [x[0] for x in sources[0]]
+
+print(f'{sources=}')
 
 # Load subjects
 with open(f'{ROOTDIR}/subjects.txt', 'r') as f:
