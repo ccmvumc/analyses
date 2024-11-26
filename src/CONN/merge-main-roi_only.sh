@@ -15,7 +15,7 @@ for i in */;do
 	echo $i
 
     # Append to subject list    
-    echo ${j} >> /OUTPUTS/subjects.txt
+    echo ${i} >> /OUTPUTS/subjects.txt
 
 	rm -r /OUTPUTS/${i}
 done
