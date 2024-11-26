@@ -1,0 +1,26 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.sif
+    source: docker://bud42/ccmvumc_analyses:v2
+requirements:
+  walltime: 0-8
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      assessors:
+        - types: ABCDS_FS7long_e1e2e3_v1
+          resources:
+          - resource: SUBJECTS
+        - types: ABCDS_FS7long_e1e2_v1
+          resources:
+          - resource: SUBJECTS
+        - types: ABCDS_FS7long_e1e3_v1
+          resources:
+          - resource: SUBJECTS
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: /bin/bash -c 'mkdir /OUTPUTS/SUBJECTS && cp -r /INPUTS/* /OUTPUTS/SUBJECTS'
+description: FreeSurfer longitudinal
