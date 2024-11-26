@@ -13,7 +13,9 @@ conditions = [x[0] for x in m['allnames'][0]]
 
 # load regions
 m = loadmat(f'{ROOTDIR}/conn/results/firstlevel/SBC_01/_list_sources.mat')
-if len(m['sourcenames'][0]) > 0:
+if len(m['sourcenames']) > 0:
+    print(m['sourcenames'])
+    print(m['sourcenames'][0])
     sources = [x[0] for x in m['sourcenames'][0]]
 else:
     # Load from main conn mat file 
