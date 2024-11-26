@@ -14,8 +14,8 @@ cd /INPUTS
 for i in */;do
 	echo $i
 
-    # Append to subject list    
-    echo ${i} >> /OUTPUTS/subjects.txt
+    # Append to subject list (removing last character slash)
+    echo ${i%?} >> /OUTPUTS/subjects.txt
 
 	rm -r /OUTPUTS/${i}
 done
