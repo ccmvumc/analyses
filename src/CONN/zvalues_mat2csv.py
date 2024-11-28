@@ -44,13 +44,17 @@ for i, c in enumerate(conditions):
                 if n1 == n2:
                     continue
 
+                if n1.startswith('Schaefer') and n2.startswith('Schaefer') and n1[8:11] != n2[8:11]:
+                    # Exclude cross-atlas Schaefer
+                    continue
+
                 data.append({
                     'id': subject,
                     'condition': c,
-                    'region1num': j,
-                    'region2num': k,
-                    'region1name': names1[j],
-                    'region2name': names2[k],
+                    'r1num': j,
+                    'r2num': k,
+                    'r1name': names1[j],
+                    'r2name': names2[k],
                     'zvalue': m['Z'][j][k][s]
                 })
 
