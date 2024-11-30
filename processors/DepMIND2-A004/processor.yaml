@@ -7,12 +7,12 @@ containers:
     source: docker://bud42/ccmvumc_analyses:v2
 requirements:
   walltime: 2-0
-  memory: 8G
+  memory: 32G
 inputs:
   xnat:
     subjects:
         assessors:
-          - types: fmri_conn_DM2_v3
+          - types: fmri_conn_DM2_v4
             resources:
               - resource: CONN
 pre:
