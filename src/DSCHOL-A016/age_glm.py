@@ -85,7 +85,7 @@ mask_path = 'WB_Brain_mask_prob0_3.nii'
 second_level_model_sex = SecondLevelModel(
 	mask_img=mask_path, n_jobs=1
 )
-second_level_model_sex = second_level_model.fit(
+second_level_model_sex = second_level_model_sex.fit(
 	FEOBV_img_paths, design_matrix=design_matrix_sex)
 
 
