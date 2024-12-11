@@ -121,6 +121,8 @@ thresholded_map, threshold = threshold_stats_img(t_map,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
+print(f't-score threshold:{threshold}')
+
 # Save the thresholded t-map to a NIfTI file
 thresholded_map.to_filename(
 	'thresholded_groupwise_comparison_t_map.nii')
@@ -129,6 +131,8 @@ thresholded_map.to_filename(
 thresholded_map_fdr, threshold_fdr = threshold_stats_img(
     t_map, alpha=fdr_threshold, height_control="fdr"
 )
+
+print(f'fdr corrected t-score threshold:{threshold_fdr}')
 
 thresholded_map.to_filename(
 	'fdr_thresholded_groupwise_comparison_t_map.nii')
@@ -144,12 +148,12 @@ with PdfPages(pdf_filename) as pdf:
 	
 	plotting.plot_stat_map(
 		thresholded_map,
-		threshold=threshold_1,
+		threshold=threshold,
 		colorbar=True,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = f"Threshold t-scores p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"Threshold t-scores p < {threshold_1}, cluster size 50 (t-score thres: {threshold})",
 		axes=axs[0]
 	)
 	
