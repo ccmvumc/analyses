@@ -134,7 +134,7 @@ thresholded_map_fdr, threshold_fdr = threshold_stats_img(
 
 print(f'fdr corrected t-score threshold:{threshold_fdr}')
 
-thresholded_map.to_filename(
+thresholded_map_fdr.to_filename(
 	'fdr_thresholded_groupwise_comparison_t_map.nii')
 
 
