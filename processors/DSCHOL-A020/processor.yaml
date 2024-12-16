@@ -1,0 +1,29 @@
+---
+containers:
+  - name: FS7
+    path: freesurfer_7.2.0.sif
+    source: docker://freesurfer/freesurfer:7.2.0
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.sif
+    source: docker://bud42/ccmvumc_analyses:v2
+requirements:
+  walltime: 0-8
+  memory: 16G
+inputs:
+  xnat:
+    subjects:
+      assessors:
+        - types: FEOBVQA_USC_NOPVC_v4
+          resources:
+          - resource: SUBJ
+            fmatch: stats/lh.aparc.stats,stats/rh.aparc.stats,stats/aseg.stats,stats/gtmseg.stats,gtmpvc.esupravwm.output/rinput.rescaled.nii.gz,mri/gtmseg.mgz
+pre:
+  type: singularity_exec
+  container: ANALYSES
+  args: /bin/bash /REPO/src/DSCHOL-A020/pre.sh
+command:
+  type: singularity_exec
+  container: FS7
+  args: /bin/bash /REPO/src/DSCHOL-A020/main.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
+description: Project-level summary stats
