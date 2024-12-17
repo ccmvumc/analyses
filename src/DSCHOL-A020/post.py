@@ -43,6 +43,6 @@ for s in glob.glob(f'{ROOTDIR}/DATA/SUBJECTS/*'):
 
 # Sort and save
 df = df.sort_values(['SUBJECT', 'ROI'])
-df.to_csv(f'{ROOTDIR}/all.csv', index=False)
+df.to_csv(f'{ROOTDIR}/stats.csv', index=False)
 
 print('DONE!')
