@@ -21,7 +21,7 @@ def load_subject(subj_dir):
     df = dfg[['ROI', 'SUVR-GTM']]
 
     # Append the column for nopvc, we know it sorted the same
-    df['SUVR-NOPVC'] = dfn['SUVR-NOPVC']j
+    df['SUVR-NOPVC'] = dfn['SUVR-NOPVC']
 
     # Merge in the volumes
     df = df.merge(dfv, on='ROI')
