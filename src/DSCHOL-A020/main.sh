@@ -2,24 +2,22 @@ export SUBJECTS_DIR=/OUTPUTS/DATA/SUBJECTS
 
 cd $SUBJECTS_DIR
 
-# Write stats table for each hemisphere for thickness, volume
-aparcstats2table --skip --delimiter comma --subjectsfile /OUTPUTS/subjects.txt --hemi lh --meas volume --tablefile /OUTPUTS/DATA/aparc.lh.volume.csv
-aparcstats2table --skip --delimiter comma --subjectsfile /OUTPUTS/subjects.txt --hemi rh --meas volume --tablefile /OUTPUTS/DATA/aparc.rh.volume.csv
 
-# Volume stats
-asegstats2table --skip --delimiter comma --subjectsfile /OUTPUTS/subjects.txt --meas volume --tablefile /OUTPUTS/DATA/aseg.volume.csv
+# Get esupravwm volume
+# NOTE: esupravwm is result of this command: mri_binarize --i mri/wmparc.mgz 
+# --match 
+# 3003 3017 3022 3024 3027 3028 3029 3031 4003 4017 4022 4024 4027 4028 4029 4031 \
+# --erode 1 --o esupravwm.nii.gz;
+
+set -x
+
+for i in *;do
+	echo $i
+
+    cd ${SUBJECTS_DIR}/${i}
+
+    mri_segstats --seg esupravwm.nii.gz --i esupravwm.nii.gz --id 1 --sumwf esupravwm.volume.txt
+
+done
 
 echo DONE
-
-
-#mri_segstats --seg <segvol> --annot <subject hemi parc> --slabel <subject hemi label> --sum <file>
-
-#asegstats2table --subjects sub-101 sub-103 --common-segs --meas volume --stats=aseg.stats --table=segstats.txt
-
-#ROI=(supravwm supravwm_eroded cortwm_eroded antflobe latplobe lattlobe antcing postcing compositegm cortwm cblmgm cblmwm)
-#for r in "${ROI[@]}"
-#do
-#    echo -n $r >> $TXT
-#    mri_segstats --seg ROI_${r}.nii.gz --i PET_mcf_meanvol.nii.gz --id 1 --sum ${r}_stats.txt
-#    grep Seg0001 ${r}_stats.txt | awk '{print ","$8","$9","$6","$7","$4}' >> $TXT
-#done

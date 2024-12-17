@@ -16,7 +16,7 @@ inputs:
         - types: FEOBVQA_USC_NOPVC_v4
           resources:
           - resource: SUBJ
-            fmatch: stats/lh.aparc.stats,stats/rh.aparc.stats,stats/aseg.stats,stats/gtmseg.stats,gtmpvc.esupravwm.output/rinput.rescaled.nii.gz,mri/gtmseg.mgz
+            fmatch: stats/gtmseg.stats,gtmpvc.esupravwm.output/nopvc.voxel.txt,gtmpvc.esupravwm.output/gtm.stats.dat,esupravwm.nii.gz
 pre:
   type: singularity_exec
   container: ANALYSES
@@ -26,4 +26,8 @@ command:
   container: FS7
   args: /bin/bash /REPO/src/DSCHOL-A020/main.sh
   extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
+post:
+  type: singularity_exec
+  container: ANALYSES
+  args: python /REPO/src/DSCHOL-A020/post.py
 description: Project-level summary stats
