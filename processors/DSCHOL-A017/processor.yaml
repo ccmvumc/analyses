@@ -17,5 +17,5 @@ inputs:
 command:
   type: singularity_exec
   container: ANALYSES
-  args: /bin/bash /REPO/src/DSCHOL-A006/main.sh
-description: FEOBV T-test
+  args: /bin/bash /REPO/src/DSCHOL-A017/main.sh
+description: agexgroup

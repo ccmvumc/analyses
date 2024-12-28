@@ -13,9 +13,9 @@ inputs:
           - types: FEOBVQA_USC_NOPVC_v4
             resources:
             - resource: SUBJ
-              fmatch: mri/orig.mgz,gtmpvc.esupravwm.output/rbv.nii.gz
+              fmatch: mri/orig.mgz
 command:
   type: singularity_exec
   container: ANALYSES
-  args: /bin/bash /REPO/src/DSCHOL-A006/main.sh
-description: FEOBV T-test
+  args: /bin/bash /REPO/src/DSCHOL-A018/main.sh
+description: FEOBV vs age
