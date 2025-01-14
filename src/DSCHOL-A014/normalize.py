@@ -6,6 +6,7 @@ from antspynet import brain_extraction
 from nilearn import datasets
 import nibabel as nib
 from scipy.ndimage import binary_dilation
+from nilearn import image
 
 
 in_dir = '/INPUTS'
@@ -89,12 +90,25 @@ for subject in sorted(os.listdir(in_dir)):
 	# Save the cerebellum mask
 	cerebellum_mask.to_filename(f'{subject_out}/cerebellum_mask_deep_atropos.nii.gz')
 
-	#mask based on SUVR >1
-	mask = smoothed_feobv > 1
+#mask based on SUVR >1
 
-	masked_smoothed_feobv = ants.mask_image(smoothed_feobv, mask)
+image_paths = [
+	f'{out_dir}/{subject}/smoothed_warped_feobv.nii.gz' for subject in sorted(os.listdir(out_dir))
+	if not subject.startswith('.') and not subject.startswith('covariates')
+]
 
-	masked_smoothed_feobv_file = f'{subject_out}/suvr_masked_smoothed_feobv.nii.gz'
-	ants.image_write(masked_smoothed_feobv, masked_smoothed_feobv_file)
+averaged_feobv = image.mean_img(image_paths)
+
+group_average_image = f'{out_dir}/averaged_feobv.nii.gz'
+averaged_feobv.to_filename(group_average_image)
+
+averaged_data = averaged_feobv.get_fdata()
+mask_data = (averaged_data > 1).astype(int)
+
+# Save the mask as a new NIfTI image
+from nilearn.image import new_img_like
+mask_image = new_img_like(averaged_feobv, mask_data)
+mask_file_path = f'{out_dir}/averaged_feobv_mask.nii.gz'
+mask_image.to_filename(mask_file_path)
 
 

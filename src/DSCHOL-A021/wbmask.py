@@ -49,11 +49,21 @@ dilero_mask = binary_erosion(dil_mask)
 dilerodil_mask = binary_dilation(dilero_mask)
 dilerodilero_mask = binary_erosion(dilerodil_mask)
 
-mask_nii = new_img_like(
-    'DST3050001/smoothed_warped_FEOBV.nii.gz', dilerodilero_mask.astype(int)
+# import averaged FEOBV mask
+feobv_suvr_mask = f'{data_path}/averaged_feobv_mask.nii.gz'
+feobv_suvr_mask_img = nib.load(feobv_suvr_mask)
+
+# convert image to binary image
+feobv_suvr_mask_data = feobv_suvr_mask_img.get_fdata()
+
+# add to average mask
+combined_mask_data = (dilerodilero_mask > 0) & (feobv_suvr_mask_data > 0)
+
+mask_gm_nii = new_img_like(
+    feobv_suvr_mask, combined_mask_data.astype(int)
 )
 
-nib.save(mask_nii, "WB_Brain_mask_prob0_3.nii")
+nib.save(mask_gm_nii, "Brain_mask_prob0_3.nii")
             
 
 
