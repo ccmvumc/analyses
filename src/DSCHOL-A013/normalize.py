@@ -65,3 +65,11 @@ for subject in sorted(os.listdir(in_dir)):
 	smoothed_warped_feobv_file = f'{subject_out}/smoothed_warped_FEOBV.nii.gz'
 	smoothed_feobv = ants.smooth_image(warped_feobv, 3)
 	ants.image_write(smoothed_feobv, smoothed_warped_feobv_file)
+
+	#mask based on SUVR >1
+	mask = smoothed_feobv > 1
+
+	masked_smoothed_feobv = ants.mask_image(smoothed_feobv, mask)
+
+	masked_smoothed_feobv_file = f'{subject_out}/suvr_masked_smoothed_feobv.nii.gz'
+	ants.image_write(masked_smoothed_feobv, masked_smoothed_feobv_file)

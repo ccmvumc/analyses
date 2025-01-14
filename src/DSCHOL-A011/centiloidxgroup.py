@@ -8,7 +8,7 @@ Created on Fri Aug  9 14:06:35 2024
 
 from nilearn import image
 from nilearn.glm.second_level import SecondLevelModel
-from nilearn.glm import threshold_stats_img
+from nilearn.glm import threshold_stats_img, fdr_threshold
 import pandas as pd
 import os
 import numpy as np
@@ -31,6 +31,7 @@ threshold_1 = 0.005
 threshold_non_para = 0.005
 #significance of clusters following non-parametric inference
 cluster_thres = -np.log10(0.05)
+fdr_threshold = 0.05
 
 #set number of permutations for non-parametric inference (10000 when finalized
 # but adds compute time, 500 for running on computer)
@@ -44,15 +45,15 @@ wbmask_path = 'Brain_mask_prob0_3.nii'
 
 # Load PET images
 # DS data image paths
-trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/smoothed_warped_FEOBV.nii.gz') + 
-				   glob.glob('/OUTPUTS/DATA/DSCHOL*/smoothed_warped_FEOBV.nii.gz')
+trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/suvr_masked_smoothed_feobv.nii.gz') +
+				   glob.glob('/OUTPUTS/DATA/DSCHOL*/suvr_masked_smoothed_feobv.nii.gz')
 				   )
 
 trcds_img_paths = sorted(trcds_img_paths)
 
 # Control cohort image paths
 control_img_paths = (
-				   glob.glob('/OUTPUTS/DATA/2*/smoothed_warped_FEOBV.nii.gz')
+				   glob.glob('/OUTPUTS/DATA/2*/suvr_masked_smoothed_feobv.nii.gz')
 				   )
 
 control_img_paths = sorted(control_img_paths)
@@ -130,9 +131,15 @@ thresholded_map, threshold = threshold_stats_img(z_map,
 												 alpha=threshold_1,
 												 cluster_threshold = 50)
 
+thresholded_map_fdr, threshold_fdr = threshold_stats_img(z_map,
+												 alpha=fdr_threshold,
+												 height_control= 'fdr')
+
 # Save the statistical map
 # Save the thresholded z-map to a NIfTI file
 thresholded_map.to_filename(f'{output_path}/centiloid_x_group_z_map.nii')
+
+thresholded_map_fdr.to_filename(f'{output_path}/centiloid_x_group_z_map_fdr_corrected.nii')
 
 #perform glm to extract betas from centiloid associations to understand direction
 #of interaction effect
@@ -207,7 +214,7 @@ pdf_filename = "/OUTPUTS/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
 
-	fig, axs = plt.subplots(3,1, figsize=(10,14))
+	fig, axs = plt.subplots(2,1, figsize=(10,14))
 	
 	plotting.plot_stat_map(
 		thresholded_map,
@@ -221,27 +228,14 @@ with PdfPages(pdf_filename) as pdf:
 	)
 	
 	plotting.plot_stat_map(
-		corrected_map['logp_max_size'],
+		thresholded_map_fdr,
+		threshold=fdr_threshold,
 		colorbar=True,
-		vmax=-np.log10(1 / permutations),
-		threshold = cluster_thres,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster size, p < {cluster_thres} (cluster logP)",
+		title = f"GLM output p < {fdr_threshold}, FDR corrected",
 		axes=axs[1]
-	)
-	
-	plotting.plot_stat_map(
-		corrected_map['logp_max_mass'],
-		colorbar=True,
-		vmax=-np.log10(1 / permutations),
-		threshold = cluster_thres,
-		cut_coords=6,
-		display_mode="x",
-		figure=fig,
-		title = f"GLM output p < {threshold_non_para}, non-parametic inference, cluster mass, p < {cluster_thres} (cluster logP)",
-		axes=axs[2]
 	)
 	
 	fig.suptitle("Group x centiloid interaction", fontsize=16,

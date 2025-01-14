@@ -88,3 +88,11 @@ for subject in sorted(os.listdir(in_dir)):
 	
 	# Save the cerebellum mask
 	cerebellum_mask.to_filename(f'{subject_out}/cerebellum_mask_deep_atropos.nii.gz')
+
+	#mask based on SUVR >1
+	mask = smoothed_feobv > 1
+
+	masked_smoothed_feobv = ants.mask_image(smoothed_feobv, mask)
+
+	masked_smoothed_feobv_file = f'{subject_out}/suvr_masked_smoothed_feobv.nii.gz'
+	ants.image_write(masked_smoothed_feobv, masked_smoothed_feobv_file)
