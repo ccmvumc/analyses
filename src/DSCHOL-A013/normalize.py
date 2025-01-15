@@ -5,6 +5,7 @@ import ants
 from antspynet import brain_extraction
 from nilearn import datasets
 import nibabel as nib
+from nilearn import image
 
 
 in_dir = '/INPUTS'
@@ -65,3 +66,24 @@ for subject in sorted(os.listdir(in_dir)):
 	smoothed_warped_feobv_file = f'{subject_out}/smoothed_warped_FEOBV.nii.gz'
 	smoothed_feobv = ants.smooth_image(warped_feobv, 3)
 	ants.image_write(smoothed_feobv, smoothed_warped_feobv_file)
+
+#mask based on SUVR >1
+
+image_paths = [
+	f'{out_dir}/{subject}/smoothed_warped_feobv.nii.gz' for subject in sorted(os.listdir(out_dir))
+	if not subject.startswith('.') and not subject.startswith('covariates')
+]
+
+averaged_feobv = image.mean_img(image_paths)
+
+group_average_image = f'{out_dir}/averaged_feobv.nii.gz'
+averaged_feobv.to_filename(group_average_image)
+
+averaged_data = averaged_feobv.get_fdata()
+mask_data = (averaged_data > 1).astype(int)
+
+# Save the mask as a new NIfTI image
+from nilearn.image import new_img_like
+mask_image = new_img_like(averaged_feobv, mask_data)
+mask_file_path = f'{out_dir}/averaged_feobv_mask.nii.gz'
+mask_image.to_filename(mask_file_path)

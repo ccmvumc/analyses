@@ -8,7 +8,7 @@ Created on Wed Aug  7 12:59:50 2024
 
 from nilearn import image
 from nilearn.glm.second_level import SecondLevelModel
-from nilearn.glm import threshold_stats_img
+from nilearn.glm import threshold_stats_img, fdr_threshold
 import pandas as pd
 import os
 import numpy as np
@@ -20,8 +20,8 @@ from nilearn.image import new_img_like
 import glob
 
 #image paths - split data to make counts easier later
-trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/smoothed_warped_FEOBV.nii.gz') +
-				   glob.glob('/OUTPUTS/DATA/DSCHOL*/smoothed_warped_FEOBV.nii.gz')
+trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/suvr_masked_smoothed_feobv.nii.gz') +
+				   glob.glob('/OUTPUTS/DATA/DSCHOL*/suvr_masked_smoothed_feobv.nii.gz')
 				   )
 
 trcds_img_paths = sorted(trcds_img_paths)
@@ -49,6 +49,7 @@ subjects_array = np.array(subject_list_trcds)
 #set signficant thresholds for different tests
 #significance (p-val) for initial test at cluster threshold 50
 threshold_1 = 0.005
+fdr_threshold = 0.05
 #significance for voxel-level significance, non-paramteric inference
 #threshold_non_para = 0.001
 #significance of clusters following non-parametric inference
@@ -92,13 +93,30 @@ unpaired_design_matrix_sex = pd.DataFrame({
 	"Intercept:": np.ones(subjects_ds)
 })
 
+# Generate design matrix control for age
+unpaired_design_matrix_age = pd.DataFrame({
+	"Amyloid": amyloid,
+	"Age": age,
+	"Intercept:": np.ones(subjects_ds)
+})
+
 # second level model
 second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
 	trcds_img_paths, design_matrix=unpaired_design_matrix_sex
 	)
 
+# second level model
+second_level_model_age = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
+	trcds_img_paths, design_matrix=unpaired_design_matrix_age
+	)
+
 # calculate contrast
 z_map_sex = second_level_model.compute_contrast(
+	second_level_contrast=[1, 0, 0],
+	output_type="z_score",
+)
+
+z_map_age = second_level_model_age.compute_contrast(
 	second_level_contrast=[1, 0, 0],
 	output_type="z_score",
 )
@@ -108,9 +126,23 @@ thresholded_map_sex, threshold_sex = threshold_stats_img(z_map_sex,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
+thresholded_map_age, threshold_age = threshold_stats_img(z_map_age,
+												 alpha=threshold_1,
+												 cluster_threshold=50)
+
+thresholded_map_age_fdr, threshold_age_fdr = threshold_stats_img(z_map_age,
+												 alpha=fdr_threshold,
+												 height_control= 'fdr')
+
 # Save the thresholded z-map to a NIfTI file
 thresholded_map_sex.to_filename(
 	'thresholded_groupwise_comparison_z_map_sex_corrected.nii')
+
+thresholded_map_age.to_filename(
+	'thresholded_groupwise_comparison_z_map_age_corrected.nii')
+
+thresholded_map_age_fdr.to_filename(
+	'thresholded_groupwise_comparison_z_map_age_fdr_corrected.nii')
 
 #perform non parametric inference
 #corrected_map_sex = non_parametric_inference(
@@ -219,9 +251,19 @@ thresholded_map, threshold = threshold_stats_img(z_map,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
+# Perform statsmap, correct for multiple comparisons
+thresholded_map_fdr, threshold_fdr = threshold_stats_img(z_map,
+												alpha=fdr_threshold,
+												height_control="fdr"
+												)
+
 # Save the thresholded z-map to a NIfTI file
 thresholded_map.to_filename(
 	'thresholded_groupwise_comparison_z_map.nii')
+
+# Save the thresholded fdr corrected z-map to a NIfTI file
+thresholded_map_fdr.to_filename(
+	'thresholded_groupwise_comparison_z_map_fdr.nii')
 
 #perform non parametric inference
 #corrected_map = non_parametric_inference(
@@ -261,24 +303,24 @@ with PdfPages(pdf_filename) as pdf:
 	fig, axs = plt.subplots(3,1, figsize=(10,14))
 	
 	plotting.plot_stat_map(
-		thresholded_map_sexage,
+		thresholded_map_sex,
 		threshold=threshold_1,
 		colorbar=True,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores), sex control",
 		axes=axs[1]
 	)
 	
 	plotting.plot_stat_map(
-		thresholded_map_sexage,
+		thresholded_map_age,
 		threshold=threshold_1,
 		colorbar=True,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores)",
+		title = f"GLM output p < {threshold_1}, cluster size 50 (z-scores), age control",
 		axes=axs[2]
 	)
 	
@@ -296,6 +338,37 @@ with PdfPages(pdf_filename) as pdf:
 	fig.suptitle("Groupwise T-test adjusting for Sex and Age", fontsize=16,
 				 weight='bold')
 	
+	pdf.savefig(fig, dpi=300)
+	plt.close()
+
+	fig, axs = plt.subplots(2, 1, figsize=(10, 14))
+
+	plotting.plot_stat_map(
+		thresholded_map_fdr,
+		threshold=threshold_fdr,
+		colorbar=True,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title=f"GLM output p < {threshold_fdr}, FDR corrected",
+		axes=axs[0]
+	)
+
+	plotting.plot_stat_map(
+		thresholded_map_age_fdr,
+		threshold=threshold_age_fdr,
+		colorbar=True,
+		cut_coords=6,
+		display_mode="x",
+		figure=fig,
+		title=f"GLM output p < {threshold_age_fdr}, age and FDR corrected",
+		axes=axs[1]
+	)
+
+
+	fig.suptitle("Groupwise T-test adjusting for multi-comparisons (FDR)", fontsize=16,
+				 weight='bold')
+
 	pdf.savefig(fig, dpi=300)
 	plt.close()
 	
