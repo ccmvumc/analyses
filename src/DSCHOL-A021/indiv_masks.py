@@ -39,7 +39,12 @@ for subject in sorted(os.listdir(in_dir)):
 	pet = image.load_img(f'/OUTPUTS/DATA/{subject}/smoothed_warped_FEOBV.nii.gz')
 	mr = image.load_img(f'/OUTPUTS/DATA/{subject}/warped_orig.nii.gz')
 	resampled_mr = image.resample_to_img(mr, pet)
-	
+
+	#import cerebellar segmentation
+	cblm = image.load_img(f'/OUTPUTS/DATA/{subject}/cerebellum_mask_deep_atropos.nii.gz')
+
+	#invert
+	inverted_cblm = math_img('1 - img', img=cblm)
 	
 	#apply nilearn mask
 	wb_mask = masking.compute_brain_mask(resampled_mr, mask_type='whole-brain')
@@ -52,11 +57,15 @@ for subject in sorted(os.listdir(in_dir)):
 	inverted_wm_mask = math_img('1 - img', img=wm_mask)
 	
 	whole_brain_without_wm = math_img('img1 * img2', img1=wb_mask, img2=inverted_wm_mask)
+
+	# combine masks
+
+	individual_mask = math_img('img1 * img2', img1=whole_brain_without_wm, img2=inverted_cblm)
 	
 	#output nilearn mask for specific subject for input into study specific mask
 	#script
 	
-	whole_brain_without_wm.to_filename(f'{subject_out}/wbmask.nii.gz')
+	individual_mask.to_filename(f'{subject_out}/wbmask.nii.gz')
 	
 print("Individualized masks generated")
 

@@ -8,7 +8,7 @@ Created on Fri Aug  9 14:06:35 2024
 
 from nilearn import image
 from nilearn.glm.second_level import SecondLevelModel
-from nilearn.glm import threshold_stats_img, fdr_threshold
+from nilearn.glm import threshold_stats_img, fdrthreshold
 import pandas as pd
 import os
 import numpy as np
@@ -31,7 +31,7 @@ threshold_1 = 0.005
 threshold_non_para = 0.005
 #significance of clusters following non-parametric inference
 cluster_thres = -np.log10(0.05)
-fdr_threshold = 0.05
+fdrthreshold = 0.05
 
 #set number of permutations for non-parametric inference (10000 when finalized
 # but adds compute time, 500 for running on computer)
@@ -151,16 +151,16 @@ thresholded_map, threshold = threshold_stats_img(z_map,
 												 cluster_threshold = 50)
 
 thresholded_map_fdr, threshold_fdr = threshold_stats_img(z_map,
-												 alpha=fdr_threshold,
-												 height_control= 'fdr')
+														 alpha=fdrthreshold,
+														 height_control= 'fdr')
 
 thresholded_map_age, threshold_age = threshold_stats_img(z_map_age,
 												 alpha=threshold_1,
 												 cluster_threshold = 50)
 
 thresholded_map_age_fdr, threshold_age_fdr = threshold_stats_img(z_map_age,
-												 alpha=fdr_threshold,
-												 height_control= 'fdr')
+																 alpha=fdrthreshold,
+																 height_control= 'fdr')
 
 # Save the statistical map
 # Save the thresholded z-map to a NIfTI file
@@ -294,12 +294,12 @@ with PdfPages(pdf_filename) as pdf:
 	
 	plotting.plot_stat_map(
 		thresholded_map_fdr,
-		threshold=fdr_threshold,
+		threshold=fdrthreshold,
 		colorbar=True,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = f"GLM output p < {fdr_threshold}, FDR corrected",
+		title = f"GLM output p < {fdrthreshold}, FDR corrected",
 		axes=axs[1]
 	)
 	
@@ -352,12 +352,12 @@ with PdfPages(pdf_filename) as pdf:
 
 	plotting.plot_stat_map(
 		thresholded_map_age_fdr,
-		threshold=fdr_threshold,
+		threshold=fdrthreshold,
 		colorbar=True,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM output, age corrected, p < {fdr_threshold}, FDR corrected",
+		title=f"GLM output, age corrected, p < {fdrthreshold}, FDR corrected",
 		axes=axs[1]
 	)
 

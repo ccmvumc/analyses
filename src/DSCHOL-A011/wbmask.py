@@ -14,6 +14,7 @@ import numpy as np
 from scipy.ndimage import binary_dilation
 from scipy.ndimage import binary_erosion
 import glob
+from nilearn.image import math_img
 
 #Set path where data is stored
 data_path = '/OUTPUTS/DATA'
@@ -49,22 +50,21 @@ dilero_gm_mask = binary_erosion(dil_gm_mask)
 dilerodil_gm_mask = binary_dilation(dilero_gm_mask)
 dilerodilero_gm_mask = binary_erosion(dilerodil_gm_mask)
 
-#import averaged FEOBV mask
+# import averaged FEOBV mask
 feobv_suvr_mask = f'{data_path}/averaged_feobv_mask.nii.gz'
 feobv_suvr_mask_img = nib.load(feobv_suvr_mask)
 
-#convert image to binary image
+# convert image to binary image
 feobv_suvr_mask_data = feobv_suvr_mask_img.get_fdata()
 
-#add to average mask
+# add to average mask
 combined_mask_data = (dilerodilero_gm_mask > 0) & (feobv_suvr_mask_data > 0)
 
 mask_gm_nii = new_img_like(
-	feobv_suvr_mask, combined_mask_data.astype(int)
+    feobv_suvr_mask, combined_mask_data.astype(int)
 )
 
 nib.save(mask_gm_nii, "Brain_mask_prob0_3.nii")
-			
 
 
 
