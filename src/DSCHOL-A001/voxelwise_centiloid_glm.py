@@ -11,7 +11,7 @@ import glob
 from nilearn import image
 from nilearn.glm.second_level import SecondLevelModel
 from nilearn.glm.second_level import non_parametric_inference
-from nilearn.glm import threshold_stats_img
+from nilearn.glm import threshold_stats_img, fdr_threshold
 import pandas as pd
 import os
 import numpy as np
@@ -32,6 +32,8 @@ threshold_1 = 0.005
 threshold_non_para = 0.005
 #significance of clusters following non-parametric inference
 cluster_thres = -np.log10(0.05)
+
+fdrthreshold = 0.05
 
 #set number of permutations for non-parametric inference (10000 when finalized
 # but adds compute time, 500 for running on computer)
@@ -170,6 +172,15 @@ thresholded_map_sexage, threshold_sexage = threshold_stats_img(z_map_sexage,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
+#fdr correct
+thresholded_map_fdr, threshold_fdr = threshold_stats_img(z_map,
+												 alpha=fdr_threshold,
+												 height_control= 'fdr')
+
+thresholded_map_age_fdr, threshold_age_fdr = threshold_stats_img(z_map_age,
+												 alpha=fdr_threshold,
+												 height_control='fdr')
+
 # Save the statistical map
 # Save the thresholded z-map to a NIfTI file
 thresholded_map.to_filename(f'{output_path}/Centiloid_glm_zmap.nii')
@@ -177,28 +188,31 @@ thresholded_map_sex.to_filename(f'{output_path}/Centiloid_glm_zmap_sex.nii')
 thresholded_map_age.to_filename(f'{output_path}/Centiloid_glm_zmap_age.nii')
 thresholded_map_sexage.to_filename(f'{output_path}/Centiloid_glm_zmap_sex+age.nii')
 
+thresholded_map_fdr.to_filename(f'{output_path}/Centiloid_fdr_glm_zmap.nii')
+thresholded_map_age_fdr.to_filename(f'{output_path}/Centiloid_fdr_glm_zmap_age.nii')
+
 #perform non parametric inference
-corrected_map = non_parametric_inference(
-	FEOBV_img_paths,
-	design_matrix=design_matrix,
-	second_level_contrast=[1,0],
-	mask=gmmask_path,
-	n_perm=permutations,
-	two_sided_test=True,
-	n_jobs=1,
-	threshold=threshold_non_para
-	)
+#corrected_map = non_parametric_inference(
+#	FEOBV_img_paths,
+#	design_matrix=design_matrix,
+#	second_level_contrast=[1,0],
+#	mask=gmmask_path,
+#	n_perm=permutations,
+#	two_sided_test=True,
+#	n_jobs=1,
+#	threshold=threshold_non_para
+#	)
 
 # extract cluster significance <0.05
-img_data_non_para = corrected_map['logp_max_size'].get_fdata()
-img_data_non_para[img_data_non_para < cluster_thres] = 0
-img_data_non_para_mask = img_data_non_para != 0
-thresholded_map_np = np.where(img_data_non_para_mask, img_data_non_para, np.nan)
+#img_data_non_para = corrected_map['logp_max_size'].get_fdata()
+#img_data_non_para[img_data_non_para < cluster_thres] = 0
+#img_data_non_para_mask = img_data_non_para != 0
+#thresholded_map_np = np.where(img_data_non_para_mask, img_data_non_para, np.nan)
 
-thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np)
+#thresholded_map_np_ni = new_img_like('DST3050001/smoothed_warped_FEOBV.nii.gz', thresholded_map_np)
 
 # Save non-parametric inference corrected map
-thresholded_map_np_ni.to_filename(f'{output_path}/Centiloid_glm_non_parametric_inference_corrected_logP_map.nii')
+#thresholded_map_np_ni.to_filename(f'{output_path}/Centiloid_glm_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
 pdf_filename = "/OUTPUTS/report.pdf"
@@ -217,27 +231,25 @@ plotting.plot_stat_map(
 )
 
 plotting.plot_stat_map(
-	corrected_map['logp_max_size'],
+	thresholded_map_fdr,
+	threshold=fdrthreshold,
 	colorbar=True,
-	vmax=-np.log10(1 / permutations),
-	threshold = cluster_thres,
 	cut_coords=6,
 	display_mode="x",
 	figure=fig,
-	title = "GLM output p < 0.005, non-parametic inference, cluster size (cluster logP)",
+	title = "GLM output p < 0.05, FDR corrected",
 	axes=axs[1]
 )
 
 plotting.plot_stat_map(
-	corrected_map['logp_max_mass'],
+	thresholded_map_age_fdr,
+	threshold=fdrthreshold,
 	colorbar=True,
-	vmax=-np.log10(1 / permutations),
-	threshold = cluster_thres,
 	cut_coords=6,
 	display_mode="x",
 	figure=fig,
-	title = "GLM output p < 0.005, non-parametic inference, cluster mass (cluster logP)",
-	axes=axs[2]
+	title = "GLM output, age as covariate p < 0.05, FDR corrected",
+	axes=axs[1]
 )
 
 

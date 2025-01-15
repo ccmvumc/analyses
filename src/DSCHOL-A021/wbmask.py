@@ -14,6 +14,7 @@ import numpy as np
 from scipy.ndimage import binary_dilation
 from scipy.ndimage import binary_erosion
 import glob
+from nilearn.image import math_img
 
 #Set path where data is stored
 data_path = '/OUTPUTS/DATA'
@@ -64,7 +65,6 @@ mask_gm_nii = new_img_like(
 )
 
 nib.save(mask_gm_nii, "Brain_mask_prob0_3.nii")
-            
 
 
             

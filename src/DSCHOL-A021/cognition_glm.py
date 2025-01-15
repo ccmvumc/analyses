@@ -29,7 +29,7 @@ output_path = '/OUTPUTS/DATA'
 #significance (p-val) for initial test at cluster threshold 50
 threshold_1 = 0.005
 
-fdr_threshold = 0.05
+fdrthreshold = 0.05
 
 
 # Load fMRI images
@@ -204,56 +204,56 @@ thresholded_map_mcrt, threshold_mcrt = threshold_stats_img(z_map_mcrt,
 												 cluster_threshold=50)
 
 thresholded_map_mcrt_fdr, threshold_mcrt_fdr = threshold_stats_img(z_map_mcrt,
-												 alpha=fdr_threshold,
-												 height_control= 'fdr')
+																   alpha=fdrthreshold,
+																   height_control= 'fdr')
 												 
 thresholded_map_dsmse_total, threshold_dsmse_total = threshold_stats_img(z_map_dsmse_total,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
 thresholded_map_dsmse_total_fdr, threshold_dsmse_total_fdr = threshold_stats_img(z_map_dsmse_total,
-															 alpha=fdr_threshold,
-															 height_control='fdr')
+																				 alpha=fdrthreshold,
+																				 height_control='fdr')
 
 thresholded_map_dsmse_non_memory_composite, threshold_dsmse_non_memory_composite = threshold_stats_img(z_map_dsmse_non_memory_composite,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
 thresholded_map_dsmse_non_memory_composite_fdr, threshold_dsmse_non_memory_composite_fdr = threshold_stats_img(z_map_dsmse_non_memory_composite,
-												 alpha=fdr_threshold,
-												 height_control= 'fdr')
+																											   alpha=fdrthreshold,
+																											   height_control= 'fdr')
 
 thresholded_map_dsmse_memory_composite, threshold_dsmse_memory_composite = threshold_stats_img(z_map_dsmse_memory_composite,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
 thresholded_map_dsmse_memory_composite_fdr, threshold_dsmse_memory_composite_fdr = threshold_stats_img(z_map_dsmse_memory_composite,
-												 alpha=fdr_threshold,
-												 height_control= 'fdr')
+																									   alpha=fdrthreshold,
+																									   height_control= 'fdr')
 
 thresholded_map_stroop_comp, threshold_stroop_comp = threshold_stats_img(z_map_stroop_comp,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
 thresholded_map_stroop_comp_fdr, threshold_stroop_comp_fdr = threshold_stats_img(z_map_stroop_comp,
-												 alpha=fdr_threshold,
-												 height_control= 'fdr')
+																				 alpha=fdrthreshold,
+																				 height_control= 'fdr')
 
 thresholded_map_stroop_time, threshold_stroop_time = threshold_stats_img(z_map_stroop_time,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
 thresholded_map_stroop_time_fdr, threshold_stroop_time_fdr = threshold_stats_img(z_map_stroop_time,
-												 alpha=fdr_threshold,
-												 cluster_threshold='fdr')
+																				 alpha=fdrthreshold,
+																				 cluster_threshold='fdr')
 
 thresholded_map_stroop_error, threshold_stroop_error = threshold_stats_img(z_map_stroop_error,
 												 alpha=threshold_1,
 												 cluster_threshold=50)
 
 thresholded_map_stroop_error_fdr, threshold_stroop_error_fdr = threshold_stats_img(z_map_stroop_error,
-												 alpha=fdr_threshold,
-												 cluster_threshold='fdr')
+																				   alpha=fdrthreshold,
+																				   cluster_threshold='fdr')
 
 # Save the statistical map
 # Save the thresholded z-map to a NIfTI file
@@ -387,7 +387,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM mCRT output p < {fdr_threshold}, FDR corrected",
+		title=f"GLM mCRT output p < {fdrthreshold}, FDR corrected",
 		axes=axs[0]
 	)
 
@@ -398,7 +398,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM DSMSE total output p < {fdr_threshold}, FDR corrected",
+		title=f"GLM DSMSE total output p < {fdrthreshold}, FDR corrected",
 		axes=axs[1]
 	)
 
@@ -409,7 +409,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM DSMSE non-memory output p < {fdr_threshold}, FDR corrected",
+		title=f"GLM DSMSE non-memory output p < {fdrthreshold}, FDR corrected",
 		axes=axs[2]
 	)
 
@@ -428,7 +428,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM DSMSE memory composite, p < {fdr_threshold}, FDR corrected",
+		title=f"GLM DSMSE memory composite, p < {fdrthreshold}, FDR corrected",
 		axes=axs[0]
 	)
 
@@ -439,7 +439,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM Stroop cats & Dogs composite output p < {fdr_threshold}, FDR corrected",
+		title=f"GLM Stroop cats & Dogs composite output p < {fdrthreshold}, FDR corrected",
 		axes=axs[1]
 	)
 
@@ -450,7 +450,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM Stroop cats & Dogs error output p < {fdr_threshold}, FDR corrected",
+		title=f"GLM Stroop cats & Dogs error output p < {fdrthreshold}, FDR corrected",
 		axes=axs[2]
 	)
 
@@ -466,7 +466,7 @@ with PdfPages(pdf_filename) as pdf:
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM Stroop cats & Dogs time output p < {fdr_threshold}, FDR corrected",
+		title=f"GLM Stroop cats & Dogs time output p < {fdrthreshold}, FDR corrected",
 		axes=axs[2]
 	)
 

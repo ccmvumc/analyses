@@ -1,6 +1,6 @@
 import glob
 import os
-
+from scipy.ndimage import binary_dilation
 import ants
 from antspynet import brain_extraction
 from nilearn import datasets
@@ -17,6 +17,9 @@ out_dir = '/OUTPUTS/DATA'
 os.makedirs(out_dir)
 atlas=f'{in_dir}/CS_DS_Intensity.nii.gz'
 fixed = ants.image_read(atlas)
+
+#set cerebellum label
+cerebellum_label = 6
 
 for subject in sorted(os.listdir(in_dir)):
 	if subject.startswith('.'):
@@ -65,6 +68,23 @@ for subject in sorted(os.listdir(in_dir)):
 	smoothed_warped_feobv_file = f'{subject_out}/smoothed_warped_FEOBV.nii.gz'
 	smoothed_feobv = ants.smooth_image(warped_feobv, 3)
 	ants.image_write(smoothed_feobv, smoothed_warped_feobv_file)
+
+	# segment cerebellum
+	mri_mni = ants.image_read(warped_orig_file)
+	segmentation = antspynet.deep_atropos(mri_mni, do_preprocessing=False)
+	cerebellum_mask_data = (segmentation['segmentation_image'].numpy() == cerebellum_label).astype(int)
+
+	# Re-create the cerebellum mask image with correct spatial metadata
+	cerebellum_mask = ants.from_numpy(
+		cerebellum_mask_data,
+		origin=segmentation['segmentation_image'].origin,
+		spacing=segmentation['segmentation_image'].spacing,
+		direction=segmentation['segmentation_image'].direction
+	)
+	cerebellum_mask_data = binary_dilation(cerebellum_mask_data)
+
+	# Save the cerebellum mask
+	cerebellum_mask.to_filename(f'{subject_out}/cerebellum_mask_deep_atropos.nii.gz')
 
 #mask based on SUVR >1
 

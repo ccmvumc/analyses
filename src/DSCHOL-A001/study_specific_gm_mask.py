@@ -55,6 +55,20 @@ mask_gm_nii = new_img_like(
 
 nib.save(mask_gm_nii, "study_specific_GM_mask_prob0_3.nii")
             
+# import averaged FEOBV mask
+feobv_suvr_mask = f'{data_path}/averaged_feobv_mask.nii.gz'
+feobv_suvr_mask_img = nib.load(feobv_suvr_mask)
 
+# convert image to binary image
+feobv_suvr_mask_data = feobv_suvr_mask_img.get_fdata()
+
+# add to average mask
+combined_mask_data = (dilerodilero_gm_mask > 0) & (feobv_suvr_mask_data > 0)
+
+mask_gm_nii = new_img_like(
+    feobv_suvr_mask, combined_mask_data.astype(int)
+)
+
+nib.save(mask_gm_nii, "Brain_mask_prob0_3.nii")
 
             
