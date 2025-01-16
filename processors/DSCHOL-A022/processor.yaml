@@ -20,14 +20,14 @@ inputs:
 pre:
   type: singularity_exec
   container: ANALYSES
-  args: /bin/bash /REPO/src/DSCHOL-A020/pre.sh
+  args: /bin/bash /REPO/src/DSCHOL-A022/pre.sh
 command:
   type: singularity_exec
   container: FS7
-  args: /bin/bash /REPO/src/DSCHOL-A020/main.sh
+  args: /bin/bash /REPO/src/DSCHOL-A022/main.sh
   extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
 post:
   type: singularity_exec
   container: ANALYSES
-  args: python /REPO/src/DSCHOL-A020/post.py
+  args: python /REPO/src/DSCHOL-A022/post.py
 description: Project-level summary stats
