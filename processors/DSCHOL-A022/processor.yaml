@@ -13,7 +13,7 @@ inputs:
   xnat:
     subjects:
       assessors:
-        - types: FEOBVQA_USC_NOPVC_v4
+        - types: FEOBVQA_v4
           resources:
           - resource: SUBJ
             fmatch: stats/gtmseg.stats,gtmpvc.esupravwm.output/nopvc.voxel.txt,gtmpvc.esupravwm.output/gtm.stats.dat,esupravwm.nii.gz
