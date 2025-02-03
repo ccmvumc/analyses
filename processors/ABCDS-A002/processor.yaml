@@ -19,8 +19,13 @@ inputs:
         - types: ABCDS_FS7long_e1e3_v1
           resources:
           - resource: SUBJECTS
-command:
+pre:
   type: singularity_exec
   container: ANALYSES
-  args: /bin/bash -c 'mkdir /OUTPUTS/SUBJECTS && cp -r /INPUTS/* /OUTPUTS/SUBJECTS'
+  args: /bin/bash /REPO/src/ABCDS-A002/pre.sh
+command:
+  type: singularity_exec
+  container: FS7
+  args: /bin/bash /REPO/src/FreeSurfer/summary/main.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
 description: FreeSurfer longitudinal
