@@ -3,6 +3,10 @@ containers:
   - name: ANALYSES
     path: ccmvumc_analyses_v2.sif
     source: docker://bud42/ccmvumc_analyses:v2
+  - name: FS7
+    path: freesurfer_7.2.0.sif
+  - name: FS7POST
+    path: fs7_post_v2.sif
 requirements:
   walltime: 0-8
   memory: 8G
@@ -10,13 +14,28 @@ inputs:
   xnat:
     subjects:
       assessors:
-        - types: ABCDS_FS7long_e1e2e3_v1
+        - types: ABCDS_FS7long_e1_v1
           resources:
           - resource: SUBJECTS
         - types: ABCDS_FS7long_e1e2_v1
           resources:
           - resource: SUBJECTS
+        - types: ABCDS_FS7long_e1e2e3_v1
+          resources:
+          - resource: SUBJECTS
         - types: ABCDS_FS7long_e1e3_v1
+          resources:
+          - resource: SUBJECTS
+        - types: ABCDS_FS7long_e1e3e5_v1
+          resources:
+          - resource: SUBJECTS
+        - types: ABCDS_FS7long_e2_v1
+          resources:
+          - resource: SUBJECTS
+        - types: ABCDS_FS7long_e2e3_v1
+          resources:
+          - resource: SUBJECTS
+        - types: ABCDS_FS7long_e3_v1
           resources:
           - resource: SUBJECTS
 pre:
@@ -28,4 +47,9 @@ command:
   container: FS7
   args: /bin/bash /REPO/src/FreeSurfer/summary/main.sh
   extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
-description: FreeSurfer longitudinal
+post:
+  type: singularity_exec
+  container: FS7POST
+  args: /bin/bash /REPO/src/FreeSurfer/summary/post.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/opt/freesurfer/.license
+description: FreeSurfer longitudinal summary

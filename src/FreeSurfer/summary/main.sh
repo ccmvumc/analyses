@@ -1,5 +1,7 @@
 export SUBJECTS_DIR=/OUTPUTS/DATA/SUBJECTS
 
+cp -r /usr/local/freesurfer/subjects/fsaverage $SUBJECTS_DIR
+
 cd $SUBJECTS_DIR
 
 # Write stats table for each hemisphere for thickness, volume
