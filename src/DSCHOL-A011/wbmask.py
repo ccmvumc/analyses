@@ -14,15 +14,13 @@ import numpy as np
 from scipy.ndimage import binary_dilation
 from scipy.ndimage import binary_erosion
 import glob
+from config import out_dir
 from nilearn.image import math_img
 
-#Set path where data is stored
-data_path = '/OUTPUTS/DATA'
-
 #path to individual subject masks
-FEOBV_files = glob.glob('/OUTPUTS/DATA/*/gmmask.nii.gz')
+FEOBV_files = glob.glob(f'{out_dir}/*/gmmask.nii.gz')
 
-os.chdir(data_path)
+os.chdir(out_dir)
 
 #Import individual nifti masks in a 4D array
 ind_masks = image.get_data(FEOBV_files)
@@ -51,7 +49,7 @@ dilerodil_gm_mask = binary_dilation(dilero_gm_mask)
 dilerodilero_gm_mask = binary_erosion(dilerodil_gm_mask)
 
 # import averaged FEOBV mask
-feobv_suvr_mask = f'{data_path}/averaged_feobv_mask.nii.gz'
+feobv_suvr_mask = f'{out_dir}/averaged_feobv_mask.nii.gz'
 feobv_suvr_mask_img = nib.load(feobv_suvr_mask)
 
 # convert image to binary image
