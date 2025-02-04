@@ -1,6 +1,6 @@
 set -x
 
-mkdir -p /OUTPUTS/DATA/SUBJECTS
+mkdir -p /OUTPUTS/SUBJECTS
 
 cd /INPUTS
 
@@ -11,7 +11,7 @@ for i in *;do
     for j in *;do
 
         # Copy from inputs to outputs
-        cp -r /INPUTS/$i/$j/assessors/* /OUTPUTS/DATA/SUBJECTS/${j}
+        cp -r /INPUTS/$i/$j/assessors/* /OUTPUTS/SUBJECTS/${j}
 
         # Append to subject list
         echo ${j} >> /OUTPUTS/subjects.txt

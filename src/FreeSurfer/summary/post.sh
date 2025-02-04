@@ -3,6 +3,7 @@ set -x
 cd /OUTPUTS/SUBJECTS
 
 for i in *;do
+    echo $i
     cd /OUTPUTS/SUBJECTS/$i/surf
     echo "-viewsize 400 400 --layout 1 --viewport 3d --hide-3d-slices" > commands.txt
     echo "-f lh.inflated:overlay=lh.thickness:overlay_threshold=0.1,3" >> commands.txt
