@@ -8,7 +8,7 @@ Created on Fri Aug  9 14:06:35 2024
 
 from nilearn import image
 from nilearn.glm.second_level import SecondLevelModel
-from nilearn.glm import threshold_stats_img, fdrthreshold
+from nilearn.glm import threshold_stats_img
 import pandas as pd
 import os
 import numpy as np
@@ -18,12 +18,13 @@ from matplotlib.backends.backend_pdf import PdfPages
 from nilearn.glm.second_level import non_parametric_inference
 from nilearn.image import new_img_like
 import glob
+from config import out_dir, covariates
 
 #Set path where data is stored
-data_path = '/OUTPUTS/DATA'
+data_path = out_dir
 
 os.chdir(data_path)
-output_path = '/OUTPUTS/DATA'
+output_path = out_dir
 
 #set signficant thresholds for different tests
 #significance (p-val) for initial test at cluster threshold 50
@@ -31,29 +32,29 @@ threshold_1 = 0.005
 threshold_non_para = 0.005
 #significance of clusters following non-parametric inference
 cluster_thres = -np.log10(0.05)
-fdrthreshold = 0.05
+fdr_thres = 0.05
 
 #set number of permutations for non-parametric inference (10000 when finalized
 # but adds compute time, 500 for running on computer)
-permutations = 10000
+permutations = 50
 
 #import covariates
-covariates_df = pd.read_csv('/INPUTS/covariates.csv')
+covariates_df = pd.read_csv(f'{covariates}/covariates.csv')
 
 # Load the study-specific whole brain mask
 wbmask_path = 'Brain_mask_prob0_3.nii'
 
 # Load PET images
 # DS data image paths
-trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/suvr_masked_smoothed_feobv.nii.gz') +
-				   glob.glob('/OUTPUTS/DATA/DSCHOL*/suvr_masked_smoothed_feobv.nii.gz')
+trcds_img_paths = (glob.glob(f'{out_dir}/DST*/smoothed_warped_FEOBV.nii.gz') +
+				   glob.glob(f'{out_dir}/DSCHOL*/smoothed_warped_FEOBV.nii.gz')
 				   )
 
 trcds_img_paths = sorted(trcds_img_paths)
 
 # Control cohort image paths
 control_img_paths = (
-				   glob.glob('/OUTPUTS/DATA/2*/suvr_masked_smoothed_feobv.nii.gz')
+				   glob.glob(f'{out_dir}/2*/smoothed_warped_FEOBV.nii.gz')
 				   )
 
 control_img_paths = sorted(control_img_paths)
@@ -151,7 +152,7 @@ thresholded_map, threshold = threshold_stats_img(z_map,
 												 cluster_threshold = 50)
 
 thresholded_map_fdr, threshold_fdr = threshold_stats_img(z_map,
-														 alpha=fdrthreshold,
+														 alpha=fdr_thres,
 														 height_control= 'fdr')
 
 thresholded_map_age, threshold_age = threshold_stats_img(z_map_age,
@@ -159,7 +160,7 @@ thresholded_map_age, threshold_age = threshold_stats_img(z_map_age,
 												 cluster_threshold = 50)
 
 thresholded_map_age_fdr, threshold_age_fdr = threshold_stats_img(z_map_age,
-																 alpha=fdrthreshold,
+																 alpha=fdr_thres,
 																 height_control= 'fdr')
 
 # Save the statistical map
@@ -275,7 +276,7 @@ thresholded_map_np_ni.to_filename(
 	f'{output_path}/interact_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = "/OUTPUTS/report.pdf"
+pdf_filename = "OUTPUTS/report.pdf"
 
 with PdfPages(pdf_filename) as pdf:
 
@@ -294,12 +295,12 @@ with PdfPages(pdf_filename) as pdf:
 	
 	plotting.plot_stat_map(
 		thresholded_map_fdr,
-		threshold=fdrthreshold,
+		threshold=fdr_thres,
 		colorbar=True,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title = f"GLM output p < {fdrthreshold}, FDR corrected",
+		title = f"GLM output p < {fdr_thres}, FDR corrected",
 		axes=axs[1]
 	)
 	
@@ -352,12 +353,12 @@ with PdfPages(pdf_filename) as pdf:
 
 	plotting.plot_stat_map(
 		thresholded_map_age_fdr,
-		threshold=fdrthreshold,
+		threshold=fdr_thres,
 		colorbar=True,
 		cut_coords=6,
 		display_mode="x",
 		figure=fig,
-		title=f"GLM output, age corrected, p < {fdrthreshold}, FDR corrected",
+		title=f"GLM output, age corrected, p < {fdr_thres}, FDR corrected",
 		axes=axs[1]
 	)
 

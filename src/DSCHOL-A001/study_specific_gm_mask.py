@@ -13,13 +13,13 @@ import os
 import numpy as np
 from scipy.ndimage import binary_dilation
 from scipy.ndimage import binary_erosion
+from config import out_dir
 
 #Set path where data is stored
-data_path = '/OUTPUTS/DATA'
 
-mask_path = glob.glob('/OUTPUTS/DATA/*/gmmask.nii.gz')
+mask_path = glob.glob(f'/{out_dir}/*/gmmask.nii.gz')
 
-os.chdir(data_path)
+os.chdir(out_dir)
 
 #Import individual nifti masks in a 4D array
 ind_masks = image.get_data(mask_path)
@@ -56,7 +56,7 @@ mask_gm_nii = new_img_like(
 nib.save(mask_gm_nii, "study_specific_GM_mask_prob0_3.nii")
             
 # import averaged FEOBV mask
-feobv_suvr_mask = f'{data_path}/averaged_feobv_mask.nii.gz'
+feobv_suvr_mask = f'{out_dir}/averaged_feobv_mask.nii.gz'
 feobv_suvr_mask_img = nib.load(feobv_suvr_mask)
 
 # convert image to binary image

@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-Author: Jason Russell.
-Script to Generate Study Specific Mask from Individual T1s
-"""
 
 from nilearn import image
 from nilearn.image import new_img_like
@@ -14,12 +7,13 @@ import numpy as np
 from scipy.ndimage import binary_dilation
 from scipy.ndimage import binary_erosion
 import glob
+from config import out_dir
 
 #Set path where data is stored
-data_path = '/OUTPUTS/DATA'
+data_path = out_dir
 
 #path to individual subject masks
-FEOBV_files = glob.glob('/OUTPUTS/DATA/*/gmmask.nii.gz')
+FEOBV_files = glob.glob(f'{out_dir}/*/gmmask.nii.gz')
 
 os.chdir(data_path)
 

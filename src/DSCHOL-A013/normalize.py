@@ -7,15 +7,13 @@ from nilearn import datasets
 import nibabel as nib
 from nilearn import image
 from scipy.ndimage import binary_dilation
+from config import in_dir, out_dir
 
 
-in_dir = '/INPUTS'
+
 atlas_ni = datasets.load_mni152_template()
-out_dir = '/OUTPUTS/DATA'
-
 
 # Convert atlas_file to ants image fixed target for registration
-os.makedirs(out_dir)
 nib.save(atlas_ni, f'{out_dir}/atlasni.nii.gz')
 atlas=f'{out_dir}/atlasni.nii.gz'
 fixed = ants.image_read(atlas)
@@ -31,7 +29,7 @@ for subject in sorted(os.listdir(in_dir)):
 		# ignore covariates csv
 		continue
 
-	subject_feobv = glob.glob(f'{in_dir}/{subject}/assessors/*FEOBVQA_v4*')[0]
+	subject_feobv = glob.glob(f'{in_dir}/{subject}')[0]
 
 	print('FEOBV:', subject_feobv)
 
@@ -40,8 +38,8 @@ for subject in sorted(os.listdir(in_dir)):
 	os.makedirs(subject_out)
 
 	# Get full file path to input images
-	orig_file = f'{subject_feobv}/mri/orig.mgz'
-	feobv_file =  f'{subject_feobv}/gtmpvc.esupravwm.output/rbv.nii.gz'
+	orig_file = f'{subject_feobv}/orig.mgz'
+	feobv_file =  f'{subject_feobv}/rbv.nii.gz'
 	
 	# Skull Strip Original T1
 	raw = ants.image_read(orig_file)
@@ -76,6 +74,8 @@ for subject in sorted(os.listdir(in_dir)):
 	segmentation = antspynet.deep_atropos(mri_mni, do_preprocessing=False)
 	cerebellum_mask_data = (segmentation['segmentation_image'].numpy() == cerebellum_label).astype(int)
 
+	cerebellum_mask_data = binary_dilation(binary_dilation(cerebellum_mask_data))
+
 	# Re-create the cerebellum mask image with correct spatial metadata
 	cerebellum_mask = ants.from_numpy(
 		cerebellum_mask_data,
@@ -84,7 +84,7 @@ for subject in sorted(os.listdir(in_dir)):
 		direction=segmentation['segmentation_image'].direction
 	)
 
-	cerebellum_mask_data = binary_dilation(cerebellum_mask_data)
+
 	# Save the cerebellum mask
 	cerebellum_mask.to_filename(f'{subject_out}/cerebellum_mask_deep_atropos.nii.gz')
 
@@ -92,7 +92,8 @@ for subject in sorted(os.listdir(in_dir)):
 
 image_paths = [
 	f'{out_dir}/{subject}/smoothed_warped_feobv.nii.gz' for subject in sorted(os.listdir(out_dir))
-	if not subject.startswith('.') and not subject.startswith('covariates')
+	if not subject.startswith('.') and not subject.startswith('covariates') and not subject.startswith('atlas')
+	and not subject.startswith('study')
 ]
 
 averaged_feobv = image.mean_img(image_paths)

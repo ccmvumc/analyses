@@ -18,18 +18,25 @@ from matplotlib.backends.backend_pdf import PdfPages
 from nilearn.glm.second_level import non_parametric_inference
 from nilearn.image import new_img_like
 import glob
+from config import out_dir, covariates
 
 #image paths - split data to make counts easier later
-trcds_img_paths = (glob.glob('/OUTPUTS/DATA/DST*/suvr_masked_smoothed_feobv.nii.gz') +
-				   glob.glob('/OUTPUTS/DATA/DSCHOL*/suvr_masked_smoothed_feobv.nii.gz')
+trcds_img_paths = (glob.glob(f'{out_dir}/DST*/smoothed_warped_FEOBV.nii.gz') +
+				   glob.glob(f'{out_dir}/DSCHOL*/smoothed_warped_FEOBV.nii.gz')
 				   )
 
 trcds_img_paths = sorted(trcds_img_paths)
 
+control_img_paths = (
+				   glob.glob(f'{out_dir}/2*/smoothed_warped_FEOBV.nii.gz')
+				   )
+
+control_img_paths = sorted(control_img_paths)
+
 print("Data paths for t-test groups set")
 
 #Set path where data is stored
-data_path = '/OUTPUTS/DATA'
+data_path = f'{out_dir}'
 
 os.chdir(data_path)
 
@@ -44,12 +51,23 @@ for subject in trcds_img_paths:
 	
 print(f'DS subject order: {subject_list_trcds}')
 
-subjects_array = np.array(subject_list_trcds)
+subject_list_control=[]
+
+for subject in control_img_paths:
+	path = os.path.normpath(subject)
+	control_parts = path.split(os.sep)
+	sub_id = control_parts[-2]
+	subject_list_control.append(sub_id)
+
+print(f'Control subject order: {subject_list_control}')
+all_subs = subject_list_trcds + subject_list_control
+
+all_subjects_array = np.array(all_subs)
 
 #set signficant thresholds for different tests
 #significance (p-val) for initial test at cluster threshold 50
 threshold_1 = 0.005
-fdr_threshold = 0.05
+fdr_thres = 0.05
 #significance for voxel-level significance, non-paramteric inference
 #threshold_non_para = 0.001
 #significance of clusters following non-parametric inference
@@ -65,22 +83,24 @@ wbmask_path = 'Brain_mask_prob0_3.nii'
 
 # Load DS images to 4D nifti
 trcds_img = image.concat_imgs(trcds_img_paths)
+control_img = image.concat_imgs(control_img_paths)
 
 # Count subjects for each group
 _, _, _, subjects_ds = trcds_img.shape
+_, _, _, subjects_control = control_img.shape
 
 #import sex variables and check order matches order of image imports
-centiloid_df = pd.read_csv('/INPUTS/covariates.csv')
-centiloid_df['id'] = centiloid_df['id'].astype(subjects_array.dtype)
+centiloid_df = pd.read_csv(f'{covariates}/covariates.csv')
+centiloid_df['id'] = centiloid_df['id'].astype(all_subjects_array.dtype)
 centiloid_df_sorted = centiloid_df.set_index('id')
-centiloid_df_sorted = centiloid_df_sorted.loc[subjects_array]
+centiloid_df_sorted = centiloid_df_sorted.loc[all_subjects_array]
 
 sex_all, sex_all_key = pd.factorize(centiloid_df_sorted['dems_sex'])
 age = centiloid_df_sorted['dems_age'].astype(float)
-amyloid, amyloid_key = pd.factorize(centiloid_df_sorted['group'])
+group, gx_key = pd.factorize(centiloid_df_sorted['group'])
 
-print(amyloid)
-print(amyloid_key)
+print(group)
+print(gx_key)
 
 print("Covariates loaded")
 print(centiloid_df_sorted)
@@ -88,26 +108,26 @@ print(centiloid_df_sorted)
 
 # Generate design matrix control for sex 
 unpaired_design_matrix_sex = pd.DataFrame({
-	"Amyloid": amyloid,
+	"Group": group,
 	"Sex": sex_all,
-	"Intercept:": np.ones(subjects_ds)
+	"Intercept:": np.ones(subjects_ds + subjects_control)
 })
 
 # Generate design matrix control for age
 unpaired_design_matrix_age = pd.DataFrame({
-	"Amyloid": amyloid,
+	"Group": group,
 	"Age": age,
-	"Intercept:": np.ones(subjects_ds)
+	"Intercept:": np.ones(subjects_ds + subjects_control)
 })
 
 # second level model
 second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
-	trcds_img_paths, design_matrix=unpaired_design_matrix_sex
+	trcds_img_paths + control_img_paths, design_matrix=unpaired_design_matrix_sex
 	)
 
 # second level model
 second_level_model_age = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
-	trcds_img_paths, design_matrix=unpaired_design_matrix_age
+	trcds_img_paths + control_img_paths, design_matrix=unpaired_design_matrix_age
 	)
 
 # calculate contrast
@@ -131,7 +151,7 @@ thresholded_map_age, threshold_age = threshold_stats_img(z_map_age,
 												 cluster_threshold=50)
 
 thresholded_map_age_fdr, threshold_age_fdr = threshold_stats_img(z_map_age,
-												 alpha=fdr_threshold,
+												 alpha=fdr_thres,
 												 height_control= 'fdr')
 
 # Save the thresholded z-map to a NIfTI file
@@ -174,15 +194,15 @@ thresholded_map_age_fdr.to_filename(
 
 #repeat controlling for sex and age 
 unpaired_design_matrix_sexage = pd.DataFrame({
-	"Amyloid": amyloid,
+	"Group": group,
 	"Sex": sex_all,
 	"Age": age,
-	"Intercept:": np.ones(subjects_ds)
+	"Intercept:": np.ones(subjects_ds + subjects_control)
 })
 
 # second level model
 second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
-	trcds_img_paths, design_matrix=unpaired_design_matrix_sexage
+	trcds_img_paths + control_img_paths, design_matrix=unpaired_design_matrix_sexage
 	)
 
 # calculate contrast
@@ -232,17 +252,17 @@ thresholded_map_sexage, threshold_sexage = threshold_stats_img(z_map_sexage,
 #repeat t-test without controlling for sex
 # Generate design matrix control for sex 
 unpaired_design_matrix = pd.DataFrame({
-	"Amyloid": amyloid
+	"Group": group
 	})
 
 # second level model
 second_level_model = SecondLevelModel(mask_img=wbmask_path, n_jobs=1).fit(
-	trcds_img_paths, design_matrix=unpaired_design_matrix
+	trcds_img_paths + control_img_paths, design_matrix=unpaired_design_matrix
 	)
 
 # calculate contrast
 z_map = second_level_model.compute_contrast(
-	"Amyloid",
+	"Group",
 	output_type="z_score",
 )
 
@@ -253,7 +273,7 @@ thresholded_map, threshold = threshold_stats_img(z_map,
 
 # Perform statsmap, correct for multiple comparisons
 thresholded_map_fdr, threshold_fdr = threshold_stats_img(z_map,
-												alpha=fdr_threshold,
+												alpha=fdr_thres,
 												height_control="fdr"
 												)
 
@@ -291,7 +311,7 @@ thresholded_map_fdr.to_filename(
 #	'Ttest_non_parametric_inference_corrected_logP_map.nii')
 
 # Generate pdf report
-pdf_filename = "/OUTPUTS/report.pdf"
+pdf_filename = "OUTPUTS/report.pdf"
 
 #significance (p-val) for initial test at cluster threshold 50
 #threshold_1 = 0.001

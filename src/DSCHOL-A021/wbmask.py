@@ -15,12 +15,13 @@ from scipy.ndimage import binary_dilation
 from scipy.ndimage import binary_erosion
 import glob
 from nilearn.image import math_img
+from config import out_dir
 
 #Set path where data is stored
-data_path = '/OUTPUTS/DATA'
+data_path = out_dir
 
 #path to individual subject masks
-FEOBV_files = glob.glob('/OUTPUTS/DATA/*/wbmask.nii.gz')
+FEOBV_files = glob.glob(f'{data_path}/*/wbmask.nii.gz')
 
 os.chdir(data_path)
 
