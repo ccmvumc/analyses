@@ -8,7 +8,7 @@ containers:
   - name: FS7POST
     path: fs7_post_v2.sif
 requirements:
-  walltime: 0-8
+  walltime: 2-0
   memory: 8G
 inputs:
   xnat:
