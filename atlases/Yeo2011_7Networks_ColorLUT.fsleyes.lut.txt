@@ -1,0 +1,7 @@
+1 0.47059 0.070588 0.51373  7Networks_1_Vis
+2 0.27451 0.5098   0.70196  7Networks_2_SomMot
+3 0       0.46275  0.066667 7Networks_3_DorsAttn
+4 0.77255 0.22745  0.99216  7Networks_4_SalVentAttn
+5 0.86275 0.97255  0.64706  7Networks_5_Limbic
+6 0.90196 0.58039  0.13725  7Networks_6_Cont
+7 0.80392 0.24314  0.32157  7Networks_7_Default
