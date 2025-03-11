@@ -1,0 +1,34 @@
+---
+containers:
+  - name: FS7
+    path: freesurfer_7.2.0.sif
+    source: docker://freesurfer/freesurfer:7.2.0
+requirements:
+  walltime: 0-8
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - types: Baseline
+          assessors:
+            - types: FS7thalamus_v1
+              resources:
+                - resource: SEG
+                  fmatch: ThalamicNuclei.FSvoxelSpace.mgz
+            - types: FS7_v1
+              resources:
+                - resource: SUBJ
+                  fmatch: mri/orig.mgz
+            - types: hipsthomas_v2
+              resources:
+                - resource: left
+                  fmatch: thomasfull.nii.gz
+                - resource: right
+                  fmatch: thomasrfull.nii.gz
+command:
+  type: singularity_exec
+  container: FS7
+  args: bash /REPO/src/D3-A007/main.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
+description: Export thalamus labels and convert to NIFTI.
