@@ -17,9 +17,9 @@ inputs:
 pre:
   type: singularity_exec
   container: ANALYSES
-  args: /bin/bash /REPO/src/DSCHOL-A023/pre.sh
+  args: /bin/bash /REPO/src/DSCHOL-A024/pre.sh
 post:
   type: singularity_exec
   container: ANALYSES
-  args: python /REPO/src/DSCHOL-A023/post.py
+  args: python /REPO/src/DSCHOL-A024/post.py
 description: Project-level summary stats for PiB
