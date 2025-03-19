@@ -14,10 +14,10 @@ inputs:
           resources:
           - resource: SUBJ
             fmatch: stats/gtmseg.stats,gtmpvc.cblmgmwm.output/nopvc.voxel.txt,gtmpvc.cblmgmwm.output/gtm.stats.dat
-pre:
+command:
   type: singularity_exec
   container: ANALYSES
-  args: /bin/bash /REPO/src/DSCHOL-A024/pre.sh
+  args: /bin/bash /REPO/src/DSCHOL-A024/main.sh
 post:
   type: singularity_exec
   container: ANALYSES
