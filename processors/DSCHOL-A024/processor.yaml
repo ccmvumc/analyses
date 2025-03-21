@@ -13,7 +13,7 @@ inputs:
         - types: PIBQA_v3
           resources:
           - resource: SUBJ
-            fmatch: stats/gtmseg.stats,gtmpvc.cblmgmwm.output/gtm.stats.dat,gtmpvc.cblmgmwm.output/nopvc.voxel.txt
+            fmatch: stats/gtmseg.stats,gtmpvc.cblmgmwm.output/gtm.stats.dat
 command:
   type: singularity_exec
   container: ANALYSES

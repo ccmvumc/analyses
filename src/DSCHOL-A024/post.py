@@ -9,13 +9,13 @@ ROOTDIR = '/OUTPUTS'
 def load_subject(subj_dir):
     dfv = pd.read_csv(f'{subj_dir}/stats/gtmseg.stats', comment='#', header=None, sep='\s+', usecols=[3,4], names=['VOL' ,'ROI'])
     dfg = pd.read_csv(f'{subj_dir}/gtmpvc.cblmgmwm.output/gtm.stats.dat', header=None, sep='\s+', usecols=[2,6], names=['ROI', 'SUVR-GTM'])
-    dfn = pd.read_csv(f'{subj_dir}/gtmpvc.cblmgmwm.output/nopvc.voxel.txt', header=None, sep='\s+', names=['SUVR-NOPVC'])
+    #dfn = pd.read_csv(f'{subj_dir}/gtmpvc.cblmgmwm.output/nopvc.voxel.txt', header=None, sep='\s+', names=['SUVR-NOPVC'])
 
     # Get a new dataframe with ROI first
     df = dfg[['ROI', 'SUVR-GTM']]
 
     # Append the column for nopvc, we know it sorted the same
-    df['SUVR-NOPVC'] = dfn['SUVR-NOPVC']
+    #df['SUVR-NOPVC'] = dfn['SUVR-NOPVC']
 
     # Merge in the volumes
     df = df.merge(dfv, on='ROI')
@@ -502,7 +502,7 @@ def save_suvr_gtm(df):
     dfp_all.to_csv(f'{ROOTDIR}/suvr_gtm_extended.csv')
 
 
-def save_suvr_no_pvc(df):
+""" def save_suvr_no_pvc(df):
     dfp = df[['ROI', 'SUVR-NOPVC', 'SUBJECT']].pivot(
         columns='ROI', values='SUVR-NOPVC', index='SUBJECT')
 
@@ -884,7 +884,7 @@ def save_suvr_no_pvc(df):
     dfp = dfp[['flobe', 'olobe', 'plobe', 'tlobe', 'cblm', 'insula', 'thalamus', 'cingulate', 'hippocampus']]
     dfp.to_csv(f'{ROOTDIR}/suvr_no_pvc.csv')
     dfp_all.to_csv(f'{ROOTDIR}/suvr_no_pvc_extended.csv')
-
+ """
 
 # Start an empty dataframe
 df = pd.DataFrame()
@@ -900,6 +900,6 @@ df = df.sort_values(['SUBJECT', 'ROI'])
 df.to_csv(f'{ROOTDIR}/all.csv', index=False)
 save_volumes(df)
 save_suvr_gtm(df)
-save_suvr_no_pvc(df)
+#save_suvr_no_pvc(df)
 
 print('DONE!')
