@@ -10,3 +10,6 @@ rm -r /OUTPUTS/conn/data/*.matc
 
 # Extract Z matrix to csv with row per value
 python /REPO/src/CONN/zvalues_mat2csv.py
+
+# Make PDF report
+python /REPO/src/CONN/make_pdf.py

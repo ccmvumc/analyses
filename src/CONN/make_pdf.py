@@ -88,6 +88,6 @@ def make_report(results_dir, filename):
         logger.error('error saving PDF:{}:{}'.format(pdf.filename, err))
 
 
-results_dir = '/Users/boydb1/Downloads/conn/results/secondlevel/SBC_01'
-pdf_name = '//Users/boydb1/Desktop/conn_results.pdf'
+results_dir = '/OUTPUTS/conn/results/secondlevel/SBC_01'
+pdf_name = '/OUTPUTS/report.pdf'
 make_report(results_dir, pdf_name)
