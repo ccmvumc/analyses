@@ -4,10 +4,17 @@ import os, shutil
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 import matplotlib.image as img 
+import seaborn as sns
+import pandas as pd
 
 
 logger = logging.getLogger('make_pdfpages')
 
+
+CSV_FILE = '/INPUTS/covariates.csv'
+SUBJECTS_FILE = '/OUTPUTS/subjects.txt'
+RESULTS_DIR = '/OUTPUTS/conn/results/secondlevel/SBC_01'
+PDF_NAME = '/OUTPUTS/report.pdf'
 
 def _add_results_page(pdf, result_dir, subjects, conditions, sources):
     shutil.copyfile(f'{result_dir}/slice_print.png', f'{result_dir}/slice_print.jpg')
@@ -32,9 +39,38 @@ def _add_results_page(pdf, result_dir, subjects, conditions, sources):
 
     pdf.savefig(fig)
 
+    plt.close(fig)
+
+
+def _add_pairplot_pages(pdf, df):
+    # seaborn pairplot without grouping
+    sns.pairplot(df)
+    pdf.savefig(plt.gcf(), dpi=300)
+    plt.close(fig)
+
+    # then group by sex
+    sns.pairplot(df, hue='SEX')
+    pdf.savefig(plt.gcf(), dpi=300)
+    plt.close(fig)
+
+    # then subject group
+    sns.pairplot(df, hue='GROUP')
+    pdf.savefig(plt.gcf(), dpi=300)
+    plt.close(fig)
+
+
+def _load_covariates(filename, subjects):
+    # Load covariates from csv file to pandas dataframe
+    logger.info(f'loading csv:{filename}')
+    df = pd.read_csv(filename)
+
+    # Set index and select subjects
+    df = df.set_index('ID')
+    df = df.loc[image_subjects]
 
 def make_report(results_dir, filename):
     with PdfPages(filename) as pdf:
+        # Page for each second-level result
         for subj in sorted(os.listdir(results_dir)):
             if subj.startswith('.'):
                 continue
@@ -47,11 +83,25 @@ def make_report(results_dir, filename):
                     if sources.startswith('.'):
                         continue
 
-                    print(f'add_results:{subj}:{cond}:{sources}')
+                    logger.info(f'add_results:{subj}:{cond}:{sources}')
                     _dir = os.path.join(results_dir, subj, cond, sources)
                     _add_results_page(pdf, _dir, subj, cond, sources)
 
+        # Covariate plots
+        if not os.path.exists(CSV_FILE):
+            logger.info('no csv file, cannot plot covariates.')
+        elif not os.path.exists(SUBJECTS_FILE):
+            logger.info('no subjects file, cannot plot covariates.')
+        else:
+            # Load subjects
+            with open(SUBJECTS_FILE, 'r') as f:
+                subjects = f.read().splitlines()
 
-results_dir = '/OUTPUTS/conn/results/secondlevel/SBC_01'
-pdf_name = '/OUTPUTS/report.pdf'
-make_report(results_dir, pdf_name)
+            # Load subject covars
+            df = _load_covariates(CSV_FILE, subjects)
+
+            # Plot covars on PDF
+            _add_pairplot_pages(pdf, df)
+
+
+make_report(RESULTS_DIR, PDF_NAME)
