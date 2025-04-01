@@ -12,4 +12,4 @@ rm -r /OUTPUTS/conn/data/*.matc
 python /REPO/src/CONN/zvalues_mat2csv.py
 
 # Make PDF report
-python /REPO/src/CONN/make_pdf.py
+python /REPO/src/CONN/make_pdfpages.py

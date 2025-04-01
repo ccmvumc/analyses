@@ -18,7 +18,7 @@ batch_data = []
 
 # TODO: site effects
 # TODO: control for site, sex, age
-# TODO: multiple conditions
+# TODO: multiple conditions/timepoints
 
 
 # Load subject data
@@ -67,51 +67,42 @@ def make_contrast(subjects, subjectc, conditions, conditionc, sources, sourcec):
     }
 
 # Build the batch in a format that will load correctly in matlab
+for s in sources:
+    # Main effect
+    batch_data.append(
+        make_contrast(['AllSubjects'], [1], conditions[0:1], [1], s, [1])
+    )
 
-# Main effect
-batch_data.extend([
-    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:1], [1]),
-    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[1:2], [1]),
-    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-    make_contrast(['AllSubjects'], [1], conditions[0:1], [1], sources[0:2], [1, -1]),
-])
+    # Group comparison
+    if len(groups) > 1:
+        batch_data.append(
+            make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], s, [1])
+        )
 
-# Group comparison
-if len(groups) > 1:
-    batch_data.extend([
-        make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
-        make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
-        make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-    ])
+    if len(groups) > 2:
+        # Compare groups 1st and 3rd
+        _groups = [groups[0], groups[2]]
+        batch_data.append(
+            make_contrast(_groups, [1, -1], conditions[0:1], [1], s, [1])
+        )
 
-if len(groups) > 2:
-    _groups = [groups[0], groups[2]]
-    batch_data.extend([
-        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:1], [1]),
-        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[1:2], [1]),
-        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-    ])
-    _groups = [groups[1], groups[2]]
-    batch_data.extend([
-        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:1], [1]),
-        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[1:2], [1]),
-        make_contrast(_groups, [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-    ])
+        # Compare groups 2nd and 3rd
+        _groups = [groups[1], groups[2]]
+        batch_data.append(
+            make_contrast(_groups, [1, -1], conditions[0:1], [1], s, [1])
+        )
 
-# Age effect
-batch_data.extend([
-    make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:1], [1]),
-    make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[1:2], [1]),
-    make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-])
+    # Age effect
+    batch_data.append(
+        make_contrast(['AllSubjects', 'AGE'], [0, 1], conditions[0:1], [1], s, [1])
+    )
 
-# Sex comparison
-if len(sexes) > 1:
-    batch_data.extend([
-        make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:1], [1]),
-        make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[1:2], [1]),
-        make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], sources[0:2], [0.5, 0.5]),
-    ])
+    # Sex comparison
+    if len(sexes) > 1:
+        batch_data.append(
+            make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], s, [1])
+        )
+
 
 print(batch_data)
 
