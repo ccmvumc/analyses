@@ -52,8 +52,6 @@ def make_report(results_dir, filename):
                     _add_results_page(pdf, _dir, subj, cond, sources)
 
 
-#results_dir = '/OUTPUTS/conn/results/secondlevel/SBC_01'
-#pdf_name = '/OUTPUTS/report.pdf'
-results_dir = '/Users/boydb1/Downloads/D3_conn_fallypride/conn/results/secondlevel/SBC_01'
-pdf_name = '/Users/boydb1/Downloads/D3_conn_fallypride/report.pdf'
+results_dir = '/OUTPUTS/conn/results/secondlevel/SBC_01'
+pdf_name = '/OUTPUTS/report.pdf'
 make_report(results_dir, pdf_name)
