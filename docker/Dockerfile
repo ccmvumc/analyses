@@ -1,6 +1,6 @@
 FROM antsx/antspy
 
-RUN pip install nilearn statsmodels matplotlib antspynet
+RUN pip install nilearn statsmodels matplotlib antspynet seaborn
 
 # Install packages needed for fslstats
 RUN apt-get update -qq && \
