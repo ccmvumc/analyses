@@ -65,7 +65,7 @@ def _load_covariates(filename, subjects):
 
 
 def make_report(results_dir, pdf_file, csv_file, subjects_file):
-    with PdfPages(filename) as pdf:
+    with PdfPages(pdf_file) as pdf:
         # Page for each second-level result
         for subj in sorted(os.listdir(results_dir)):
             if subj.startswith('.'):
