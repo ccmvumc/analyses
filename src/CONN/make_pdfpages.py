@@ -57,7 +57,7 @@ def _add_pairplot_pages(pdf, df):
 def _load_covariates(filename, subjects):
     # Load covariates from csv file to pandas dataframe
     logger.info(f'loading csv:{filename}')
-    df = pd.read_csv(filename)
+    df = pd.read_csv(filename, dytpe=str)
 
     # Set index and select subjects
     df = df.set_index('ID')
