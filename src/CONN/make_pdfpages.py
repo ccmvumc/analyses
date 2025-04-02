@@ -61,7 +61,9 @@ def _load_covariates(filename, subjects):
 
     # Set index and select subjects
     df = df.set_index('ID')
-    df = df.loc[image_subjects]
+    df = df.loc[subjects]
+
+    return df
 
 
 def make_report(results_dir, pdf_file, csv_file, subjects_file):
