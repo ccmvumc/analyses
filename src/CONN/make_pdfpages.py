@@ -11,11 +11,6 @@ import pandas as pd
 logger = logging.getLogger('make_pdfpages')
 
 
-CSV_FILE = '/INPUTS/covariates.csv'
-SUBJECTS_FILE = '/OUTPUTS/subjects.txt'
-RESULTS_DIR = '/OUTPUTS/conn/results/secondlevel/SBC_01'
-PDF_NAME = '/OUTPUTS/report.pdf'
-
 def _add_results_page(pdf, result_dir, subjects, conditions, sources):
     shutil.copyfile(f'{result_dir}/slice_print.png', f'{result_dir}/slice_print.jpg')
     shutil.copyfile(f'{result_dir}/volume_print.png', f'{result_dir}/volume_print.jpg')
@@ -68,7 +63,8 @@ def _load_covariates(filename, subjects):
     df = df.set_index('ID')
     df = df.loc[image_subjects]
 
-def make_report(results_dir, filename):
+
+def make_report(results_dir, pdf_file, csv_file, subjects_file):
     with PdfPages(filename) as pdf:
         # Page for each second-level result
         for subj in sorted(os.listdir(results_dir)):
@@ -88,20 +84,25 @@ def make_report(results_dir, filename):
                     _add_results_page(pdf, _dir, subj, cond, sources)
 
         # Covariate plots
-        if not os.path.exists(CSV_FILE):
+        if not os.path.exists(csv_file):
             logger.info('no csv file, cannot plot covariates.')
-        elif not os.path.exists(SUBJECTS_FILE):
+        elif not os.path.exists(subjects_file):
             logger.info('no subjects file, cannot plot covariates.')
         else:
             # Load subjects
-            with open(SUBJECTS_FILE, 'r') as f:
+            with open(subjects_file, 'r') as f:
                 subjects = f.read().splitlines()
 
             # Load subject covars
-            df = _load_covariates(CSV_FILE, subjects)
+            df = _load_covariates(csv_file, subjects)
 
             # Plot covars on PDF
             _add_pairplot_pages(pdf, df)
 
 
-make_report(RESULTS_DIR, PDF_NAME)
+if __name__ == "__main__":
+    CSV_FILE = '/INPUTS/covariates.csv'
+    SUBJECTS_FILE = '/OUTPUTS/subjects.txt'
+    RESULTS_DIR = '/OUTPUTS/conn/results/secondlevel/SBC_01'
+    PDF_NAME = '/OUTPUTS/report.pdf'
+    make_report(RESULTS_DIR, PDF_NAME, CSV_FILE, SUBJECTS_FILE)
