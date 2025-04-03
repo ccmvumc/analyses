@@ -38,20 +38,12 @@ def _add_results_page(pdf, result_dir, subjects, conditions, sources):
 
 
 def _add_pairplot_pages(pdf, df):
-    # seaborn pairplot without grouping
-    sns.pairplot(df)
-    pdf.savefig(plt.gcf(), dpi=300)
-    plt.close(fig)
-
-    # then group by sex
-    sns.pairplot(df, hue='SEX')
-    pdf.savefig(plt.gcf(), dpi=300)
-    plt.close(fig)
-
-    # then subject group
-    sns.pairplot(df, hue='GROUP')
-    pdf.savefig(plt.gcf(), dpi=300)
-    plt.close(fig)
+    # seaborn pairplot without grouping, then group by sex, then group by group
+    for h in [None, 'SEX', 'GROUP']:
+        sns.pairplot(df, hue=h)
+        _fig = plt.gcf()
+        pdf.savefig(_fig, dpi=300)
+        plt.close(_fig)
 
 
 def _load_covariates(filename, subjects):
