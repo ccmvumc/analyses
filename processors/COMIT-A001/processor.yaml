@@ -1,0 +1,29 @@
+---
+containers: 
+  - name: EEG-EGI-wavelet_2ndlvl
+    path: EEG-EGI-wavelet_2ndlvl_v1.0.0.simg
+requirements:
+  walltime: 0-12
+  memory: 16G
+inputs:
+  vars:
+    times: -704:4:1500
+    bins: 80
+    freqrange_low: 2
+    freqrange_high: 30
+    thrsh: 0.005
+  xnat:
+    subjects:
+      sessions:
+        - types: Baseline
+          assessors:
+            - types: EEG-EGI-wavelet_v1
+              resources:
+              - resource: WAVELET_OUTPUT_DIR/*
+command:
+  type: singularity_run
+  container: EEG-EGI-wavelet_2ndlvl
+  args: /bin/bash /REPO/src/pipeline_entrypoint.sh
+  args: --times {times}  --bins {bins} --freqrange_low{freqrange_low}  --freqrange_high{freqrange_high}
+
+description: Project-level EEG wavelet FDR statistics
