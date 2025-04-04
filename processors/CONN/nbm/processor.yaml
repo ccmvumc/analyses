@@ -1,0 +1,30 @@
+---
+containers:
+  - name: CONN
+    path: all_conn_rsfc_v1.2.0.sif
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 2-0
+  memory: 16G
+inputs:
+  xnat:
+    subjects:
+        assessors:
+          - types: fmri_conn_nbm_v1
+            resources:
+              - resource: CONN
+pre:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/CONN/merge-pre.sh
+command:
+  type: singularity_exec
+  container: CONN
+  args: bash /REPO/src/CONN/merge-main.sh
+post:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/CONN/merge-post.sh
+description: Project-level RSFC with CONN toolbox
