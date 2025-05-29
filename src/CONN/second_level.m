@@ -16,9 +16,9 @@ for i=1:length(filelist)
 
     disp(mat_file);
 
-    % Load result, contrast 1, presets 1 (CONN default for volume-based)
+    % Load result, contrast 1, presets=2 for permutation
     disp('open display');
-    h = conn_display(mat_file, 1, 1);
+    h = conn_display(mat_file, 1, 2);
 
     % Print views
     disp('volume_print');

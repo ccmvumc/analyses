@@ -11,10 +11,10 @@ requirements:
 inputs:
   xnat:
     subjects:
-        assessors:
-          - types: fmri_conn_nbm_v1
-            resources:
-              - resource: CONN
+      assessors:
+        - types: fmri_conn_nbm_v1
+          resources:
+            - resource: CONN
 pre:
   type: singularity_exec
   container: ANALYSES

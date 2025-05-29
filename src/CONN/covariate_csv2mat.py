@@ -20,6 +20,8 @@ if os.path.exists('/OUTPUTS/subjects.txt'):
     # Filter by subject list    
     df = df[df.ID.isin(subjects)]
 
+# TODO: compare sort order of subjects to df, error if different?
+
 # Mean center age
 df['AGE'] = df['AGE'].astype(float)
 df['AGE'] = (df['AGE'] - df['AGE'].mean()) / df['AGE'].std()
