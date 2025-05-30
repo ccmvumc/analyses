@@ -114,7 +114,7 @@ for s in sources:
                 make_contrast(['AllSubjects', _name], [0, 1], conditions[0:1], [1], s, [1])
             )
     except:
-        logger.debug(f'no fallypride data for source:{s}')
+        print(f'no fallypride data for source:{s}')
         pass
 
 
