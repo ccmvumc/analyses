@@ -75,6 +75,7 @@ for s in sources:
 
     # Group comparison
     if len(groups) > 1:
+        # Compare groups 1st and 2nd
         batch_data.append(
             make_contrast(groups[0:2], [1, -1], conditions[0:1], [1], s, [1])
         )
@@ -102,6 +103,19 @@ for s in sources:
         batch_data.append(
             make_contrast(['SEX_M', 'SEX_F'], [1, -1], conditions[0:1], [1], s, [1])
         )
+
+    # Fallypride SUVR
+    try:
+        _region = s.split('.')[1].lower()
+        _name = f'fallypride_{_region}'
+        if _name in df.columns():
+            # Effect of Uptake in all subjects
+            batch_data.append(
+                make_contrast(['AllSubjects', _name], [0, 1], conditions[0:1], [1], s, [1])
+            )
+    except:
+        logger.debug(f'no fallypride data for source:{s}')
+        pass
 
 
 print(batch_data)
