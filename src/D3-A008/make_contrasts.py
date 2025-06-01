@@ -108,13 +108,15 @@ for s in sources:
     try:
         _region = s.split('.')[1].lower()
         _name = f'fallypride_{_region}'
-        if _name in df.columns():
+        print(f'Checking:{_region}:{_name}')
+        if _name in df.columns:
             # Effect of Uptake in all subjects
+            print(f'Appending fallypride contrast:{_region}:{_name}')
             batch_data.append(
                 make_contrast(['AllSubjects', _name], [0, 1], conditions[0:1], [1], s, [1])
             )
-    except:
-        print(f'no fallypride data for source:{s}')
+    except Exception as err:
+        print(f'ERORR:loading fallypride data for source:{s}')
         pass
 
 
