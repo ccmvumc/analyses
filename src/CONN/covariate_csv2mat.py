@@ -12,13 +12,16 @@ mat = {}
 # Load subject data
 df = pd.read_csv(CSVFILE)
 
-if os.path.exists('/OUTPUTS/subjects.txt'):
-    # Load subjects
-    with open(f'{ROOTDIR}/subjects.txt', 'r') as f:
-        subjects = f.read().splitlines()
-    
-    # Filter by subject list    
-    df = df[df.ID.isin(subjects)]
+print(f'loaded {len(df)} subjects from {CSVFILE}')
+
+subjects = [x for x in os.listdir('/INPUTS') if os.path.isdir(f'/INPUTS/{x}')]
+
+print(f'{len(subjects)} subjects downloaded')
+
+# Filter by subject list    
+df = df[df.ID.isin(subjects)]
+
+print(f'Saving covariates for {len(df)} subjects')
 
 # TODO: compare sort order of subjects to df, error if different?
 
@@ -45,7 +48,7 @@ for i in range(len(names)):
 
 # Store in mat format as expected by SPM/CONN
 mat['effect_names'] = np.array(names, dtype=object)
-mat['effects'] =  np_vectors
+mat['effects'] = np_vectors
 
 # Create file
 scipy.io.savemat(MATFILE, mat)
