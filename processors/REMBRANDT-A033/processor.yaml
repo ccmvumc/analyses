@@ -26,5 +26,5 @@ command:
 post:
   type: singularity_exec
   container: ANALYSES
-  args: bash /REPO/src/CONN/merge-post.sh
+  args: bash /REPO/src/REMBRANDT-A033/merge-post.sh
 description: Project-level RSFC with CONN toolbox

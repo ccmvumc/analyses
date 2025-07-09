@@ -2,11 +2,8 @@ import pandas as pd
 
 
 ZDIR = '/OUTPUTS'
-INFILE = f'{ZDIR}/zvalues.csv'
-OUTFILE_000 = f'{ZDIR}/zvalues-Schaefer000.csv'
-OUTFILE_100 = f'{ZDIR}/zvalues-Schaefer100.csv'
-OUTFILE_200 = f'{ZDIR}/zvalues-Schaefer200.csv'
-OUTFILE_400 = f'{ZDIR}/zvalues-Schaefer400.csv'
+INFILE = f'{ZDIR}/zvalues-DnSeg.csv'
+OUTFILE_200 = f'{ZDIR}/zvalues-DnSeg-Schaefer200.csv'
 
 
 def get_names(df):
@@ -25,23 +22,6 @@ def get_names(df):
     # region is after last underscore
     df['r1region'] = df['r1name'].str.extract(r'(?:[^_]*_){3}(.*)')
     df['r2region'] = df['r2name'].str.extract(r'(?:[^_]*_){3}(.*)')
-
-    # handle schaefer400 with different format
-    condition = df['r1atlas'] == 'Schaefer400'
-    extracted_values = df.loc[condition, 'r1name'].str.extract(r'(?:[^_]*_){2}([^_]+)_')
-    df.loc[condition, 'r1hemi'] = extracted_values[0]
-    extracted_values = df.loc[condition, 'r1name'].str.extract(r'(?:[^_]*_){3}([^_]+)_')
-    df.loc[condition, 'r1network'] = extracted_values[0]
-    extracted_values = df.loc[condition, 'r1name'].str.extract(r'(?:[^_]*_){4}(.*)')
-    df.loc[condition, 'r1region'] = extracted_values[0]
-
-    condition = df['r2atlas'] == 'Schaefer400'
-    extracted_values = df.loc[condition, 'r2name'].str.extract(r'(?:[^_]*_){2}([^_]+)_')
-    df.loc[condition, 'r2hemi'] = extracted_values[0]
-    extracted_values = df.loc[condition, 'r2name'].str.extract(r'(?:[^_]*_){3}([^_]+)_')
-    df.loc[condition, 'r2network'] = extracted_values[0]
-    extracted_values = df.loc[condition, 'r2name'].str.extract(r'(?:[^_]*_){4}(.*)')
-    df.loc[condition, 'r2region'] = extracted_values[0]
 
     # handle CONN toolbox networks atlas format
     condition = df['r1atlas'] == 'networks'
@@ -73,24 +53,8 @@ def get_names(df):
     return df
 
 # Read, add columns, overwrite
-
 df = pd.read_csv(INFILE)
 
-# No Schaefers
-df[
-    (~df.r1name.str.startswith('Schaefer')) &
-    (~df.r2name.str.startswith('Schaefer'))
-].to_csv(OUTFILE_000, index=False)
-
-# Now with Schafer100
-df[
-    (~df.r1name.str.startswith('Schaefer200')) & 
-    (~df.r2name.str.startswith('Schaefer200')) & 
-    (~df.r1name.str.startswith('Schaefer400')) & 
-    (~df.r2name.str.startswith('Schaefer400'))
-].to_csv(OUTFILE_100, index=False)
-
-# Now with Schafer200
 df[
     (~df.r1name.str.startswith('Schaefer100')) & 
     (~df.r2name.str.startswith('Schaefer100')) & 
@@ -98,16 +62,8 @@ df[
     (~df.r2name.str.startswith('Schaefer400'))
 ].to_csv(OUTFILE_200, index=False)
 
-# Now with Schafer400
-df[
-    (~df.r1name.str.startswith('Schaefer100')) & 
-    (~df.r2name.str.startswith('Schaefer100')) & 
-    (~df.r1name.str.startswith('Schaefer200')) & 
-    (~df.r2name.str.startswith('Schaefer200'))
-].to_csv(OUTFILE_400, index=False)
-
 # Add cleaned names
-for f in [OUTFILE_000, OUTFILE_100, OUTFILE_200, OUTFILE_400]:
+for f in [OUTFILE_200]:
     print(f)
     df = pd.read_csv(f)
     df = get_names(df)
