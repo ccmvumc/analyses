@@ -78,7 +78,7 @@ for k=1:numel(sessions)
         end
 
         % Load conditions from file
-        load(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, [scan '.conditions.mat']);
+        load(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, [scan '.conditions.mat']));
 
         % Current scan indexed by r, total run number
         % Set for condition for k, this session
