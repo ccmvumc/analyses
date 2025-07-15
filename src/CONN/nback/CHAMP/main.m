@@ -156,7 +156,6 @@ batch.Setup.outputfiles=[0,1,0,0,0,0];
 
 % Configure preproc
 batch.Setup.preprocessing.steps=STEPS;
-batch.Setup.preprocessing.sliceorder=var.SLICETIMES;
 
 % Configure to run and overwrite any existing
 batch.Setup.done=1;
