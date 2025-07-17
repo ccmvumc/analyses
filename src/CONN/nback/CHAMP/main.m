@@ -4,9 +4,9 @@ BIND = getenv("SINGULARITY_BIND");
 ROOT = '/OUTPUTS/PREPROC';
 anats = {};
 fmris = {};
-conditions = {};
-onsets = {};
-durations = {};
+all_conditions = {};
+all_onsets = {};
+all_durations = {};
 all_tr = 0.0;
 
 disp(pwd);
@@ -73,18 +73,22 @@ for k=1:numel(sessions)
 
         % Initialize all conditions for this run
         for c=1:numel(sessions)
-            onsets{c}{n}{r} = [];
-            durations{c}{n}{r} = [];
+            all_onsets{c}{n}{r} = [];
+            all_durations{c}{n}{r} = [];
         end
 
         % Load conditions from file
         load(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, [scan '.conditions.mat']));
 
+        disp(conditions);
+        disp(onsets);
+        disp(durations);
+
         % Current scan indexed by r, total run number
         % Set for condition for k, this session
-        conditions{k} = conditions;
-        onsets{k}{n}{r} = onsets;
-        durations{k}{n}{r} = durations;
+        all_conditions{k} = conditions;
+        all_onsets{k}{n}{r} = onsets;
+        all_durations{k}{n}{r} = durations;
 
         % Increment total run count for subject
         r = r + 1;
@@ -96,9 +100,9 @@ end
 var.ROOT = ROOT;
 var.STRUCTURALS = anats;
 var.FUNCTIONALS = fmris;
-var.CONDITIONS = conditions;
-var.ONSETS = onsets;
-var.DURATIONS = durations;
+var.CONDITIONS = all_conditions;
+var.ONSETS = all_onsets;
+var.DURATIONS = all_durations;
 var.TR = all_tr;
 disp(var);
 

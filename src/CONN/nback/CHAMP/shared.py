@@ -4,11 +4,11 @@ import numpy as np
 import scipy.io
 
 
-TRIALS_FILE = '/OUTPUTS/PREPROC/trials.csv'  
-BEHAVIOR_FILE = '/OUTPUTS/PREPROC/behavior.txt'  
-TAB_FILE = '/OUTPUTS/PREPROC/edat.txt'
-CONDITIONS_FILE = '/OUTPUTS/PREPROC/conditions.mat'
-CONTRAST_FILE = '/OUTPUTS/PREPROC/contrasts.mat'
+TRIALS_FILE = '/OUTPUTS/PREPROC/SUBJECT/trials.csv'  
+BEHAVIOR_FILE = '/OUTPUTS/PREPROC/SUBJECT/behavior.txt'  
+TAB_FILE = '/OUTPUTS/PREPROC/SUBJECT/edat.txt'
+CONDITIONS_FILE = '/OUTPUTS/PREPROC/SUBJECT/conditions.mat'
+CONTRAST_FILE = '/OUTPUTS/PREPROC/SUBJECT/contrasts.mat'
 CONDITIONS = ['0Back', '1Back', '2Back', '3Back']
 
 
