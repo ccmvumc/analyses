@@ -1,7 +1,7 @@
 % Run single subject in CONN toolbox
 CONTAINER = getenv("SINGULARITY_CONTAINER");
 BIND = getenv("SINGULARITY_BIND");
-ROOT = '/OUTPUTS/PREPROC';
+ROOT = '/OUTPUTS';
 anats = {};
 fmris = {};
 all_conditions = {};
@@ -20,6 +20,7 @@ end
 
 % Get list of subdirectories
 subjects = dir(fullfile(ROOT, 'PREPROC'));
+disp(subjects);
 
 % Get just the directory names while excluding dot and double-dot
 subjects = {subjects([subjects.isdir] & cellfun(@(d)~all(d == '.'), {subjects.name})).name};
@@ -31,10 +32,12 @@ subj = subjects{n};
 
 % Assign the ANAT for the subject
 anats{n} = fullfile(ROOT, 'PREPROC', subj, 'ANAT.nii');
+disp(anats);
 
 % Get list of sessions
 sessions = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI'));
 sessions = {sessions([sessions.isdir] & cellfun(@(d)~all(d == '.'), {sessions.name})).name};
+disp(sessions);
 
 % Counter for total runs
 r = 1;
