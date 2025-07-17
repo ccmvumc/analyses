@@ -83,13 +83,13 @@ for k=1:numel(sessions)
         % Load conditions from file
         load(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, [scan '.conditions.mat']));
 
-        disp(conditions);
+        disp(names);
         disp(onsets);
         disp(durations);
 
         % Current scan indexed by r, total run number
         % Set for condition for k, this session
-        all_conditions{k} = conditions;
+        all_conditions{k} = names;
         all_onsets{k}{n}{r} = onsets;
         all_durations{k}{n}{r} = durations;
 
