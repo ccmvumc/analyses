@@ -89,9 +89,12 @@ for k=1:numel(sessions)
 
         % Current scan indexed by r, total run number
         % Set for condition for k, this session
-        all_conditions{k} = names;
-        all_onsets{k}{n}{r} = onsets;
-        all_durations{k}{n}{r} = durations;
+        %all_conditions{k} = names;
+        %all_onsets{k}{n}{r} = onsets;
+        %all_durations{k}{n}{r} = durations;
+        all_conditions{k} = ['rest-' sess];
+        all_onsets{k}{n}{r} = 0;
+        all_durations{k}{n}{r} = inf;
 
         % Increment total run count for subject
         r = r + 1;
