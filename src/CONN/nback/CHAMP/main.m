@@ -181,6 +181,7 @@ batch.Denoising.overwrite='Yes';
 % First-Level Analysis, Seed to Voxel
 batch.Analysis.done=1;
 batch.Analysis.overwrite='Yes';
+batch.Analysis.sources={'networks.DefaultMode'};
 batch.Analysis.weight='none';
 batch.Analysis.type=2;  % Seed2Voxel only
 
