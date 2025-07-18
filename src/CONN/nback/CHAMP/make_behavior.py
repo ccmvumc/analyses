@@ -1,5 +1,8 @@
 
-from shared import save_behavior, load_trials, get_conditions
+from ..shared import save_behavior, load_trials
+
+
+CONDITIONS = ['0Back', '1Back', '2Back', '3Back']
 
 
 def parse_behavior():
@@ -13,7 +16,7 @@ def parse_behavior():
     data['overall_ACC'] = df.ACC.mean()
 
     # Accuracy of each trial type
-    for c in get_conditions():
+    for c in CONDITIONS:
         data[c + '_ACC'] = df[(df.TYPE == c)].ACC.mean()
 
     # Initialize trial count

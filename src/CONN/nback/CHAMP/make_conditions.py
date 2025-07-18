@@ -1,15 +1,16 @@
 
-from shared import load_edat, write_spm_conditions, get_conditions
+from ..shared import load_edat, write_spm_conditions
 
 
 TYPE_FIELD = 'TrialCondition'  # edat column that stores trial condition
 TYPE_FIELD_SUFFIX = 'RunBlockTrialCondition'
 DURATION = 0.0
+CONDITIONS = ['0Back', '1Back', '2Back', '3Back']
 
 
 def _get_conditions():
     '''Values in type field are condition with suffix'''
-    return [f'{x}{TYPE_FIELD_SUFFIX}' for x in get_conditions()]
+    return [f'{x}{TYPE_FIELD_SUFFIX}' for x in CONDITIONS()]
 
 
 def load_nback():

@@ -1,5 +1,5 @@
 
-from shared import save_behavior, load_trials
+from ..shared import save_behavior, load_trials
 
 
 def parse_behavior():
