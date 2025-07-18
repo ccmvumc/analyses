@@ -74,27 +74,29 @@ for k=1:numel(sessions)
             end
         end
 
-        % Initialize all conditions for this run
-        for c=1:numel(sessions)
-            all_onsets{c}{n}{r} = [];
-            all_durations{c}{n}{r} = [];
-        end
-
         % Load conditions from file
         load(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, [scan '.conditions.mat']));
 
         disp(names);
         disp(onsets);
         disp(durations);
+ 
+        if isempty(all_conditions)
+            all_conditions = names;
+        elseif ~isequal(all_conditions, names)
+            disp('Conflicting conditions found');
+            disp(all_conditions);
+            disp(names);
+            exit;
+        end
 
-        % Current scan indexed by r, total run number
-        % Set for condition for k, this session
-        %all_conditions{k} = names;
-        %all_onsets{k}{n}{r} = onsets;
-        %all_durations{k}{n}{r} = durations;
-        all_conditions{k} = ['rest-' sess];
-        all_onsets{k}{n}{r} = 0;
-        all_durations{k}{n}{r} = inf;
+        % Assign each condition to current subject indexed by n, current scan indexed by r, total run number
+        for c=1:numel(names)
+            condition = names{c};
+            disp(condition);
+            all_onsets{c}{n}{r} = onsets{c};
+            all_durations{c}{n}{r} = durations{c};
+        end
 
         % Increment total run count for subject
         r = r + 1;
