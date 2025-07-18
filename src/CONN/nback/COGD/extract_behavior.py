@@ -2,8 +2,12 @@
 from shared import save_behavior, load_trials
 
 
-def parse_behavior(df):
+def parse_behavior():
+    # Initialize the summary data
     data = {}
+
+    # Load the trials data
+    df = load_trials()
 
     # Accuracy
     data['overall_acc'] = df.ACC.mean().round(2)

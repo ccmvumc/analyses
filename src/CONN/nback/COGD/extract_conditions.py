@@ -21,7 +21,7 @@ def load_nback():
 
 
 def extract_conditions():
-    names, onsets, durations = load_nback(df)
+    names, onsets, durations = load_nback()
 
     # Save to mat file for spm
     write_spm_conditions(names, onsets, durations)
