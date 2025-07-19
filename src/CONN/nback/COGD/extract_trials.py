@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..shared import load_edat, save_trials
+from shared import load_edat, save_trials
 
 
 # no single column has onset/acc/rt. have to combine

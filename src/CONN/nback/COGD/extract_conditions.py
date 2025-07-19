@@ -1,5 +1,5 @@
 
-from ..shared import load_edat, write_spm_conditions
+from shared import load_edat, write_spm_conditions
 
 
 def load_nback():

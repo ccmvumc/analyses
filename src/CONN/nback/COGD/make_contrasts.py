@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.io
 
-from ..shared import CONTRAST_FILE, write_contrasts
+from shared import CONTRAST_FILE, write_contrasts
 
 
 # Conditions in .mat files
