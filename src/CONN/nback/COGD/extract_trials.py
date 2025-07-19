@@ -7,7 +7,7 @@ from ..shared import load_edat, save_trials
 def apply_columns(row):
 
     # Map the shorthand type from the type column
-    row_type = row['Procedure[SubTrial]']
+    row_type = row['Procedure_SubTrial_']
     if row_type == 'ZeroBackProc':
          row['_TYPE'] = '0Back'
     elif row_type == 'TwoBackProc':
@@ -16,33 +16,33 @@ def apply_columns(row):
         raise ValueError('unknown trial type')
 
     if row_type == 'ZeroBackProc':
-        row['_ONSET'] = row['ZeroBackStimuli.OnsetTime']
-        row['_RESP'] = row['ZeroBackStimuli.RESP']
-        row['_RT'] = row['ZeroBackStimuli.RT']
-        row['_ACC'] = row['ZeroBackStimuli.ACC']
+        row['_ONSET'] = row['ZeroBackStimuli_OnsetTime']
+        row['_RESP'] = row['ZeroBackStimuli_RESP']
+        row['_RT'] = row['ZeroBackStimuli_RT']
+        row['_ACC'] = row['ZeroBackStimuli_ACC']
     
         if str(row['ZeroBackTarget']) == '1':
             row['_SUBTYPE'] = 'Target'
         else:
             row['_SUBTYPE'] = 'Distractor'
     elif row_type == 'TwoBackProc':
-        if row['Procedure[LogLevel6]'] == 'TrailTwoBackBegin':
-            row['_ONSET'] = row['TwoBackBegin.OnsetTime']
-            row['_RESP'] = row['TwoBackBegin.RESP']
-            row['_RT'] = row['TwoBackBegin.RT']
-            row['_ACC'] = row['TwoBackBegin.ACC']
+        if row['Procedure_LogLevel6_'] == 'TrailTwoBackBegin':
+            row['_ONSET'] = row['TwoBackBegin_OnsetTime']
+            row['_RESP'] = row['TwoBackBegin_RESP']
+            row['_RT'] = row['TwoBackBegin_RT']
+            row['_ACC'] = row['TwoBackBegin_ACC']
             row['_SUBTYPE'] = 'Begin'
-        elif row['Procedure[LogLevel6]'] == 'TrailTwoBackTarget':
-            row['_ONSET'] = row['TwoBackTarget.OnsetTime']
-            row['_RESP'] = row['TwoBackTarget.RESP']
-            row['_RT'] = row['TwoBackTarget.RT']
-            row['_ACC'] = row['TwoBackTarget.ACC']
+        elif row['Procedure_LogLevel6_'] == 'TrailTwoBackTarget':
+            row['_ONSET'] = row['TwoBackTarget_OnsetTime']
+            row['_RESP'] = row['TwoBackTarget_RESP']
+            row['_RT'] = row['TwoBackTarget_RT']
+            row['_ACC'] = row['TwoBackTarget_ACC']
             row['_SUBTYPE'] = 'Target'
-        elif row['Procedure[LogLevel6]'] == 'TrailTwoBackDistractor':
-            row['_ONSET'] = row['TwoBackDistractor.OnsetTime']
-            row['_RESP'] = row['TwoBackDistractor.RESP']
-            row['_RT'] = row['TwoBackDistractor.RT']
-            row['_ACC'] = row['TwoBackDistractor.ACC']
+        elif row['Procedure_LogLevel6_'] == 'TrailTwoBackDistractor':
+            row['_ONSET'] = row['TwoBackDistractor_OnsetTime']
+            row['_RESP'] = row['TwoBackDistractor_RESP']
+            row['_RT'] = row['TwoBackDistractor_RT']
+            row['_ACC'] = row['TwoBackDistractor_ACC']
             row['_SUBTYPE'] = 'Distractor'
         else:
             raise ValueError('unknown 2Back sub-trial type')
@@ -66,8 +66,8 @@ def parse_nback(df):
     # Set trial numbering
     df['_TRIAL'] = df.index.copy()
 
-    # Get the starting offset time
-    df['_START_OFFSET_'] = df['Synchronize.OffsetTime'].iloc[0]
+    # Get the starting offset time from first row
+    df['_START_OFFSET_'] = df['Synchronize_OffsetTime'].iloc[0]
 
     # Apply new columns to each row
     df = df.apply(apply_columns, axis=1)
