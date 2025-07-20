@@ -24,6 +24,11 @@ def parse_behavior():
 
     data['overall_rt_mean'] = df.RT.mean()
 
+    # Round floats to 2 places
+    for k, v in data.items():
+        if isinstance(v, float):
+            data[k] = round(v, 2)
+
     # rename to all lowercase 
     data = {k.lower(): v for k, v in data.items()}
 

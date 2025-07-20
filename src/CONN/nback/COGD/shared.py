@@ -34,8 +34,8 @@ def read_edat(edat_path):
                     skiprows += 1
 
     # Load Data
-    df = pd.read_csv(
-        edat_path, sep='\t', encoding=encoding, skiprows=skiprows, header=0)
+    df = pd.read_csv(edat_path, sep='\t', encoding=encoding, skiprows=skiprows, header=0, dtype=str, keep_default_na=False)
+
     return df
 
 
