@@ -21,7 +21,7 @@ def apply_columns(row):
         row['_RT'] = row['ZeroBackStimuli_RT']
         row['_ACC'] = row['ZeroBackStimuli_ACC']
     
-        if str(int(row['ZeroBackTarget'])) == '1':
+        if row['ZeroBackTarget'] == '1':
             row['_SUBTYPE'] = 'Target'
         else:
             row['_SUBTYPE'] = 'Distractor'
