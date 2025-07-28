@@ -26,5 +26,5 @@ command:
 post:
   type: singularity_exec
   container: ANALYSES
-  args: bash /REPO/src/CONN/task/merge-post.sh
+  args: bash /REPO/src/CONN/task/merge-post-keep.sh
 description: Project-level NBACK with CONN toolbox
