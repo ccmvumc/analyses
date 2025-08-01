@@ -2,6 +2,22 @@
 CONTAINER = getenv("SINGULARITY_CONTAINER");
 BIND = getenv("SINGULARITY_BIND");
 ROOT = '/OUTPUTS';
+FILTER=[0, Inf];
+STEPS={
+    'functional_label_as_original',...
+    'functional_realign&unwarp',...
+    'functional_slicetime',...
+    'functional_art',...
+    'functional_coregister_affine_noreslice',...
+    'functional_label_as_subjectspace',...
+    'functional_segment&normalize_direct',...
+    'functional_label_as_mnispace',...
+    'structural_center',...
+    'structural_segment&normalize',...
+    'functional_smooth',...
+    'functional_label_as_smoothed'...
+    };
+
 anats = {};
 fmris = {};
 all_conditions = {};
@@ -126,24 +142,6 @@ disp(var);
 
 NSUBJECTS=length(var.STRUCTURALS);
 
-FILTER=[0.01, 0.1];
-
-% These same steps are also available in CONN as defaultMNISScombined.mat
-STEPS={
-    'functional_label_as_original',...
-    'functional_realign&unwarp',...
-    'functional_slicetime',...
-    'functional_art',...
-    'functional_coregister_affine_noreslice',...
-    'functional_label_as_subjectspace',...
-    'functional_segment&normalize_direct',...
-    'functional_label_as_mnispace',...
-    'structural_center',...
-    'structural_segment&normalize',...
-    'functional_smooth',...
-    'functional_label_as_smoothed'...
-    };
-
 % Covariates, Second-Level subject effects, loaded after merging subjects
 % Setup.subjects.effects, Setup.subjects.groups
 
@@ -184,19 +182,33 @@ batch.Setup.preprocessing.sliceorder=var.SLICETIMES;
 
 % Configure to run and overwrite any existing
 batch.Setup.done=1;
-batch.Setup.overwrite='Yes';                            
+batch.Setup.overwrite=1;                            
 
 % Configure denoising
 batch.Denoising.filter=FILTER;
+batch.Denoising.confounds.names={'White Matter', 'CSF', 'Realignment', 'Scrubbing'};
 batch.Denoising.done=1;
-batch.Denoising.overwrite='Yes';
+batch.Denoising.overwrite=1;
 
-% First-Level Analysis for Seed to Voxel and ROI-to-ROI on same sources
+% First-Level Analysis
+batch.Analysis.analysis_number=1;
 batch.Analysis.done=1;
-batch.Analysis.overwrite='Yes';
-batch.Analysis.sources={'networks.DefaultMode'};
-batch.Analysis.weight='none';
-batch.Analysis.type=2;  % Seed2Voxel
+batch.Analysis.overwrite=1;
+
+% Contrasts
+batch.Results.analysis_number=1;
+batch.Results.between_conditions.names={
+    '0Back > Rest',
+    '2Back > Rest',
+    '2Back > 0Back'
+};
+batch.Results.between_conditions.contrasts={
+    [-1 1 0],
+    [-1 0 1],
+    [0 -1 1]
+};
+batch.Results.done=1;
+batch.Results.overwrite=1;
 
 disp('Running batch with CONN');
 conn_batch(batch);
