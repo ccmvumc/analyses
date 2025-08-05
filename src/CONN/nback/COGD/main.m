@@ -188,7 +188,7 @@ batch.Setup.overwrite=1;
 
 % Configure denoising
 batch.Denoising.filter=FILTER;
-batch.Denoising.confounds.names={'White Matter', 'CSF', 'Realignment', 'Scrubbing'};
+batch.Denoising.confounds.names={'White Matter', 'CSF', 'realignment', 'scrubbing'};
 batch.Denoising.done=1;
 batch.Denoising.overwrite=1;
 
