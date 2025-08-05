@@ -2,6 +2,21 @@
 CONTAINER = getenv("SINGULARITY_CONTAINER");
 BIND = getenv("SINGULARITY_BIND");
 ROOT = '/OUTPUTS';
+FILTER=[0.01, Inf];
+STEPS={
+    'functional_label_as_original',...
+    'functional_realign&unwarp',...
+    'functional_art',...
+    'functional_coregister_affine_noreslice',...
+    'functional_label_as_subjectspace',...
+    'functional_segment&normalize_direct',...
+    'functional_label_as_mnispace',...
+    'structural_center',...
+    'structural_segment&normalize',...
+    'functional_smooth',...
+    'functional_label_as_smoothed'...
+    };
+
 anats = {};
 fmris = {};
 all_conditions = {};
@@ -37,7 +52,6 @@ disp(anats);
 % Get list of sessions
 sessions = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI'));
 sessions = {sessions([sessions.isdir] & cellfun(@(d)~all(d == '.'), {sessions.name})).name};
-disp(sessions);
 
 % Counter for total runs
 r = 1;
@@ -116,22 +130,6 @@ disp(var);
 
 NSUBJECTS=length(var.STRUCTURALS);
 
-FILTER=[0.01, 0.1];
-
-STEPS={
-    'functional_label_as_original',...
-    'functional_realign&unwarp',...
-    'functional_art',...
-    'functional_coregister_affine_noreslice',...
-    'functional_label_as_subjectspace',...
-    'functional_segment&normalize_direct',...
-    'functional_label_as_mnispace',...
-    'structural_center',...
-    'structural_segment&normalize',...
-    'functional_smooth',...
-    'functional_label_as_smoothed'...
-    };
-
 % Covariates, Second-Level subject effects, loaded after merging subjects
 % Setup.subjects.effects, Setup.subjects.groups
 
@@ -144,7 +142,9 @@ batch.Setup.nsubjects=1;
 batch.Setup.RT=var.TR;
 batch.Setup.functionals=var.FUNCTIONALS;
 batch.Setup.structurals=var.STRUCTURALS;
-batch.Setup.analyses=[2];  % S2V
+batch.Setup.rois.names = {};
+batch.Setup.rois.dimensions = {};
+batch.Setup.rois.files = {};
 
 % Prepopulate secondary datasets so we can refer to subject-space in ROIs
 batch.Setup.secondarydatasets{1}=struct('functionals_type', 2, 'functionals_label', 'unsmoothed volumes');
@@ -171,19 +171,35 @@ batch.Setup.preprocessing.steps=STEPS;
 
 % Configure to run and overwrite any existing
 batch.Setup.done=1;
-batch.Setup.overwrite='Yes';                            
+batch.Setup.overwrite=1;
 
 % Configure denoising
 batch.Denoising.filter=FILTER;
+batch.Denoising.confounds.names={'White Matter', 'CSF', 'realignment', 'scrubbing'};
 batch.Denoising.done=1;
-batch.Denoising.overwrite='Yes';
+batch.Denoising.overwrite=1;
 
-% First-Level Analysis, Seed to Voxel
+% First-Level Analysis
+batch.Analysis.analysis_number=1;
 batch.Analysis.done=1;
-batch.Analysis.overwrite='Yes';
-batch.Analysis.sources={'networks.DefaultMode'};
-batch.Analysis.weight='none';
-batch.Analysis.type=2;  % Seed2Voxel only
+batch.Analysis.overwrite=1;
+
+% Contrasts
+batch.Results.analysis_number=1;
+batch.Results.between_conditions.names={
+    '0Back > 2Back',
+    '2Back > 0Back',
+    'ParamInc',
+    'ParamDec'
+};
+batch.Results.between_conditions.contrasts={
+    [1 0 -1 0],
+    [-1 0 1 0],
+    [-3 -2 -1 6],
+    [6 -1 -2 -3],
+};
+batch.Results.done=1;
+batch.Results.overwrite=1;
 
 disp('Running batch with CONN');
 conn_batch(batch);
