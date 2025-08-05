@@ -196,6 +196,11 @@ batch.Denoising.overwrite=1;
 batch.Analysis.analysis_number=1;
 batch.Analysis.done=1;
 batch.Analysis.overwrite=1;
+batch.Analysis.sources = {
+    'Effect of REST',
+    'Effect of 0BACK',
+    'Effect of 2BACK'
+};
 
 % Contrasts
 batch.Results.analysis_number=1;
