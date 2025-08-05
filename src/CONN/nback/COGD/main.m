@@ -204,21 +204,6 @@ batch.Analysis.sources = {
     'Effect of 2BACK'
 };
 
-% Contrasts
-batch.Results.analysis_number=1;
-batch.Results.between_conditions.names={
-    '0Back > Rest',
-    '2Back > Rest',
-    '2Back > 0Back'
-};
-batch.Results.between_conditions.contrasts={
-    [-1 1 0],
-    [-1 0 1],
-    [0 -1 1]
-};
-batch.Results.done=1;
-batch.Results.overwrite=1;
-
 disp('Running batch with CONN');
 conn_batch(batch);
 disp('DONE!');

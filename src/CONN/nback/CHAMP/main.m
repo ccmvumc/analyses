@@ -190,23 +190,6 @@ batch.Analysis.sources = {
     'Effect of 3BackRunBlockTrialCondition'
 };
 
-% Contrasts
-batch.Results.analysis_number=1;
-batch.Results.between_conditions.names={
-    '0Back > 2Back',
-    '2Back > 0Back',
-    'ParamInc',
-    'ParamDec'
-};
-batch.Results.between_conditions.contrasts={
-    [1 0 -1 0],
-    [-1 0 1 0],
-    [-3 -2 -1 6],
-    [6 -1 -2 -3],
-};
-batch.Results.done=1;
-batch.Results.overwrite=1;
-
 disp('Running batch with CONN');
 conn_batch(batch);
 disp('DONE!');
