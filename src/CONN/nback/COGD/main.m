@@ -1,3 +1,5 @@
+%https://www.nitrc.org/forum/message.php?msg_id=14154
+
 % Run single subject in CONN toolbox
 CONTAINER = getenv("SINGULARITY_CONTAINER");
 BIND = getenv("SINGULARITY_BIND");
