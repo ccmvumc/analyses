@@ -183,6 +183,12 @@ batch.Denoising.overwrite=1;
 batch.Analysis.analysis_number=1;
 batch.Analysis.done=1;
 batch.Analysis.overwrite=1;
+batch.Analysis.sources = {
+    'Effect of 0BackRunBlockTrialCondition',
+    'Effect of 1BackRunBlockTrialCondition',
+    'Effect of 2BackRunBlockTrialCondition',
+    'Effect of 3BackRunBlockTrialCondition'
+};
 
 % Contrasts
 batch.Results.analysis_number=1;
