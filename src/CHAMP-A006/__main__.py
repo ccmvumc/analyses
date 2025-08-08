@@ -91,7 +91,7 @@ def run_first_level(image_file, conditions_file, output_dir):
             threshold=THRESHOLD,
             display_mode='z',
             cut_coords=CUT_COORDS,
-            title=f'{cid}:{c}',
+            title=f'CHAMP N-Back 1st-Level contrast_{cid}:{c}',
             cmap=COLORMAP,
             vmax=VMAX
         )
@@ -130,7 +130,7 @@ def run_second_level(subjects_dir, group_dir):
             cut_coords=CUT_COORDS,
             display_mode='z',
             cmap=COLORMAP,
-            title=f'{cid}:{c}',
+            title=f'CHAMP N-Back 2nd-Level contrast_{cid}:{c}',
             vmax=VMAX
         )
 
@@ -150,6 +150,7 @@ def _write_subjects(subjects, filename):
     '''Writes a text file with one subject per line'''
     with open(filename, 'w') as f:
         f.write('\n'.join(subjects) + '\n')
+
 
 def main():
     print('loading subjects')
