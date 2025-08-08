@@ -1,0 +1,21 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-8
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      assessors:
+        - types: fmri_nback_CHAMP_v1
+          resources:
+            - resource: PREPROC
+              fmatch: FMRI/Baseline/dswuFMRI1.nii.gz,FMRI/Baseline/FMRI1.nii.conditions.mat
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash -c "PYTHONPATH=/REPO/src python -m CHAMP-A006"
+description: Project-level NBACK with nilearn

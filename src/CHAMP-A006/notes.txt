@@ -1,0 +1,16 @@
+Use "garjus run" to test locally on a few subjects. Nothing will be uploaded.
+garjus run -p CHAMP -s 2033,2034,2040 -r ~/git/analyses/processors/CHAMP-A006/processor.yaml -d /tmp/OUTPUTS-CHAMP-A006
+
+
+To debug a script in the docker, run the docker in interactive mode and set bash as the entry point.
+Use the the same settings garjus would run to mount INPUTS/OUTPUTS and REPO:
+docker run -it --entrypoint /bin/bash -v /tmp/OUTPUTS-CHAMP-A006/INPUTS:/INPUTS -v /tmp/OUTPUTS-CHAMP-A006/OUTPUTS:/OUTPUTS -v /Users/boydb1/git/analyses:/REPO bud42/ccmvumc_analyses:v2.1
+
+Then at shell prompt "inside the docker", run the script:
+python /REPO/src/CHAMP-A006/main.py 
+
+You can keep this shell open, modify the code outside the docker and run the updated code from the shell.
+
+
+Run a few more subjects
+garjus run -p CHAMP -s 1016,1019,1022,1023,1024,1037,2030,2033 -r ~/git/analyses/processors/CHAMP-A006/processor.yaml -d /tmp/OUTPUTS-CHAMP-A006
