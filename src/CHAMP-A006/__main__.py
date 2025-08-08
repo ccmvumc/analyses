@@ -30,7 +30,7 @@ from nilearn.plotting import plot_stat_map
 from nilearn.plotting import plot_design_matrix
 from nilearn.reporting import make_glm_report
 
-from .params import TR, CONDITION_MAP, CONTRASTS, CUT_COORDS, DURATION
+from .params import TR, CONDITION_MAP, CONTRASTS, CUT_COORDS, DURATION, THRESHOLD, COLORMAP, VMAX
 
 
 def _load_events(conditions_file):
@@ -65,6 +65,7 @@ def run_first_level(image_file, conditions_file, output_dir):
         noise_model='ols',
         hrf_model='spm',
         drift_model=None,
+        signal_scaling=False,
     )
 
     # Estimate fit
@@ -85,7 +86,15 @@ def run_first_level(image_file, conditions_file, output_dir):
         zmap.to_filename(f'{output_dir}/contrast_{cid}_zmap.nii.gz')
 
         # Plot
-        plot_stat_map(zmap, threshold=3.1, display_mode='z', cut_coords=CUT_COORDS)
+        plot_stat_map(
+            zmap,
+            threshold=THRESHOLD,
+            display_mode='z',
+            cut_coords=CUT_COORDS,
+            title=f'{cid}:{c}',
+            cmap=COLORMAP,
+            vmax=VMAX
+        )
 
         # Save plot
         plt.savefig(f'{output_dir}/contrast_{cid}_report.pdf')
@@ -93,7 +102,7 @@ def run_first_level(image_file, conditions_file, output_dir):
         plt.close()
 
     # Get the default report
-    report = make_glm_report(model, contrasts=np.array(CONTRASTS))
+    report = make_glm_report(model, title='CHAMP N-Back Task', contrasts=np.array(CONTRASTS), cut_coords=CUT_COORDS)
     report.save_as_html(f'{output_dir}/glm_report.html')
 
 
@@ -115,20 +124,27 @@ def run_second_level(subjects_dir, group_dir):
         zmap = model.compute_contrast(second_level_contrast="intercept", output_type="z_score")
 
         # Plot
-        plot_stat_map(zmap, threshold=3.1, display_mode='z', cut_coords=CUT_COORDS,
-            vmax=8,
-            cmap='cold_hot',
-            title='{i}:{cid}:{c}')
+        plot_stat_map(
+            zmap,
+            threshold=THRESHOLD,
+            cut_coords=CUT_COORDS,
+            display_mode='z',
+            cmap=COLORMAP,
+            title=f'{cid}:{c}',
+            vmax=VMAX
+        )
 
         # Save plot
         plt.savefig(f'{group_dir}/singlet_contrast_{cid}_report.pdf')
 
         plt.close()
 
+        # Get the default report
+        print('Second Level make_glm_report()')
+        report = make_glm_report(model, contrasts=np.array([1]), cut_coords=CUT_COORDS)
+        print(f'Saving report to: {group_dir}/contrast_{cid}_glm_report.html')
+        report.save_as_html(f'{group_dir}/contrast_{cid}_glm_report.html')
 
-    # TODO: Get the default report
-    #report = make_glm_report(model, c)
-    #report.save_as_html(f'{group_dir}/glm_report.html')
 
 def _write_subjects(subjects, filename):
     '''Writes a text file with one subject per line'''
@@ -162,16 +178,17 @@ def main():
                 print(f'No conditions.mat for subject:{subj}')
                 continue
 
+        # Found everything so include this subject
+        include_subjects.append(subj)
+
         subj_dir = f'/OUTPUTS/SUBJECTS/{subj}'
 
         if os.path.exists(subj_dir):
             print(f'skipping, exists:{subj_dir}')
             continue
 
-        os.makedirs(subj_dir, exist_ok=True)
-
         print(f'Running first-level:{subj}')
-        include_subjects.append(subj)
+        os.makedirs(subj_dir, exist_ok=True)
         run_first_level(subj_image, subj_mat, subj_dir)
 
     # Save subject list
