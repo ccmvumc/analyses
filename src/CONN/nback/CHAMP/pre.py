@@ -74,7 +74,7 @@ def make_conditions(edat_file, conditions, type_field, duration, conditions_file
     # Load onsets and durations for each condition
     for cond in conditions:
         # Get the trial type full name for this condition
-        val = f'{x}{TYPE_FIELD_SUFFIX}'
+        val = f'{cond}{TYPE_FIELD_SUFFIX}'
 
         # Get the onsets that match the val
         cond_onsets = list(df[df[type_field] == val]['_Onset'])
