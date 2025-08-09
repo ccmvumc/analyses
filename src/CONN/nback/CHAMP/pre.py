@@ -173,9 +173,7 @@ def extract(edat_file):
     trials_file = edat_base + '.trials.csv'
     behavior_file = edat_base + '.behavior.txt'
 
-    conditions = get_conditions()
-
-    make_conditions(conditions, TYPE_FIELD, DURATION, conditions_file)
+    make_conditions(CONDITIONS, TYPE_FIELD, DURATION, conditions_file)
 
     extract_trials(edat_file, trials_file)
 
