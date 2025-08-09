@@ -59,10 +59,10 @@ def run_first_level(image_file, conditions_file, output_dir):
     print(events)
 
     # Specify model with parameters set for denoised CONN images
+    # https://neurostars.org/t/nilearn-glm-first-level-question/29612
     print("Fitting a GLM")
     model = FirstLevelModel(
         t_r=TR,
-        noise_model='ols',
         hrf_model='spm',
         drift_model=None,
         signal_scaling=False,

@@ -4,13 +4,6 @@ import numpy as np
 import scipy.io
 
 
-TRIALS_FILE = '/OUTPUTS/PREPROC/SUBJECT/trials.csv'  
-BEHAVIOR_FILE = '/OUTPUTS/PREPROC/SUBJECT/behavior.txt'  
-TAB_FILE = '/OUTPUTS/PREPROC/SUBJECT/edat.txt'
-CONDITIONS_FILE = '/OUTPUTS/PREPROC/SUBJECT/conditions.mat'
-CONTRAST_FILE = '/OUTPUTS/PREPROC/SUBJECT/contrasts.mat'
-
-
 def read_edat(edat_path):
     skiprows = 0
     first_field = 'ExperimentName'
@@ -39,8 +32,8 @@ def read_edat(edat_path):
     return df
 
 
-def load_edat():
-    df = read_edat(TAB_FILE)
+def load_edat(filename):
+    df = read_edat(filename)
 
     # Fix column names
     df.columns = df.columns.map(
@@ -49,7 +42,7 @@ def load_edat():
     return df
 
 
-def write_spm_conditions(names, onsets, durations):
+def write_spm_conditions(names, onsets, durations, filename):
     np_names = np.array(names, dtype=object)
     np_onsets = np.empty((len(names),), dtype=object)
     np_durations = np.empty((len(names),), dtype=object)
@@ -64,12 +57,12 @@ def write_spm_conditions(names, onsets, durations):
     mat['durations'] = np_durations
 
     # Create file
-    scipy.io.savemat(CONDITIONS_FILE, mat)
+    scipy.io.savemat(filename, mat)
 
 
-def load_behavior():
+def load_behavior(filename):
     b = {}
-    with open(BEHAVIOR_FILE, "r") as f:
+    with open(filename, "r") as f:
         for line in f:
             k, v = line.split('=')
             b[k] = v
@@ -77,19 +70,19 @@ def load_behavior():
     return b
 
 
-def load_trials():
-    return pd.read_csv(TRIALS_FILE)
+def load_trials(filename):
+    return pd.read_csv(filename)
 
 
-def save_behavior(data):
+def save_behavior(filename, data):
     '''Write text file with behavior values'''
-    with open(BEHAVIOR_FILE, "w") as f:
+    with open(filename, "w") as f:
         for k in sorted(data):
             f.write("%s=%s\n" % (k, data[k]))
 
 
-def save_trials(df):
-    df.to_csv(TRIALS_FILE, index=False)
+def save_trials(df, filename):
+    df.to_csv(filename, index=False)
 
 
 def write_contrasts(names, vectors, filename):
@@ -104,7 +97,7 @@ def write_contrasts(names, vectors, filename):
     try:
         scipy.io.savemat(filename, mat)
     except OSError:
-        print('error saving file:' + CONTRAST_FILE)
+        print('error saving file:' + filename)
         return False
 
     return True

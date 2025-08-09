@@ -1,13 +1,5 @@
-echo "Making conditions.mat from edat.txt"
-python make_conditions.py
+echo "Making *conditions.mat, *trials.csv, and *behavior.xt from *edat.txt"
 
-echo "Making trials.csv from edat.txt"
-python make_trials.py
-
-echo "Making behavior.txt from trials.csv"
-python make_behavior.py
-
-echo "Making contrasts.mat"
-python make_contrasts.py
+python pre.py
 
 echo "ALL DONE!"
