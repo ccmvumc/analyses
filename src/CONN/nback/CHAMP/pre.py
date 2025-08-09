@@ -47,7 +47,7 @@ def extract_behavior(trials_file, behavior_file):
     data = parse_behavior(df)
 
     # write text file
-    save_behavior(data)
+    save_behavior(data, behavior_file)
 
 
 def load_nback(edat_file):

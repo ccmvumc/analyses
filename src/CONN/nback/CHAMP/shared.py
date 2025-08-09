@@ -74,7 +74,7 @@ def load_trials(filename):
     return pd.read_csv(filename)
 
 
-def save_behavior(filename, data):
+def save_behavior(data, filename):
     '''Write text file with behavior values'''
     with open(filename, "w") as f:
         for k in sorted(data):
