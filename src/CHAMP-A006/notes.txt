@@ -12,5 +12,10 @@ python -m CHAMP-A006
 
 You can keep this shell open, modify the code outside the docker and run the script from the same shell again using the updated code.
 
+
 Run a few more subjects
 garjus run -p CHAMP -s 1016,1019,1022,1023,1024,1037,2030,2033 -r ~/git/analyses/processors/CHAMP-A006/processor.yaml -d /tmp/OUTPUTS-CHAMP-A006
+
+
+Update GitHub and try with GitHub repo to run the procesor.yaml on the main branch:
+garjus run -p CHAMP -s 1016,1019,1022,1023,1024,1037,2030,2033 -r ccmvumc/analyses/CHAMP-A006 -d /tmp/OUTPUTS-CHAMP-A006
