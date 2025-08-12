@@ -1,0 +1,30 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-2
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - assessors:
+          - types: DnSeg_v1
+            resources:
+            - resource: DATA
+              fmatch: T1_resliced.nii.gz,T1_seg.nii.gz
+          - types: FS7sclimbic_v0
+            resources:
+              - resource: DATA
+                fmatch: nu.sclimbic.mgz
+pre:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/DnSeg/compare/prep.sh
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/DnSeg/compare/main.sh
+description: Project-level report
