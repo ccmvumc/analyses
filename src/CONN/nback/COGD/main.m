@@ -4,7 +4,7 @@
 CONTAINER = getenv("SINGULARITY_CONTAINER");
 BIND = getenv("SINGULARITY_BIND");
 ROOT = '/OUTPUTS';
-FILTER=[0, Inf];
+FILTER=[0.01, Inf];
 STEPS={
     'functional_label_as_original',...
     'functional_realign&unwarp',...
