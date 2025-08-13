@@ -1,7 +1,11 @@
 import os
 from glob import glob
+import re
+import fnmatch
 
+import pandas as pd
 import numpy as np
+import seaborn as sns
 from scipy.ndimage import center_of_mass
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
@@ -13,13 +17,22 @@ from matplotlib_venn import venn2
 from pypdf import PdfWriter
 
 
-# INPUTS: directory with subdirectory SUBJECTS with a subdir per subject
-# OUTPUTS: report.pdf at top level, volumes.txt and report in each subject dir
+# INPUTS: 
+#     files are downloaded into hierarchy:
+#     /INPUTS/<SUBJECT>/<SESSION>/assessors/<ASSESSOR>/*
+# OUTPUTS:
+#    at top level: report.pdf, all_subject_reports.pdf
+#    per subject: volumes.txt, report.pdf
+
+
+# TODO:
+# attach representative subject pdfs to the summary report
+#def _attach_reps(output_dir, pdf_file):
+# Minimum/Max/Median: mean(dnseg_lh, dnseg_rh)
 
 
 def calculate_volumes(dnseg, sclimbic):
     ''' Return volume of each ROI and volume of intersection, per hemisphere'''
-
     volumes = {}
 
     # Load images
@@ -71,19 +84,18 @@ def _load_volumes(filename):
     # Load each line as key/value pair
     with open(filename, "r") as f:
         for line in f:
-            k, v = line.split('=')
-            volumes[k] = v
+            k, v = line.rstrip('\n').split('=')
+            volumes[k] = float(v)
 
     return volumes
 
 
 def _calculate_summary(root_dir):
     '''Calculate summary of subjects, means and counts, returns dict'''
-
     data = []
     summary = {}
     rois = ['dnseg', 'sclimbic', 'intersect']
-
+    hemis = ['lh', 'rh']
     subj_dir = os.path.join(root_dir, 'SUBJECTS')
 
     print(f'Loading subjects from {subj_dir}')
@@ -91,55 +103,93 @@ def _calculate_summary(root_dir):
         if d.startswith('.'):
             continue
 
-        print(d)
-        vols = _load_volumes(os.path.join(subj_dir, d, 'volumes.txt'))
-        vols['SUBJECT'] = d
-        data.append(vols)
+        try:
+            vols = _load_volumes(os.path.join(subj_dir, d, 'volumes.txt'))
+            vols['SUBJECT'] = d
+            data.append(vols)
+        except Exception as err:
+            print(f'{d}:{err}')
 
-    df = pd.DataFrame(d)
-    print(df)
+    df = pd.DataFrame(data)
 
-    for roi in []
-        for hemi in ['lh', 'rh']:
-            summary[f'mean_{roi}_{hemi}'] = df[f'{roi}_{hemi}'].mean()
+    for h in hemis:
+        df[f'pct_dnseg_{h}'] = df[f'intersect_{h}'] / df[f'dnseg_{h}'] * 100.0
+        df[f'pct_dice_{h}'] = (df[f'intersect_{h}'] * 2)/ (df[f'dnseg_{h}'] + df[f'sclimbic_{h}']) * 100.0
+        df[f'pct_sclimbic_{h}'] = df[f'intersect_{h}'] / df[f'sclimbic_{h}'] * 100.0
 
-    summary['count_sessions'] = len(df)        
+    for r in rois:
+        for h in hemis:
+            summary[f'mean_{r}_{h}'] = df[f'{r}_{h}'].mean()
 
-    return summary
+    summary['count_sessions'] = len(df)
+
+    return summary, df
 
 
 def _make_summary(root_dir):
     '''Make summary pdf'''
     pdf_file = os.path.join(root_dir, 'report.pdf')
-    summary = _calculate_summary(root_dir)
+    rois = ['dnseg', 'sclimbic', 'intersect']
+    hemis = ['lh', 'rh']
+    summary_file =  f'{root_dir}/summary.txt'
+    data_file =  f'{root_dir}/data.csv'
 
-    session_count = summary['count_sessions']
+    # Load summary data
+    summary, df = _calculate_summary(root_dir)
+
+    # Save summary data
+    _save_summary(summary, summary_file)
+    _save_df(df, data_file)
 
     # Make the PDF
     print('Making pdf')
     with PdfPages(pdf_file) as pdf:
 
-        fig, ax = plt.subplots(5, 2, figsize=(8.5,11))
+        fig, ax = plt.subplots(4, 2, figsize=(8.5,11))
 
+        session_count = summary['count_sessions']
         fig.suptitle(f'DnSeg vs. sclimbic\nSummary n={session_count}')
 
         # Plot the venn row
         print('Plotting venn diagrams')
+
+        # Create renamed volumes for plot_venn, without "mean" prefix
         volumes = {}
-        for roi in ['dnseg', 'sclimbic', 'intersect']:
-            for hemi in ['lh', 'rh']:
-                volumes[f'{roi}_{hemi}'] = summary[f'mean_{roi}_{hemi}']
+        for r in rois:
+            for h in hemis:
+                volumes[f'{r}_{h}'] = summary[f'mean_{r}_{h}']
 
         _plot_venn(volumes, ax[0])
 
+        # Boxplots per hemisphere
+        for i, h in enumerate(hemis):
+            # Volumes
+            _columns = [x for x in df.columns if x.endswith(h) and not x.startswith('pct')]
+            df[_columns].boxplot(ax=ax[1][i])
+            ax[1][i].set_ylabel('Volume mm^3')
+
+            # Percent
+            _columns = [x for x in df.columns if x.endswith(h) and x.startswith('pct')]
+            df[_columns].boxplot(ax=ax[2][i])
+            ax[2][i].set_ylabel('Percent Overlap')
+            ax[2][i].set_ylim(0, 100)
+
+            # Dnseg vs sclimbic
+            sns.regplot(data=df, x=f'dnseg_{h}', y=f'sclimbic_{h}', ax=ax[3][i], marker='.', color='grey')
+            ax[3][i].set_title('Volume')
+            ax[3][i].set_aspect('equal', adjustable="datalim")
+            ax[3][i].grid(True)
+
+        # Include list of session IDs for: median, min, max of intersect
+
         # Tigthen up margins
         plt.subplots_adjust(
-            left=0.07,
+            left=0.10,
             bottom=0.07,
             right=0.93,
             top=0.93,
-            wspace=0.05,
-            hspace=0.15,
+            wspace=0.3,
+            hspace=0.3,
         )
 
         # Save to PDF
@@ -155,38 +205,36 @@ def _plot_venn(volumes, ax):
     # Make left venn in first column
     venn2(
         subsets=(
-            volumes['dnseg_lh'],
-            volumes['sclimbic_lh'],
-            volumes['intersect_lh'],
+            int(volumes['dnseg_lh']),
+            int(volumes['sclimbic_lh']),
+            int(volumes['intersect_lh']),
         ),
         set_labels=('DnSeg NBM', 'sclimbic BF', ''),
         set_colors=['red', 'lime'],
         alpha=0.7,
         ax=ax[0],
     )
-    ax[0].set_title('Left Hemisphere\nVolume (mm^3)')
+    ax[0].set_title('Left Hemisphere\n Mean Volume (mm^3)')
 
     # Make right venn in second column
     venn2(
         subsets=(
-            volumes['dnseg_rh'],
-            volumes['sclimbic_rh'],
-            volumes['intersect_rh'],
+            int(volumes['dnseg_rh']),
+            int(volumes['sclimbic_rh']),
+            int(volumes['intersect_rh']),
         ),
         set_labels=('DnSeg NBM', 'sclimbic BF', ''),
         set_colors=['fuchsia', 'deepskyblue'],
         alpha=0.7,
         ax=ax[1]
     )
-    ax[1].set_title('Right Hemisphere\nVolume (mm^3)')
+    ax[1].set_title('Right Hemisphere\n Mean Volume (mm^3)')
 
 
 def _zoom_ortho(disp, coords):
     '''Zoom all 3 displays of an orth view by adjusting axis limtis'''
-
-    # zoom in mmillimeters
-    ZMX = 20 
-    ZMY = 30
+    ZMX = 20  # zoom x fov in mmillimeters
+    ZMY = 30  # zoom y fov in mmillimeters
 
     x = coords[0]
     y = coords[1]
@@ -206,30 +254,41 @@ def _zoom_ortho(disp, coords):
 
 
 def _save_volumes(volumes, filename):
-    '''Write text file with behavior values'''
+    '''Write text file with values'''
     with open(filename, "w") as f:
         for k in sorted(volumes):
             f.write("%s=%s\n" % (k, volumes[k]))
 
 
-def _process_subject(subject_dir):
+def _save_df(df, filename):
+    df.to_csv(filename)
+
+
+def _save_summary(summary, filename):
+    '''Write text file with values'''
+    with open(filename, "w") as f:
+        for k in sorted(summary):
+            f.write("%s=%s\n" % (k, summary[k]))
+
+
+def _process_subject(input_dir, output_dir):
     '''Process a subject, outputs are volumes text file and a PDF report'''
-    sclimbic_file = subject_dir + '/nu.sclimbic.mgz'
-    dnseg_file = subject_dir + '/T1_seg.nii.gz'
-    anat_file = subject_dir + '/T1_resliced.nii.gz'
-    pdf_file = subject_dir + '/report.pdf'
-    vol_file = subject_dir +'/volumes.txt'
+    sclimbic_file = glob(f'{input_dir}/assessors/*/nu.sclimbic.mgz')[0]
+    dnseg_file = glob(f'{input_dir}/assessors/*/T1_seg.nii.gz')[0]
+    anat_file = glob(f'{input_dir}/assessors/*/T1_resliced.nii.gz')[0]
+    pdf_file = output_dir + '/report.pdf'
+    vol_file = output_dir +'/volumes.txt'
 
     if os.path.exists(vol_file) and os.path.exists(pdf_file):
         print(f'exists:{vol_file}:{pdf_file}')
         return
 
-    print('calculating volumes for comparison')
+    #print(f'{output_dir}:calculating volumes for comparison')
     volumes = calculate_volumes(dnseg_file, sclimbic_file)
-    _save_volumes(volumes, subject_dir +'/volumes.txt')
+    _save_volumes(volumes, vol_file)
 
     # Find coordinates of center of mass for each ROI separate hemispheres
-    print('finding center-of-mass coordinates for plotting')
+    #print(f'{output_dir}:finding center-of-mass coordinates for plotting')
 
     # Load dnseg
     roi_img = load_img(dnseg_file)
@@ -247,24 +306,27 @@ def _process_subject(subject_dir):
     coords_dnseg_rh = _coords
 
     _coords, _names = find_parcellation_cut_coords(sclimbic_file, return_label_names=True)
-    # TODO: use names to confirm label id   
+    print(len(_names))
     coords_sclimbic_lh = _coords[9]
     coords_sclimbic_rh = _coords[10]
 
     # Make the PDF
-    print('Making pdf')
+    print(f'{output_dir}:making pdf')
     with PdfPages(pdf_file) as pdf:
-        subject = os.path.basename(subject_dir)
+        subject = os.path.basename(output_dir)
 
         fig, ax = plt.subplots(5, 2, figsize=(8.5,11))
 
         fig.suptitle(f'{subject}\nDnSeg vs. sclimbic')
 
         # Plot the venn row
-        print('Plotting venn diagrams')
         _plot_venn(volumes, ax[0])
 
-        print('Plotting images')
+        dnseg_lh = math_img("img == 1", img=dnseg_file)
+        dnseg_rh = math_img("img == 2", img=dnseg_file)
+        sclimbic_lh = math_img("img == 865", img=sclimbic_file)
+        sclimbic_rh = math_img("img == 866", img=sclimbic_file)
+
         plt.subplots_adjust(
             left=0.07,
             bottom=0.07,
@@ -273,11 +335,6 @@ def _process_subject(subject_dir):
             wspace=0.05,
             hspace=0.15,
         )
-
-        dnseg_lh = math_img("img == 1", img=dnseg_file)
-        dnseg_rh = math_img("img == 2", img=dnseg_file)
-        sclimbic_lh = math_img("img == 865", img=sclimbic_file)
-        sclimbic_rh = math_img("img == 866", img=sclimbic_file)
 
         # Show 3 views, not zoomed with both lh
         disp = plot_roi(
@@ -414,26 +471,56 @@ def _merge_reports(reports, merged_file):
     merger.close()
 
 
-def main(root_dir):
-    '''Creates report per subject and summary report'''
-    subj_dir = os.path.join(root_dir, 'SUBJECTS')
+def _filter_matches(match_input, match_filter):
+    return re.match(fnmatch.translate(match_filter), match_input)
 
-    print(f'Loading subjects from {subj_dir}')
-    for d in sorted(os.listdir(subj_dir)):
-        if d.startswith('.'):
+
+def main(input_dir, output_dir=None, session_filter=None):
+    '''Creates report per subject and summary report'''
+    all_file = f'{output_dir}/all_subject_reports.pdf'
+
+    if output_dir is None:
+        input_dir = output_dir
+
+    print(f'Loading subjects from {input_dir}')
+    for subj in sorted(os.listdir(os.path.join(input_dir))):
+        if subj.startswith('.'):
             continue
 
-        print(d)
-        _process_subject(os.path.join(subj_dir, d))
+        if not os.path.isdir(os.path.join(input_dir, subj)):
+            continue
 
-    print('Merging subject reports')
-    reports = sorted(glob(f'{subj_dir}/*/report.pdf'))
-    _merge_reports(reports, f'{root_dir}/all_subject_reports.pdf')
+        for sess in sorted(os.listdir(os.path.join(input_dir, subj))):
+            if sess.startswith('.'):
+                continue
+
+            if not os.path.isdir(os.path.join(input_dir, subj, sess)):
+                continue
+
+            if session_filter and not _filter_matches(sess, session_filter):
+                continue
+
+            print(subj, sess)
+            input_subj = os.path.join(input_dir, subj, sess)
+            output_subj = os.path.join(output_dir, 'SUBJECTS', sess)
+            try:
+                os.makedirs(output_subj, exist_ok=True)
+                _process_subject(input_subj, output_subj)
+            except Exception as err:
+                print(f'error processing {subj}:{sess}:{err}')
+                continue
+
+    if os.path.exists(all_file):
+        print(f'already exists:{all_file}')
+    else:
+        print('Merging subject reports')
+        reports = sorted(glob(f'{output_dir}/SUBJECTS/*/report.pdf'))
+        _merge_reports(reports, all_file)
 
     print('Making summary report')
-    _make_summary(root_dir)
+    _make_summary(output_dir)
 
 
 if __name__ == '__main__':
     import sys
-    main(sys.argv[1])
+    main(sys.argv[1], sys.argv[2])  #, sys.argv[3])
