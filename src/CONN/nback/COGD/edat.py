@@ -12,8 +12,11 @@ DURATIONS = [20.0, 60.0, 60.0]
 
 
 def parse_behavior(df):
+    # Initialize the summary data
+    data = {}
+
     # Drop the Begin trials that are not used for accuracy/RT
-    df = df[.SUBTYPE != 'Begin']
+    df = df[df.SUBTYPE != 'Begin']
 
     # Accuracy
     data['overall_acc'] = df.ACC.mean()

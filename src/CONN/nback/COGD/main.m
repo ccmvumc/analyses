@@ -1,8 +1,6 @@
 %https://www.nitrc.org/forum/message.php?msg_id=14154
 
 % Run single subject in CONN toolbox
-CONTAINER = getenv("SINGULARITY_CONTAINER");
-BIND = getenv("SINGULARITY_BIND");
 ROOT = '/OUTPUTS';
 FILTER=[0.01, Inf];
 STEPS={
@@ -29,13 +27,6 @@ all_tr = 0.0;
 all_times = [];
 
 disp(pwd);
-disp(BIND);
-disp(CONTAINER);
-
-if BIND == ""
-    disp('no binds found for INPUTS/OUTPUTS');
-    exit;
-end
 
 % Get list of subdirectories
 subjects = dir(fullfile(ROOT, 'PREPROC'));
