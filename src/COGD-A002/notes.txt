@@ -1,0 +1,10 @@
+# for SUBJECT in *:do garjus spin -p COGD -s $SUBJECT -d /tmp/COGD-spin/$SUBJECT -y ~/Downloads/fmri_nback_COGD_v2.0.0.yaml;done;
+
+#TBD:garjus run -p COGD -r ccmvumc/analyses/COGD-A002 -d /tmp/OUTPUTS-COGD-A002
+
+
+
+cp -r ~/Desktop/COGD-spin-fmri_nback_v2/* .
+for i in *;do mv $i/OUTPUTS/PREPROC/$i/* $i;done
+rm -r */OUTPUTS
+rm -r */INPUTS
