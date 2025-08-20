@@ -1,4 +1,6 @@
-# for SUBJECT in *:do garjus spin -p COGD -s $SUBJECT -d /tmp/COGD-spin/$SUBJECT -y ~/Downloads/fmri_nback_COGD_v2.0.0.yaml;done;
+# for SUBJECT in *:do 
+#garjus spin -p COGD -s $SUBJECT -d /tmp/COGD-spin/$SUBJECT -y ~/Downloads/fmri_nback_COGD_v2.0.0.yaml;
+#done;
 
 #TBD:garjus run -p COGD -r ccmvumc/analyses/COGD-A002 -d /tmp/OUTPUTS-COGD-A002
 
@@ -8,3 +10,32 @@ cp -r ~/Desktop/COGD-spin-fmri_nback_v2/* .
 for i in *;do mv $i/OUTPUTS/PREPROC/$i/* $i;done
 rm -r */OUTPUTS
 rm -r */INPUTS
+
+
+
+garjus spin -p COGD -s 9601b -d /tmp/COGD-9601b-synbold -y ~/git/analyses/src/COGD-A002/synbold_v1.3.2.yaml
+
+
+
+garjus spin -p COGD -s 9620 -d /tmp/COGD-spin/9620 -y ~/Downloads/fmri_nback_COGD_v2.0.0.yaml --reuse
+
+
+
+
+ cp -r ~/Desktop/COGD-spin-fmri_nback_v2/9620/OUTPUTS/PREPROC/9620 .
+
+
+
+
+# manually convert 
+scp NBACKtest-9607-2.edat3 mrburns:~/NBACKtest-9607-2.edat3    
+scp mrburns:~/*9607*.txt .
+
+
+
+
+cp NBACKtest-9607-2.edat2_tab.txt /tmp/COGD-spin/9607/INPUTS/Week5-edat.txt 
+
+
+
+garjus spin -p COGD -s 9607 -d /tmp/COGD-spin/9607 -y ~/Downloads/fmri_nback_COGD_v2.0.0.yaml --reuse
