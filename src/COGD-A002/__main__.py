@@ -38,7 +38,6 @@ def merge_behavior(input_dir, output_file):
             f = os.path.join(input_dir, subj, 'FMRI', sess, 'FMRI.nii.behavior.txt')
             b.update(load_behavior(f))
             data.append(b)
-            print(b)
 
     df = pd.DataFrame(data)
 
@@ -49,7 +48,27 @@ def merge_behavior(input_dir, output_file):
 
     df = df.sort_values(['SUBJECT', 'SESSION'])
 
-    print(df)
+    df.to_csv(output_file, index=False)
+
+
+def merge_stats(input_dir, output_file):
+    data = []
+    subjects = [x for x in os.listdir(input_dir) if os.path.isdir(f'{input_dir}/{x}')]
+
+    for subj in subjects:
+        for sess in SESSIONS:
+            b = {'SUBJECT': subj, 'SESSION': sess}
+            f = os.path.join(input_dir, subj, sess, 'stats.txt')
+            b.update(load_stats(f))
+            data.append(b)
+
+    df = pd.DataFrame(data)
+
+    drop_columns = [x for x in df.columns if x.endswith('constant')]
+
+    df = df.drop(columns=drop_columns)
+
+    df = df.sort_values(['SUBJECT', 'SESSION'])
 
     df.to_csv(output_file, index=False)
 
@@ -64,7 +83,22 @@ def load_behavior(filename):
     return b
 
 
+def load_stats(filename):
+    stats = {}
+    with open(filename, "r") as f:
+        for line in f:
+            k, v = line.strip().split('=')
+            stats[k] = v
+
+    return stats
+
+
 if __name__ == '__main__':
     firstlevel.main(sys.argv[1], sys.argv[2])
     secondlevel.main(sys.argv[2])
     merge_behavior(sys.argv[1], os.path.join(sys.argv[2], 'behavior.csv'))
+    merge_stats(
+        os.path.join(sys.argv[2], 'SUBJECTS'),
+        os.path.join(sys.argv[2], 'stats.csv')
+    )
+    print('DONE!')

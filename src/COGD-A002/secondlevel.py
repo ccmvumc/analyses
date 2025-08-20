@@ -15,7 +15,7 @@ from .params import CONTRASTS, CUT_COORDS, THRESHOLD, COLORMAP, VMAX
 TITLE = 'COG-D N-Back Task'
 
 
-def run_second_level(subjects_dir, group_dir):
+def run_second_level(subjects_dir, group_dir, roi_dir):
     print(subjects_dir)
     print(group_dir)
 
@@ -35,7 +35,7 @@ def run_second_level(subjects_dir, group_dir):
         zmap = model.compute_contrast(second_level_contrast="intercept", output_type="z_score")
 
         # Plot
-        plot_stat_map(
+        display = plot_stat_map(
             zmap,
             threshold=THRESHOLD,
             cut_coords=CUT_COORDS,
@@ -44,6 +44,10 @@ def run_second_level(subjects_dir, group_dir):
             title=f'{TITLE} 2nd-Level contrast_{cid}:{c}',
             vmax=VMAX
         )
+
+        for r in glob(f'{roi_dir}/*.nii.gz'):
+            display.add_contours(r, levels=[0.5], colors="r")
+
 
         # Save plot
         plt.savefig(f'{group_dir}/singlet_contrast_{cid}_report.pdf')
@@ -57,13 +61,10 @@ def run_second_level(subjects_dir, group_dir):
         report.save_as_html(f'{group_dir}/contrast_{cid}_glm_report.html')
 
 
-def pre_vs_post(subjects_dir, group_dir):
-    pass
-
-
 def main(root_dir):
     subjects_dir = os.path.join(root_dir, 'SUBJECTS')
     group_dir = os.path.join(root_dir, 'GROUP')
+    roi_dir = os.path.join(root_dir, 'ROIS')
 
     os.makedirs(group_dir, exist_ok=True)
-    run_second_level(subjects_dir, group_dir)
+    run_second_level(subjects_dir, group_dir, roi_dir)

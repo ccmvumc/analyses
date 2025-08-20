@@ -20,3 +20,22 @@ VMAX = 6
 
 # Colormap used to display zmaps
 COLORMAP = 'cold_hot'
+
+# Regions of interest for beta value extraction
+ROIS = [
+    {
+        'name': 'acc',
+        'atlas': 'Schaefer200',
+        'labels': [73, 179]
+    },
+    {
+        'name': 'dlpfc',
+        'atlas': 'Schaefer200',
+        'labels': [66, 67, 68, 69, 70, 170, 171, 172, 173, 174, 175, 176]
+    },
+    {
+        'name': 'ppc',
+        'atlas': 'Schaefer200',
+        'labels': [61, 62, 63, 165, 166, 167]
+    },
+]
