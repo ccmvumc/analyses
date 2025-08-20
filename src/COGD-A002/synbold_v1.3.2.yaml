@@ -1,0 +1,48 @@
+# https://github.com/MASILab/SynBOLD-DisCo
+---
+procyamlversion: 3.0.0-dev.0
+containers:
+  - name: synbold
+    path: synbold-disco_v1.3.sif
+    source: docker://ytzero/synbold-disco:v1.3
+requirements:
+  walltime: 0-8
+  memory: 16G
+
+inputs:
+  xnat:
+    scans:
+      - name: scan_t1
+        types: T1
+        nifti: T1.nii.gz
+        skip_unusable: True
+        keep_multis: first
+      - name: scan_fmri
+        types: fMRI_NBACK
+        nifti: BOLD_d.nii.gz
+        needs_qc: True
+
+# Note that this drops a lot of synbold intermediate outputs
+outputs:
+  - {path: rBOLD.par,         type: FILE, resource: MOTPAR}
+  - {path: T1_mask.nii.gz,    type: FILE, resource: T1_MASKED}
+  - {path: BOLD_d_3D.nii.gz,  type: FILE, resource: BOLD_MEAN}
+  - {path: BOLD_s_3D.nii.gz,  type: FILE, resource: BOLD_SYN}
+  - {path: BOLD_u.nii.gz,     type: FILE, resource: BOLD_CORRECTED}
+  - {path: BOLD_u_3D.nii.gz,  type: FILE, resource: BOLD_CORRECTED_MEAN}
+  - {path: BOLD_d_u.nii.gz,   type: FILE, resource: BOLD_D_CORRECTED}
+
+
+
+command:
+  type: singularity_run
+  container: synbold
+  extraopts: -v ~/freesurfer_license.txt:/opt/freesurfer/license.txt
+
+post:
+  type: singularity_exec
+  container: synbold
+  args: bash -c "source /opt/freesurfer/SetUpFreeSurfer.sh && source activate /opt/miniconda3 && cd /OUTPUTS && applytopup --imain=BOLD_d --datain=acqparams.txt --inindex=1 --topup=topup_results --out=BOLD_d_u --method=jac && fslmaths -dt float BOLD_d_u.nii.gz BOLD_d_u.nii.gz -odt int"
+  extraopts: -v ~/freesurfer_license.txt:/opt/freesurfer/license.txt
+
+jobtemplate: job_template_v3.txt
