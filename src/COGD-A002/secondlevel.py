@@ -34,6 +34,8 @@ def run_second_level(subjects_dir, group_dir, roi_dir):
 
         zmap = model.compute_contrast(second_level_contrast="intercept", output_type="z_score")
 
+        zmap.to_filename(f'{group_dir}/contrast_{cid}_zmap.nii.gz')
+
         # Plot
         display = plot_stat_map(
             zmap,
@@ -46,7 +48,7 @@ def run_second_level(subjects_dir, group_dir, roi_dir):
         )
 
         for r in glob(f'{roi_dir}/*.nii.gz'):
-            display.add_contours(r, levels=[0.5], colors="r")
+            display.add_contours(r, levels=[0.5], colors="g")
 
 
         # Save plot
