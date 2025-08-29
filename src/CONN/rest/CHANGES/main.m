@@ -1,5 +1,5 @@
 % Run single rest subject with stc in CONN toolbox
-SLICEORDER = 'interleaved (Philips)'
+SLICEORDER = 'interleaved (Philips)';
 ROOT = '/OUTPUTS';
 FILTER=[0.01, 0.1];
 STEPS={
@@ -100,6 +100,7 @@ for k=1:numel(sessions)
 
         % Determine TR
         new_tr = spm_vol_nifti(fmris{n}{r}).private.timing.tspace;
+        disp(new_tr);
         if all_tr == 0.0
             all_tr = new_tr;
         elseif all_tr ~= new_tr
@@ -111,11 +112,20 @@ for k=1:numel(sessions)
             end
         end
 
+        % Initialize all conditions for this run
+        for c=1:numel(sessions)
+            onsets{c}{n}{r} = [];
+            durations{c}{n}{r} = [];
+        end
+
         % Set onsets to 0 and duration to infinity to include whole scan.
         % Current scan indexed by total run number, r.
         % Set for condition for this session, k.
         onsets{k}{n}{r} = 0;
         durations{k}{n}{r} = inf;
+
+        disp(onsets);
+        disp(durations);
 
         % Increment total run count for subject
         r = r + 1;
