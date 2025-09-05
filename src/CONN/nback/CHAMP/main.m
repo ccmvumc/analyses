@@ -2,7 +2,7 @@
 CONTAINER = getenv("SINGULARITY_CONTAINER");
 BIND = getenv("SINGULARITY_BIND");
 ROOT = '/OUTPUTS';
-FILTER=[0.01, Inf];
+FILTER=[0.01, inf];
 STEPS={
     'functional_label_as_original',...
     'functional_realign&unwarp',...
@@ -138,8 +138,8 @@ for k=1:numel(sessions)
     scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
     scans = {scans(~[scans.isdir]).name};
     for s=1:numel(scans)
-        all_onsets{c}{n}{r} = {0};
-        all_durations{c}{n}{r} = {inf};
+        all_onsets{c}{n}{r} = 0;
+        all_durations{c}{n}{r} = inf;
         r = r + 1;
     end
     c = c + 1;
