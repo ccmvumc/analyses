@@ -1,0 +1,1 @@
+garjus --debug run -p COGD -r ~/git//analyses/processors/COGD-A003/processor.yaml -d /tmp/COGD 

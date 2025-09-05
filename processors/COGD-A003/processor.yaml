@@ -1,0 +1,23 @@
+---
+containers:
+  - name: CONN
+    path: all_conn_rsfc_v1.4.3.sif
+    source: docker://bud42/all_conn_rsfc:v1.4.3
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-8
+  memory: 16G
+inputs:
+  xnat:
+    subjects:
+      assessors:
+        - types: fmri_rest_COGD_v2
+          resources:
+            - resource: CONN
+command:
+  type: singularity_exec
+  container: CONN
+  args: bash /REPO/src/COGD-A003/main.sh
+description: Project-level RSFC with CONN toolbox, control regions

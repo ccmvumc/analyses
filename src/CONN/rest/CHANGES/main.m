@@ -133,12 +133,14 @@ for k=1:numel(sessions)
 end
 
 % Assign each roi
+disp(roinames);
 for i=1:numel(roinames)
     % Get current roi name
     roi = roinames{i};
 
     % Find the path to the roi file for this subject
     filename = dir(fullfile(ROOT, 'ROI', roi, subj));
+    disp(filename);
     filename = {filename(~[filename.isdir]).name};
     filename = filename{1};
     roifiles{i}{n} = fullfile(ROOT, 'ROI', roi, subj, filename);
@@ -146,6 +148,7 @@ for i=1:numel(roinames)
 end
 
 % Assign each atlas file
+disp(atlasnames);
 for i=1:numel(atlasnames)
     atlas = atlasnames{i};
     atlasfiles{i}{n} = fullfile(ROOT, [atlas '.nii']);
