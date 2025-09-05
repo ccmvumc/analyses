@@ -135,6 +135,7 @@ for k=1:numel(sessions)
             all_onsets{c}{n}{r} = [];
             all_durations{c}{n}{r} = [];
             r = r + 1;
+        end
     end
 end
 
