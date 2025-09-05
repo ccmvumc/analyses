@@ -116,7 +116,7 @@ for k=1:numel(sessions)
         c = numel(names) + k;
         all_conditions{c} = sess;
         all_onsets{c}{n}{r} = 0;
-        all_onsets{c}{n}{r} = Inf;
+        all_durations{c}{n}{r} = Inf;
 
         % Increment total run count for subject
         r = r + 1;
