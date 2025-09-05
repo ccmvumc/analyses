@@ -114,9 +114,13 @@ for k=1:numel(sessions)
 
         % Set a session-wide condition
         c = numel(names) + k;
+        disp(c);
+        disp(sess);
         all_conditions{c} = sess;
         all_onsets{c}{n}{r} = 0;
-        all_durations{c}{n}{r} = Inf;
+        all_durations{c}{n}{r} = inf;
+        disp(all_onsets{c}{n}{r});
+        disp(all_durations{c}{n}{r});
 
         % Increment total run count for subject
         r = r + 1;
