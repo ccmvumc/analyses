@@ -97,7 +97,7 @@ for k=1:numel(sessions)
  
         if isempty(all_conditions)
             all_conditions = names;
-        elseif ~isequal(all_conditions[:numel(names)], names)
+        elseif ~isequal(all_conditions(1:numel(names)), names)
             disp('Conflicting conditions found');
             disp(all_conditions);
             disp(names);
