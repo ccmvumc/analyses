@@ -112,20 +112,44 @@ for k=1:numel(sessions)
             all_durations{c}{n}{r} = durations{c};
         end
 
-        % Set a session-wide condition
-        c = numel(names) + k;
-        disp(c);
-        disp(sess);
-        all_conditions{c} = sess;
-        all_onsets{c}{n}{r} = 0;
-        all_durations{c}{n}{r} = inf;
-        disp(all_onsets{c}{n}{r});
-        disp(all_durations{c}{n}{r});
-
         % Increment total run count for subject
         r = r + 1;
     end
 end
+
+
+disp(all_conditions)
+disp(all_onsets);
+disp(all_durations);
+
+
+% Set session-wide conditions
+r = 1;
+c = numel(all_conditions) + 1;
+for k=1:numel(sessions)
+    % Get current session
+    sess = sessions{k};
+    disp(sess);
+
+    disp(c);
+
+    all_conditions{c} = sess;
+
+    scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
+    scans = {scans(~[scans.isdir]).name};
+    for s=1:numel(scans)
+        all_onsets{c}{n}{r} = {0};
+        all_durations{c}{n}{r} = {inf};
+        r = r + 1;
+    end
+    c = c + 1;
+end
+
+
+disp(all_conditions)
+disp(all_onsets);
+disp(all_durations);
+
 
 
 % Build the variable structure
@@ -194,10 +218,10 @@ batch.Analysis.analysis_number=1;
 batch.Analysis.done=1;
 batch.Analysis.overwrite=1;
 batch.Analysis.sources = {
-    'Effect of 0BackRunBlockTrialCondition',
-    'Effect of 1BackRunBlockTrialCondition',
-    'Effect of 2BackRunBlockTrialCondition',
-    'Effect of 3BackRunBlockTrialCondition'
+    'Effect of 0Back',
+    'Effect of 1Back',
+    'Effect of 2Back',
+    'Effect of 3Back'
 };
 
 disp('Running batch with CONN');
