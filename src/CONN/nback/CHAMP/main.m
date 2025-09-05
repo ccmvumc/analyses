@@ -138,8 +138,8 @@ for k=1:numel(sessions)
     scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
     scans = {scans(~[scans.isdir]).name};
     for s=1:numel(scans)
-        all_onsets{c}{n}{r} = 0;
-        all_durations{c}{n}{r} = inf;
+        all_onsets{c}{n}{r} = [0];
+        all_durations{c}{n}{r} = [inf];
         r = r + 1;
     end
     c = c + 1;
