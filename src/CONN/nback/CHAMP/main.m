@@ -97,7 +97,7 @@ for k=1:numel(sessions)
  
         if isempty(all_conditions)
             all_conditions = names;
-        elseif ~isequal(all_conditions, names)
+        elseif ~isequal(all_conditions[:numel(names)], names)
             disp('Conflicting conditions found');
             disp(all_conditions);
             disp(names);
@@ -111,6 +111,12 @@ for k=1:numel(sessions)
             all_onsets{c}{n}{r} = onsets{c};
             all_durations{c}{n}{r} = durations{c};
         end
+
+        % Set a session-wide condition
+        c = numel(names) + k;
+        all_conditions{c} = sess;
+        all_onsets{c}{n}{r} = 0;
+        all_onsets{c}{n}{r} = Inf;
 
         % Increment total run count for subject
         r = r + 1;

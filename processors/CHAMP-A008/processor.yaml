@@ -1,0 +1,20 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-12
+  memory: 20G
+inputs:
+  xnat:
+    subjects:
+      assessors:
+        - types: fmri_nback_CHAMP_v2
+          resources:
+            - resource: CONN
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash -c "PYTHONPATH=/REPO/src python -u -m CHAMP-A008 /INPUTS /OUTPUTS"
+description: Project-level NBACK with CONN
