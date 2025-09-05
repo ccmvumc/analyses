@@ -61,7 +61,7 @@ for k=1:numel(sessions)
     % Get current session
     sess = sessions{k};
 
-    disp(sess);
+    %disp(sess);
 
     % Get list of scans for this session
     scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
@@ -70,7 +70,7 @@ for k=1:numel(sessions)
     % Assign each scan by appending to list for whole subject
     for s=1:numel(scans)
         scan = scans{s};
-        disp(scan);
+        %disp(scan);
 
         % Set the scan file
         fmris{n}{r} = fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, scan);
@@ -91,9 +91,9 @@ for k=1:numel(sessions)
         % Load conditions from file
         load(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, [scan '.conditions.mat']));
 
-        disp(names);
-        disp(onsets);
-        disp(durations);
+        %disp(names);
+        %disp(onsets);
+        %disp(durations);
  
         if isempty(all_conditions)
             all_conditions = names;
@@ -133,13 +133,13 @@ for k=1:numel(sessions)
 
     disp(c);
 
-    all_conditions{c} = sess;
+    %all_conditions{c} = sess;
 
     scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
     scans = {scans(~[scans.isdir]).name};
     for s=1:numel(scans)
-        all_onsets{c}{n}{r} = [0];
-        all_durations{c}{n}{r} = [inf];
+        %all_onsets{c}{n}{r} = [0];
+        %all_durations{c}{n}{r} = [inf];
         r = r + 1;
     end
     c = c + 1;
