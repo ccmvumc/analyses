@@ -141,7 +141,8 @@ end
 
 % Set session-wide conditions
 r = 1;
-c = numel(all_conditions) + 1;
+c = numel(all_conditions) - numel(sessions);
+disp(c);
 for k=1:numel(sessions)
     % Get current session
     sess = sessions{k};
