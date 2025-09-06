@@ -123,15 +123,13 @@ disp(all_onsets);
 disp(all_durations);
 
 % Init session-wide conditions
-r = 1;
-for k=1:numel(sessions)
-    % Get current session
-    sess = sessions{k};
-    scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
-    scans = {scans(~[scans.isdir]).name};
-    for s=1:numel(scans)
-        for c=(numel(all_conditions) + 1):(numel(all_conditions) + numel(sessions))
-            all_conditions{c} = '';
+for c=(numel(all_conditions) + 1):(numel(all_conditions) + numel(sessions))
+    r = 1;
+    for k=1:numel(sessions)
+        sess = sessions{k};
+        scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
+        scans = {scans(~[scans.isdir]).name};
+        for s=1:numel(scans)
             all_onsets{c}{n}{r} = [];
             all_durations{c}{n}{r} = [];
             r = r + 1;
