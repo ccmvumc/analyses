@@ -124,6 +124,7 @@ disp(all_durations);
 
 % Init session-wide conditions
 for c=(numel(all_conditions) + 1):(numel(all_conditions) + numel(sessions))
+    all_conditions{c} = '';
     r = 1;
     for k=1:numel(sessions)
         sess = sessions{k};
