@@ -140,7 +140,7 @@ end
 
 % Set session-wide conditions
 r = 1;
-c = numel(all_conditions) - numel(sessions);
+c = numel(all_conditions) - numel(sessions) + 1;
 disp(c);
 for k=1:numel(sessions)
     % Get current session
