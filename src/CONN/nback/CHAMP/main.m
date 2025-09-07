@@ -148,9 +148,10 @@ NSUBJECTS=length(var.STRUCTURALS);
 clear batch;
 batch.filename=fullfile(var.ROOT, 'conn_project.mat');
 
-% Setup
+% Setup, seed2voxel only
 batch.Setup.isnew=1;
 batch.Setup.nsubjects=1;
+batch.Setup.analyses=2;
 batch.Setup.RT=var.TR;
 batch.Setup.functionals=var.FUNCTIONALS;
 batch.Setup.structurals=var.STRUCTURALS;
