@@ -1,6 +1,4 @@
 % Run single subject in CONN toolbox
-CONTAINER = getenv("SINGULARITY_CONTAINER");
-BIND = getenv("SINGULARITY_BIND");
 ROOT = '/OUTPUTS';
 FILTER=[0.01, inf];
 STEPS={
@@ -24,22 +22,11 @@ all_onsets = {};
 all_durations = {};
 all_tr = 0.0;
 
-disp(pwd);
-disp(BIND);
-disp(CONTAINER);
-
-if BIND == ""
-    disp('no binds found for INPUTS/OUTPUTS');
-    exit;
-end
-
 % Get list of subdirectories
 subjects = dir(fullfile(ROOT, 'PREPROC'));
-disp(subjects);
 
 % Get just the directory names while excluding dot and double-dot
 subjects = {subjects([subjects.isdir] & cellfun(@(d)~all(d == '.'), {subjects.name})).name};
-disp(subjects);
 
 % Get current subject
 n = 1;
@@ -47,21 +34,18 @@ subj = subjects{n};
 
 % Assign the ANAT for the subject
 anats{n} = fullfile(ROOT, 'PREPROC', subj, 'ANAT.nii');
-disp(anats);
 
 % Get list of sessions
 sessions = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI'));
 sessions = {sessions([sessions.isdir] & cellfun(@(d)~all(d == '.'), {sessions.name})).name};
 
-% Counter for total runs
+% Counter for total runs across sessions
 r = 1;
 
 % Assign each session
 for k=1:numel(sessions)
     % Get current session
     sess = sessions{k};
-
-    %disp(sess);
 
     % Get list of scans for this session
     scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
@@ -70,7 +54,6 @@ for k=1:numel(sessions)
     % Assign each scan by appending to list for whole subject
     for s=1:numel(scans)
         scan = scans{s};
-        %disp(scan);
 
         % Set the scan file
         fmris{n}{r} = fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, scan);
@@ -91,10 +74,6 @@ for k=1:numel(sessions)
         % Load conditions from file
         load(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, [scan '.conditions.mat']));
 
-        %disp(names);
-        %disp(onsets);
-        %disp(durations);
- 
         if isempty(all_conditions)
             all_conditions = names;
         elseif ~isequal(all_conditions(1:numel(names)), names)
@@ -107,7 +86,6 @@ for k=1:numel(sessions)
         % Assign each condition to current subject indexed by n, current scan indexed by r, total run number
         for c=1:numel(names)
             condition = names{c};
-            disp(condition);
             all_onsets{c}{n}{r} = onsets{c};
             all_durations{c}{n}{r} = durations{c};
         end
@@ -116,11 +94,6 @@ for k=1:numel(sessions)
         r = r + 1;
     end
 end
-
-
-disp(all_conditions)
-disp(all_onsets);
-disp(all_durations);
 
 % Init session-wide conditions
 for c=(numel(all_conditions) + 1):(numel(all_conditions) + numel(sessions))
@@ -141,12 +114,9 @@ end
 % Set session-wide conditions
 r = 1;
 c = numel(all_conditions) - numel(sessions) + 1;
-disp(c);
 for k=1:numel(sessions)
     % Get current session
     sess = sessions{k};
-    disp(sess);
-    disp(c);
     all_conditions{c} = sess;
 
     scans = dir(fullfile(ROOT, 'PREPROC', subj, 'FMRI', sess, '*.nii'));
@@ -158,12 +128,6 @@ for k=1:numel(sessions)
     end
     c = c + 1;
 end
-
-
-disp(all_conditions)
-disp(all_onsets);
-disp(all_durations);
-
 
 
 % Build the variable structure
@@ -206,12 +170,7 @@ batch.Setup.conditions.durations=var.DURATIONS;
 
 % Enable saving denoised NIFTIs with d prefix
 % Optional output files:
-%   outputfiles(1): 1/0 creates confound beta-maps
 %   outputfiles(2): 1/0 creates confound-corrected timeseries
-%   outputfiles(3): 1/0 creates seed-to-voxel r-maps
-%   outputfiles(4): 1/0 creates seed-to-voxel p-maps
-%   outputfiles(5): 1/0 creates seed-to-voxel FDR-p-maps
-%   outputfiles(6): 1/0 creates ROI-extraction REX files
 batch.Setup.outputfiles=[0,1,0,0,0,0];
 
 % Configure preproc
@@ -227,11 +186,13 @@ batch.Denoising.confounds.names={'White Matter', 'CSF', 'realignment', 'scrubbin
 batch.Denoising.done=1;
 batch.Denoising.overwrite=1;
 
-% First-Level Analysis
+% First-Level Analysis, multivariate regression of task conditions, seed2voxel only
 batch.Analysis.analysis_number=1;
 batch.Analysis.done=1;
 batch.Analysis.overwrite=1;
-batch.Analysis.sources = {
+batch.Analysis.measure=4;
+batch.Analysis.type=2;
+batch.Analysis.sources={
     'Effect of 0Back',
     'Effect of 1Back',
     'Effect of 2Back',
