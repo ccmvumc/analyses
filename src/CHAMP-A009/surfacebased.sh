@@ -7,7 +7,8 @@ source='/REPO/src/CHAMP-A009'
 
 mkdir -p $out_dir
 
-fsdg_file='/OUTPUTS/g1v2.fsgd'
+fsdg_file_dlpfc='/OUTPUTS/dlpfc_fsdg.fsgd'
+fsdg_file_ppc='/OUTPUTS/ppc_fsdg.fsdg'
 matrix_file="${source}/matrix.mtx"
 
 
@@ -76,35 +77,67 @@ mris_fwhm \
 --hemi rh \
 --fwhm 5
 
-#run mri_glm_fit
-echo "Running mri_glm_fit for left hemisphere"
+#run mri_glm_fit for dlpfc
+echo "Running mri_glm_fit for left hemisphere for dlpfc"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsdg $fsdg_file \
+--fsdg $fsdg_file_dlpfc \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir
+--glmdir $out_dir/glm/lh.glm.glmdir_dlpfc
 
-echo "Running mri_glm_fit for right hemisphere"
+echo "Running mri_glm_fit for right hemisphere for dlpfc"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsdg $fsdg_file \
+--fsdg $fsdg_file_dlpfc \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir
+--glmdir $out_dir/glm/rh.glm.glmdir_dlpfc
 
-#run with clusterwise corrections for negative correlations
-echo "Running mri_glmfit-sim for left hemisphere"
+#run with clusterwise corrections for negative correlations for dlpfc
+echo "Running mri_glmfit-sim for left hemisphere for dlpfc"
 mri_glmfit-sim \
---glmdir $out_dir/glm/lh.glm.glmdir \
+--glmdir $out_dir/glm/lh.glm.glmdir_dlpfc \
 --mczim 2.3 neg \
 --2spaces
 
-echo "Running mri_glmfit-sim for right hemisphere"
+echo "Running mri_glmfit-sim for right hemisphere for dlpfc"
 mri_glmfit-sim \
---glmdir $out_dir/glm/rh.glm.glmdir \
+--glmdir $out_dir/glm/rh.glm.glmdir_dlpfc \
+--mczim 2.3 neg \
+--2spaces
+
+#run mri_glm_fit for ppc
+echo "Running mri_glm_fit for left hemisphere for dlpfc"
+mri_glmfit \
+--y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
+--fsdg $fsdg_file_ppc \
+--C $matrix_file \
+--surf fsaverage lh \
+--cortex \
+--glmdir $out_dir/glm/lh.glm.glmdir_ppc
+
+echo "Running mri_glm_fit for right hemisphere for ppc"
+mri_glmfit \
+--y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
+--fsdg $fsdg_file_ppc \
+--C $matrix_file \
+--surf fsaverage rh \
+--cortex \
+--glmdir $out_dir/glm/rh.glm.glmdir_ppc
+
+#run with clusterwise corrections for negative correlations for ppc
+echo "Running mri_glmfit-sim for left hemisphere for ppc"
+mri_glmfit-sim \
+--glmdir $out_dir/glm/lh.glm.glmdir_ppc \
+--mczim 2.3 neg \
+--2spaces
+
+echo "Running mri_glmfit-sim for right hemisphere for ppc"
+mri_glmfit-sim \
+--glmdir $out_dir/glm/rh.glm.glmdir_ppc \
 --mczim 2.3 neg \
 --2spaces
 
