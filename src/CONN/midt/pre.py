@@ -15,25 +15,8 @@ def parse_behavior(df):
     # Initialize the summary data
     data = {}
 
-    # Accuracy of all trials
-    data['overall_ACC'] = df.ACC.mean()
-
-    # Accuracy of each trial type
-    for c in CONDITIONS:
-        data[c + '_ACC'] = df[(df.TYPE == c)].ACC.mean()
-
     # Initialize trial count
     data['overall_trial_count'] = len(df)
-
-    data['overall_rt_mean'] = df.RT.mean()
-
-    # Round floats to 2 places
-    for k, v in data.items():
-        if isinstance(v, float):
-            data[k] = round(v, 2)
-
-    # rename to all lowercase 
-    data = {k.lower(): v for k, v in data.items()}
 
     return data
 
@@ -72,9 +55,9 @@ def make_conditions(edat_file, conditions, duration, conditions_file):
     # Load onsets and durations for each condition
     for cond_name in conditions:
         if cond_name == 'Reward':
-            val = '$4'
+            val = '+$4'
         else:
-            val = '$0'
+            val = '$0.00'
 
         # Get the onsets that match the val
         cond_onsets = list(df[df['Current_SubTrial_'] == val]['_Onset'])
@@ -86,7 +69,7 @@ def make_conditions(edat_file, conditions, duration, conditions_file):
         names.append(cond_name)
 
         # Set the durations
-        durations.append([duration])
+        durations.append(duration)
 
     # Save to mat file for spm
     write_spm_conditions(names, onsets, durations, conditions_file)
@@ -95,28 +78,26 @@ def make_conditions(edat_file, conditions, duration, conditions_file):
 def apply_columns(row):
     # Map the type
     row_type = row['Current_SubTrial_']
-    if row_type == '$4':
-        row['_TYPE'] = 'Reward'
-    elif row_type == '$0':
-        row['_TYPE'] = 'NoReward'
-    else:
-        raise ValueError(f'unknown trial type:{row}')
 
-    row['_ONSET'] = row['Cue1_OnsetTime']
-    row['_RESP'] = row['Cue1_RESP']
-    #row['_RT'] = row['_RT']
-    #row['_ACC'] = row['_ACC']
-
-    # Apply offset to onset time
-    row['_ONSET'] = (row['_ONSET'] - row['_START_OFFSET_']) / 1000.0
-
-    # Give the columns better names
     row['INDEX'] = row['_TRIAL']
-    row['TYPE'] = row['_TYPE']
-    row['RT'] = row['_RT'] 
-    row['ACC'] = row['_ACC'] 
-    row['RESP'] = row['_RESP'] 
-    row['ONSET'] = row['_ONSET']
+    row['RT'] = ''
+    row['ACC'] = ''
+    row['RESP'] = ''
+
+    if row_type == '+$4':
+        row['TYPE'] = 'Reward'
+    elif row_type == '$0.00':
+        row['TYPE'] = 'NoReward'
+    else:
+        row['TYPE'] = 'Other'
+
+    try:
+        row['ONSET'] = row['Cue1_OnsetTime']
+  
+        # Apply offset to onset time
+        row['ONSET'] = (row['ONSET'] - row['_START_OFFSET_']) / 1000.0
+    except Exception as err:
+        row['ONSET'] = ''
 
     return row
 
@@ -133,6 +114,8 @@ def parse_midt(df):
 
     # Get just the columns we need
     df = df[['INDEX', 'TYPE', 'RT', 'ACC', 'RESP', 'ONSET']]
+
+    df = df[df.TYPE.isin(CONDITIONS)]
 
     # Return a dataframe of the results
     return df
@@ -162,8 +145,8 @@ def extract(edat_file):
     extract_behavior(trials_file, behavior_file)
 
 
-def main():
-    edat_files = glob('/OUTPUTS/PREPROC/*/FMRI/*/*.edat.txt')
+def main(output_dir):
+    edat_files = glob(f'{output_dir}/PREPROC/*/FMRI/*/*.edat.txt')
 
     for e in edat_files:
         print(f'Extracting from EDAT:{e}')
@@ -171,4 +154,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()   
+    import sys
+    output_dir = sys.argv[1]
+    main(output_dir)
+    print('DONE!')
