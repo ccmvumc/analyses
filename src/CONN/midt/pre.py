@@ -55,7 +55,7 @@ def load_midt(edat_file):
     df = load_edat(edat_file)
 
     # Get the offset to the first trial
-    start_offset = df.iloc[0, 'starting_OnsetTime']
+    start_offset = df.iloc[0].starting_OnsetTime
 
     # Subtract start time and convert to seconds
     df['_Onset'] = (df['Cue1_OnsetTime'] - start_offset) / 1000.0
@@ -126,7 +126,7 @@ def parse_midt(df):
     df['_TRIAL'] = df.index.copy()
 
     # Get the starting offset time
-    df['_START_OFFSET_'] = df.iloc[0, 'starting_OnsetTime']
+    df['_START_OFFSET_'] = df.iloc[0].starting_OnsetTime
 
     # Apply new columns to each row
     df = df.apply(apply_columns, axis=1)
