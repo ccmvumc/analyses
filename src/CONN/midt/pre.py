@@ -36,10 +36,12 @@ def load_midt(edat_file):
     df = load_edat(edat_file)
 
     # Get the offset to the first trial
-    start_offset = df.iloc[0].starting_OnsetTime
+    start1_offset = df.iloc[0].starting_OnsetTime
+    start2_offset = df.iloc[27].starting1_OnsetTime
 
     # Subtract start time and convert to seconds
-    df['_Onset'] = (df['Cue1_OnsetTime'] - start_offset) / 1000.0
+    df['_Onset1'] = (df['Cue1_OnsetTime'] - start1_offset) / 1000.0
+    df['_Onset2'] = (df['Cue1_OnsetTime'] - start2_offset) / 1000.0
 
     return df
 
@@ -61,8 +63,8 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
             val = '$0.00'
 
         # Get the onsets that match the val
-        cond1_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk1')]['_Onset'])
-        cond2_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk2')]['_Onset'])
+        cond1_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk1')]['_Onset1'])
+        cond2_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk2')]['_Onset2'])
 
         # Append to onset list
         onsets1.append(cond1_onsets)
