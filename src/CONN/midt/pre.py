@@ -8,8 +8,6 @@ from shared import save_behavior, load_trials, load_edat, write_spm_conditions, 
 
 
 CONDITIONS = ['Reward', 'NoReward']
-TYPE_FIELD = 'TrialCondition'  # edat column that stores trial condition
-TYPE_FIELD_SUFFIX = 'RunBlockTrialCondition'
 DURATION = 2.0  # duration of each trial
 
 
@@ -63,7 +61,7 @@ def load_midt(edat_file):
     return df
 
 
-def make_conditions(edat_file, conditions, type_field, duration, conditions_file):
+def make_conditions(edat_file, conditions, duration, conditions_file):
     names = []
     onsets = []
     durations = []
@@ -72,18 +70,20 @@ def make_conditions(edat_file, conditions, type_field, duration, conditions_file
     df = load_midt(edat_file)
 
     # Load onsets and durations for each condition
-    for cond in conditions:
-        # Get the trial type full name for this condition
-        val = f'{cond}{TYPE_FIELD_SUFFIX}'
+    for cond_name in conditions:
+        if cond_name == 'Reward':
+            val = '$4'
+        else:
+            val = '$0'
 
         # Get the onsets that match the val
-        cond_onsets = list(df[df[type_field] == val]['_Onset'])
+        cond_onsets = list(df[df['Current_SubTrial_'] == val]['_Onset'])
 
         # Append to onset list
         onsets.append(cond_onsets)
 
         # Set the name of the condition
-        names.append(cond)
+        names.append(cond_name)
 
         # Set the durations
         durations.append([duration])
@@ -155,7 +155,7 @@ def extract(edat_file):
     trials_file = edat_base + '.trials.csv'
     behavior_file = edat_base + '.behavior.txt'
 
-    make_conditions(edat_file, CONDITIONS, TYPE_FIELD, DURATION, conditions_file)
+    make_conditions(edat_file, CONDITIONS, DURATION, conditions_file)
 
     extract_trials(edat_file, trials_file)
 
