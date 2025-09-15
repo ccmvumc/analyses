@@ -10,7 +10,7 @@ inputs:
   xnat:
     subjects:
       assessors:
-        - types: fmri_nback_CHAMP_v2
+        - types: fmri_nback_CHAMP_v3
           resources:
             - resource: CONN
 command:

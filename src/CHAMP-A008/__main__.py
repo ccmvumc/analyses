@@ -7,6 +7,12 @@ def _prep(input_dir, output_dir):
     subjects = [x for x in os.listdir(input_dir) if os.path.isdir(f'{input_dir}/{x}')]
 
     for subj in sorted(subjects):
+        subj_dir = f'{output_dir}/{subj}'
+
+        if os.path.exists(subj_dir):
+            print(f'Already prepped:{subj_dir}')
+            continue
+
         print(f'Prep {subj}')
 
         try:
@@ -28,7 +34,6 @@ def _prep(input_dir, output_dir):
                 continue
 
         # Extract from zip in inputs to subject folder in outputs
-        subj_dir = f'{output_dir}/{subj}'
         os.makedirs(subj_dir, exist_ok=True)
         with zipfile.ZipFile(subj_zip, "r") as z:
             z.extractall(subj_dir)
@@ -38,8 +43,11 @@ def _prep(input_dir, output_dir):
 
 
 if __name__ == '__main__':
-    if False:
-        print('Prep')
-        _prep(sys.argv[1], sys.argv[2])
+    print('Prep')
+    input_dir = sys.argv[1]
+    output_dir = sys.argv[2]
 
+    _prep(input_dir, output_dir)
     print('DONE!')
+
+# run merge.m in matlab command line wherre conn installed
