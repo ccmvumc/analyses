@@ -100,7 +100,7 @@ def apply_columns(row):
     elif row_type == '$0':
         row['_TYPE'] = 'NoReward'
     else:
-        raise ValueError('unknown trial type')
+        raise ValueError(f'unknown trial type:{row}')
 
     row['_ONSET'] = row['Cue1_OnsetTime']
     row['_RESP'] = row['Cue1_RESP']
