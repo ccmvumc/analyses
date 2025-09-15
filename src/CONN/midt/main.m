@@ -26,6 +26,7 @@ all_conditions = {};
 all_onsets = {};
 all_durations = {};
 all_tr = 0.0;
+all_times = [];
 n = 1;
 
 % Get list of subdirectories
