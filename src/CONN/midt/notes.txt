@@ -1,0 +1,5 @@
+python pre.py /private/tmp/MIDT
+
+
+
+garjus spin -p D3 -y ~/Downloads/fmri_midt_D3_v1.0.0.yaml -s P3001a -d /private/tmp/MIDT

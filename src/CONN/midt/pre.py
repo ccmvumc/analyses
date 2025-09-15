@@ -1,4 +1,4 @@
-
+import os
 from glob import glob
 
 import numpy as np
@@ -44,35 +44,39 @@ def load_midt(edat_file):
     return df
 
 
-def make_conditions(edat_file, conditions, duration, conditions_file):
+def make_conditions(edat_file, conditions1_file, conditions2_file):
     names = []
-    onsets = []
+    onsets1 = []
+    onsets2 = []
     durations = []
 
     # Load data from edat txt file to a pandas dataframe
     df = load_midt(edat_file)
 
     # Load onsets and durations for each condition
-    for cond_name in conditions:
+    for cond_name in CONDITIONS:
         if cond_name == 'Reward':
             val = '+$4'
         else:
             val = '$0.00'
 
         # Get the onsets that match the val
-        cond_onsets = list(df[df['Current_SubTrial_'] == val]['_Onset'])
+        cond1_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk1')]['_Onset'])
+        cond2_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk2')]['_Onset'])
 
         # Append to onset list
-        onsets.append(cond_onsets)
+        onsets1.append(cond1_onsets)
+        onsets2.append(cond2_onsets)
 
         # Set the name of the condition
         names.append(cond_name)
 
         # Set the durations
-        durations.append(duration)
+        durations.append(DURATION)
 
     # Save to mat file for spm
-    write_spm_conditions(names, onsets, durations, conditions_file)
+    write_spm_conditions(names, onsets1, durations, conditions1_file)
+    write_spm_conditions(names, onsets2, durations, conditions2_file)
 
 
 def apply_columns(row):
@@ -83,6 +87,8 @@ def apply_columns(row):
     row['RT'] = ''
     row['ACC'] = ''
     row['RESP'] = ''
+
+    row['BLOCK'] = row['Procedure_Trial_']
 
     if row_type == '+$4':
         row['TYPE'] = 'Reward'
@@ -113,7 +119,7 @@ def parse_midt(df):
     df = df.apply(apply_columns, axis=1)
 
     # Get just the columns we need
-    df = df[['INDEX', 'TYPE', 'RT', 'ACC', 'RESP', 'ONSET']]
+    df = df[['INDEX', 'BLOCK', 'TYPE', 'ONSET']]
 
     df = df[df.TYPE.isin(CONDITIONS)]
 
@@ -128,17 +134,18 @@ def extract_trials(edat_file, trials_file):
     # Parse the df to get a dataframe of just the generic columns
     df = parse_midt(df)
 
-    # write csv file
+    # write csv files
     save_trials(df, trials_file)
 
 
 def extract(edat_file):
-    edat_base = edat_file.rsplit('.edat.txt')[0]
-    conditions_file = edat_base + '.conditions.mat'
-    trials_file = edat_base + '.trials.csv'
-    behavior_file = edat_base + '.behavior.txt'
+    edat_dir = os.path.dirname(edat_file)
+    conditions1_file = f'{edat_dir}/FMRI1.nii.conditions.mat'
+    conditions2_file = f'{edat_dir}/FMRI2.nii.conditions.mat'
+    trials_file = f'{edat_dir}/trials.csv'
+    behavior_file = f'{edat_dir}/behavior.txt'
 
-    make_conditions(edat_file, CONDITIONS, DURATION, conditions_file)
+    make_conditions(edat_file, conditions1_file, conditions2_file)
 
     extract_trials(edat_file, trials_file)
 
@@ -146,7 +153,7 @@ def extract(edat_file):
 
 
 def main(output_dir):
-    edat_files = glob(f'{output_dir}/PREPROC/*/FMRI/*/*.edat.txt')
+    edat_files = glob(f'{output_dir}/PREPROC/*/FMRI/*/FMRI1.nii.edat.txt')
 
     for e in edat_files:
         print(f'Extracting from EDAT:{e}')
