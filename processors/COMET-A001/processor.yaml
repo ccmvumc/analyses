@@ -21,7 +21,7 @@ inputs:
               resources:
               - resource: WAVELET_OUTPUT_DIR
 command:
-  type: singularity_exec
+  type: singularity_run
   container: EEG-EGI-wavelet_2ndlvl
-  args: /bin/bash /REPO/src/COMET-A001/pipeline_entrypoint.sh --times {times} --bins {bins} --freqrange_low {freqrange_low} --freqrange_high {freqrange_high}
+  args: --times {times} --bins {bins} --freqrange_low {freqrange_low} --freqrange_high {freqrange_high}
 description: Project-level EEG wavelet FDR statistics
