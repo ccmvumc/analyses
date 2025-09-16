@@ -19,7 +19,7 @@ inputs:
           assessors:
             - types: EEG-EGI-wavelet_v1
               resources:
-              - resource: WAVELET_OUTPUT_DIR
+              - resource: WAVELET_OUTPUT_DIR/rept
 command:
   type: singularity_run
   container: EEG-EGI-wavelet_2ndlvl
