@@ -15,7 +15,7 @@ def write_fsgd(df, output_file, title, activation):
         for _, row in df.iterrows():
             subject = row['SUBJECT']
             age = row['Age']
-            site = row['Site']
+            site = row['site']
             fmri = row[activation]
             f.write(f"Input {subject} Main {age} {site} {fmri}\n")
         
