@@ -17,5 +17,10 @@ inputs:
 command:
   type: singularity_exec
   container: ANALYSES
-  args: /bin/bash /REPO/src/CHAMP-A009/main.sh
+  args: python /REPO/src/CHAMP-A009/gen_fsdg.py
+post:
+  type: singularity_exec
+  container: FS7
+  args: /bin/bash /REPO/src/CHAMP-A009/surfacebased.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
 description: FEOBV fMRI NBACK relationship PLC
