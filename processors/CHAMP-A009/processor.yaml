@@ -14,11 +14,11 @@ inputs:
             resources:
             - resource: SUBJ
               fmatch: gtmpvc.esupravwm.output/aux/bbpet2anat.lta,gtmpvc.esupravwm.output/mgx.ctxgm.nii.gz
-command:
+pre:
   type: singularity_exec
   container: ANALYSES
   args: python /REPO/src/CHAMP-A009/gen_fsdg.py
-post:
+command:
   type: singularity_exec
   container: FS7
   args: /bin/bash /REPO/src/CHAMP-A009/surfacebased.sh
