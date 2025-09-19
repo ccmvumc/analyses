@@ -3,6 +3,8 @@ containers:
   - name: ANALYSES
     path: ccmvumc_analyses_v2.sif
     source: docker://bud42/ccmvumc_analyses:v2
+  - name: FS7
+    path: freesurfer_7.2.0.sif
 requirements:
   walltime: 0-6
   memory: 16G
