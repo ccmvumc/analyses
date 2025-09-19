@@ -15,7 +15,7 @@ inputs:
           - types: FEOBVQA_v4
             resources:
             - resource: SUBJ
-              fmatch: gtmpvc.esupravwm.output/aux/bbpet2anat.lta,gtmpvc.esupravwm.output/mgx.ctxgm.nii.gz, surf/lh.white, surf/rh.white
+              fmatch: gtmpvc.esupravwm.output/aux/bbpet2anat.lta,gtmpvc.esupravwm.output/mgx.ctxgm.nii.gz,surf/lh.white,surf/rh.white
 pre:
   type: singularity_exec
   container: ANALYSES
