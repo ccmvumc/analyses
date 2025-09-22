@@ -5,6 +5,12 @@ in_dir='/INPUTS'
 out_dir='/OUTPUTS/DATA'
 source='/REPO/src/CHAMP-A009'
 
+#cp fsaverage to inputs
+cp -r /usr/local/freesurfer/subjects/fsaverage /INPUTS/
+
+#set subject dir
+export SUBJECTS_DIR=/INPUTS
+
 mkdir -p $out_dir
 
 fsdg_file_dlpfc='/OUTPUTS/dlpfc_fsdg.fsgd'
@@ -31,7 +37,6 @@ for subject in $in_dir/*; do
     --o $out_dir/$subject_name/lh.mgx.ctx.fsaverage.sm00.nii.gz \
     --cortex \
     --trgsubject fsaverage \
-    --sd /INPUTS
 
     mri_vol2surf \
     --mov $sub_feobv/mgx.ctxgm.nii.gz \
@@ -41,7 +46,6 @@ for subject in $in_dir/*; do
     --o $out_dir/$subject_name/rh.mgx.ctx.fsaverage.sm00.nii.gz \
     --cortex \
     --trgsubject fsaverage \
-    --sd /INPUTS
 
 
 done
