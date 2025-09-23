@@ -37,6 +37,8 @@ for subject in $in_dir/*; do
     --o $out_dir/$subject_name/lh.mgx.ctx.fsaverage.sm00.nii.gz \
     --cortex \
     --trgsubject fsaverage \
+    --sd /INPUTS \
+    --srcsubject $subject
 
     mri_vol2surf \
     --mov $sub_feobv/mgx.ctxgm.nii.gz \
@@ -46,6 +48,8 @@ for subject in $in_dir/*; do
     --o $out_dir/$subject_name/rh.mgx.ctx.fsaverage.sm00.nii.gz \
     --cortex \
     --trgsubject fsaverage \
+    --sd /INPUTS \
+    --srcsubject $subject
 
 
 done
