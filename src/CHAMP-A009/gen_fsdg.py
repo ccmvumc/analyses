@@ -13,9 +13,9 @@ def write_fsgd(df, output_file, title, activation):
         
         # Write input lines for each subject
         for _, row in df.iterrows():
-            subject = row['SUBJECT']
+            subject = row['SUBJECT'].astype(str)
             age = row['Age']
-            site = row['site']
+            site = row['site'].astype(str)
             fmri = row[activation]
             f.write(f"Input {subject} Main {age} {site} {fmri}\n")
         
