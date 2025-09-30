@@ -26,6 +26,7 @@ for subject in $in_dir/*; do
     mkdir -p $out_dir/$subject_name
 
     sub_feobv=$in_dir/$subject_name/assessors/*FEOBVQA_v4*/gtmpvc.esupravwm.output
+    sub_surf=$in_dir/$subject_name/assessors/*FEOBVQA_v4*
 
     echo "Processing: $sub_feobv"
 
@@ -37,7 +38,7 @@ for subject in $in_dir/*; do
     --o $out_dir/$subject_name/lh.mgx.ctx.fsaverage.sm00.nii.gz \
     --cortex \
     --trgsubject fsaverage \
-    --srcsubject $subject_name
+    --srcsubject $sub_surf
 
     mri_vol2surf \
     --mov $sub_feobv/mgx.ctxgm.nii.gz \
@@ -47,7 +48,7 @@ for subject in $in_dir/*; do
     --o $out_dir/$subject_name/rh.mgx.ctx.fsaverage.sm00.nii.gz \
     --cortex \
     --trgsubject fsaverage \
-    --srcsubject $subject_name
+    --srcsubject $sub_surf
 
 
 done
@@ -118,7 +119,7 @@ mri_glmfit-sim \
 --2spaces
 
 #run mri_glm_fit for ppc
-echo "Running mri_glm_fit for left hemisphere for dlpfc"
+echo "Running mri_glm_fit for left hemisphere for ppc"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsdg $fsdg_file_ppc \
