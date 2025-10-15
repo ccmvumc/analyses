@@ -1,0 +1,20 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-6
+  memory: 16G
+inputs:
+  xnat:
+    subjects:
+        assessors:
+          - types: fmri_rest_CHANGES_v1
+            resources:
+            - resource: CONN
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash -c "PYTHONPATH=/REPO/src python -u -m CHANGES-A005 /INPUTS /OUTPUTS"
+description: Project-level Basal Forebrain RSFC with nilearn
