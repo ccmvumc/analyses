@@ -11,6 +11,9 @@ fsdg_file_dlpfc='/OUTPUTS/dlpfc_fsdg.fsgd'
 fsdg_file_ppc='/OUTPUTS/ppc_fsdg.fsdg'
 matrix_file="${source}/matrix.mtx"
 
+#cp fsaverage to inputs
+cp -r /usr/local/freesurfer/subjects/fsaverage /INPUTS/
+
 
 # for each subject sample mgx vol to left and right hemisphere
 
@@ -33,7 +36,7 @@ for subject in $in_dir/*; do
     --cortex \
     --trgsubject fsaverage \
     --srcsubject $sub_surf \
-    --sd $in_dir/$subject_name
+    --sd $in_dir/
 
     mri_vol2surf \
     --mov $sub_feobv/mgx.ctxgm.nii.gz \
