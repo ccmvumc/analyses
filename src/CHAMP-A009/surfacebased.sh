@@ -20,7 +20,7 @@ for subject in $in_dir/*; do
     mkdir -p $out_dir/$subject_name
 
     sub_feobv=$in_dir/$subject_name/assessors/*FEOBVQA_v4*/gtmpvc.esupravwm.output
-    sub_surf=/$subject_name/assessors/*FEOBVQA_v4*
+    sub_surf=/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ
 
     echo "Processing: $sub_feobv"
 
@@ -33,7 +33,7 @@ for subject in $in_dir/*; do
     --cortex \
     --trgsubject fsaverage \
     --srcsubject $sub_surf \
-    --sd $in_dir/$subject_name
+    --sd $in_dir/
 
     mri_vol2surf \
     --mov $sub_feobv/mgx.ctxgm.nii.gz \
