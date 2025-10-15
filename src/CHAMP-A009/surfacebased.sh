@@ -19,8 +19,8 @@ for subject in $in_dir/*; do
     subject_name=$(basename $subject)
     mkdir -p $out_dir/$subject_name
 
-    sub_feobv=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/gtmpvc.esupravwm.output
-    sub_surf=/$subject_name/assessors/*/*FEOBVQA_v4*
+    sub_feobv=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output
+    sub_surf=/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ
 
     echo "Processing: $sub_feobv"
 
