@@ -23,7 +23,17 @@ for subject in $in_dir/*; do
     mkdir -p $out_dir/$subject_name
 
     sub_feobv=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output
-    sub_surf=$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ
+    sub_surf=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ
+    
+    echo "Before expansion - sub_feobv: $sub_feobv"
+    echo "Before expansion - sub_surf: $sub_surf"
+    
+    # Expand wildcards to actual paths
+    sub_feobv=$(echo $sub_feobv)
+    sub_surf=$(echo $sub_surf)
+    
+    echo "After expansion - sub_feobv: $sub_feobv"
+    echo "After expansion - sub_surf: $sub_surf"
 
     echo "Processing: $sub_feobv"
 
