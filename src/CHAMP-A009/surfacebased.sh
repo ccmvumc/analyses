@@ -23,11 +23,16 @@ for subject in $in_dir/*; do
     mkdir -p $out_dir/$subject_name
 
     sub_feobv=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output
-    sub_surf=$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ
+    sub_surf_w_input=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ
     
     echo "Before expansion - sub_feobv: $sub_feobv"
-    echo "Before expansion - sub_surf: $sub_surf"
+    echo "Before expansion - sub_surf_w_input: $sub_surf_w_input"
     
+    sub_surf_w_input=$(echo $sub_surf_w_input)
+
+    #select from $sub_surf_w_input the string not including /INPUTS/
+    sub_surf=$(echo $sub_surf_w_input | sed "s|$in_dir/||")
+
     # Expand wildcards to actual paths
     sub_feobv=$(echo $sub_feobv)
     sub_surf=$(echo $sub_surf)
