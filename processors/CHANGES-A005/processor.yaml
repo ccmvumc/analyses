@@ -13,8 +13,16 @@ inputs:
           - types: fmri_rest_CHANGES_v1
             resources:
             - resource: CONN
+pre:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/CONN/merge-pre-roi_only.sh
 command:
   type: singularity_exec
   container: ANALYSES
-  args: bash -c "PYTHONPATH=/REPO/src python -u -m CHANGES-A005 /INPUTS /OUTPUTS"
+  args: bash /REPO/src/CONN/merge-main-roi_only.sh
+post:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/CONN/merge-post-roi_only.sh
 description: Project-level Basal Forebrain RSFC with nilearn
