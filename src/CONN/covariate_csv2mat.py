@@ -33,11 +33,9 @@ df['AGE'] = df['AGE'].astype(float)
 df['AGE'] = (df['AGE'] - df['AGE'].mean()) / df['AGE'].std()
 
 # Convert categorical columns to dummy columns
-dummies = ['SEX', 'GROUP']
-if 'SITE' in df.columns:
-    dummies.append('SITE')
-
-df = pd.get_dummies(df, columns=dummies, dtype='int')
+dummies = [x for x in ['SITE', 'GROUP', 'SEX'] if x in df.columns]
+if dummies:
+    df = pd.get_dummies(df, columns=dummies, dtype='int')
 
 # Filter out non-numeric data and force float
 effects = df.select_dtypes(include=[np.number])
