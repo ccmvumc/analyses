@@ -19,6 +19,16 @@ cp -r /usr/local/freesurfer/subjects/fsaverage /INPUTS/
 
 for subject in $in_dir/*; do
     echo $subject
+    #skip if subject is not a directory
+    if [ ! -d $subject ]; then
+        continue
+    fi
+
+    #skip if subject is fsaverage
+    if [ $subject == "fsaverage" ]; then
+        continue
+    fi
+    
     subject_name=$(basename $subject)
     mkdir -p $out_dir/$subject_name
 
@@ -104,7 +114,7 @@ mris_fwhm \
 echo "Running mri_glm_fit for left hemisphere for dlpfc"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsdg $fsdg_file_dlpfc \
+--fsgd $fsdg_file_dlpfc \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
@@ -113,7 +123,7 @@ mri_glmfit \
 echo "Running mri_glm_fit for right hemisphere for dlpfc"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsdg $fsdg_file_dlpfc \
+--fsgd $fsdg_file_dlpfc \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
@@ -123,20 +133,20 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for dlpfc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_dlpfc \
---mczim 2.3 neg \
+--mczsim 2.3 neg \
 --2spaces
 
 echo "Running mri_glmfit-sim for right hemisphere for dlpfc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_dlpfc \
---mczim 2.3 neg \
+--mczsim 2.3 neg \
 --2spaces
 
 #run mri_glm_fit for ppc
 echo "Running mri_glm_fit for left hemisphere for ppc"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsdg $fsdg_file_ppc \
+--fsgd $fsdg_file_ppc \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
@@ -145,7 +155,7 @@ mri_glmfit \
 echo "Running mri_glm_fit for right hemisphere for ppc"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsdg $fsdg_file_ppc \
+--fsgd $fsdg_file_ppc \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
@@ -155,13 +165,13 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for ppc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_ppc \
---mczim 2.3 neg \
+--mczsim 2.3 neg \
 --2spaces
 
 echo "Running mri_glmfit-sim for right hemisphere for ppc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_ppc \
---mczim 2.3 neg \
+--mczsim 2.3 neg \
 --2spaces
 
 
