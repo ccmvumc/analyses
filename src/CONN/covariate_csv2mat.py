@@ -11,8 +11,10 @@ mat = {}
 
 # Load subject data
 df = pd.read_csv(CSVFILE)
+df['ID'] = df['ID'].astype(str)
 
 print(f'loaded {len(df)} subjects from {CSVFILE}')
+print(df)
 
 subjects = [x for x in os.listdir('/INPUTS') if os.path.isdir(f'/INPUTS/{x}')]
 
@@ -22,6 +24,7 @@ print(f'{len(subjects)} subjects downloaded')
 df = df[df.ID.isin(subjects)]
 
 print(f'Saving covariates for {len(df)} subjects')
+print(df)
 
 # TODO: compare sort order of subjects to df, error if different?
 
