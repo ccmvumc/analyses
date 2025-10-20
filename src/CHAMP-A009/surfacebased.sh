@@ -6,6 +6,7 @@ out_dir='/OUTPUTS/DATA'
 source='/REPO/src/CHAMP-A009'
 
 mkdir -p $out_dir
+mkdir -p $out_dir/glm
 
 fsdg_file_dlpfc='/OUTPUTS/dlpfc_fsdg.fsgd'
 fsdg_file_ppc='/OUTPUTS/ppc_fsdg.fsdg'
