@@ -1,5 +1,6 @@
 % Merges all conn.mat files into a single conn.mat
-% When testing, run this from matlab command prompt since the container does not work with podman.
+% When testing, run this from matlab command prompt 
+% since the container does not work with podman.
 
 cd '/private/tmp/CHANGES-A005';
 
