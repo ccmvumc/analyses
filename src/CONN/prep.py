@@ -12,7 +12,7 @@ for subj in sorted(subjects):
     try:
         subj_mat = glob(f'/INPUTS/{subj}/**/CONN/conn_project.mat', recursive=True)[0]
     except:
-       print(f'No conn_project.mat for subject:{subj}')
+        print(f'No conn_project.mat for subject:{subj}')
         continue
 
     try:

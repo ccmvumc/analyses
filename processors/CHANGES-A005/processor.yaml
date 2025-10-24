@@ -27,5 +27,5 @@ command:
 post:
   type: singularity_exec
   container: ANALYSES
-  args: bash /REPO/src/CONN/merge-post-roi_only.sh
+  args: bash -c "/REPO/src/CONN/merge-post-roi_only.sh;/REPO/src/CHANGES-A005/post.sh"
 description: Project-level Basal Forebrain RSFC
