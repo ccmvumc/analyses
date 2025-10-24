@@ -1,0 +1,32 @@
+---
+containers:
+  - name: CONN
+    path: all_conn_rsfc_v1.2.0.sif
+    source: docker://bud42/all_conn_rsfc:v1.2.0
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-12
+  memory: 20G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - assessors:
+          - types: fmri_midt_D3_v1
+            resources:
+              - resource: CONN
+pre:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/CONN/merge-pre.sh
+command:
+  type: singularity_exec
+  container: CONN
+  args: bash /REPO/src/CONN/merge-main.sh
+post:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/CONN/merge-post.sh
+description: Project-level MIDT with CONN
