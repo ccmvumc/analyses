@@ -13,7 +13,8 @@ inputs:
   xnat:
     subjects:
       sessions:
-        - assessors:
+        - types: Baseline
+          assessors:
           - types: fmri_midt_D3_v1
             resources:
               - resource: CONN
