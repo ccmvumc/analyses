@@ -10,22 +10,16 @@ for subj in sorted(subjects):
     subj_dir = f'/OUTPUTS/{subj}'
 
     try:
-        subj_mat = glob(f'/INPUTS/{subj}/*/*/*/CONN/conn_project.mat')[0]
+        subj_mat = glob(f'/INPUTS/{subj}/**/CONN/conn_project.mat', recursive=True)[0]
     except:
-        try:    
-            subj_mat = glob(f'/INPUTS/{subj}/*/*/CONN/conn_project.mat')[0]
-        except:
-            print(f'No conn_project.mat for subject:{subj}')
-            continue
+       print(f'No conn_project.mat for subject:{subj}')
+        continue
 
     try:
-        subj_zip = glob(f'/INPUTS/{subj}/*/*/*/CONN/conn_project.zip')[0]
+        subj_zip = glob(f'/INPUTS/{subj}/**/CONN/conn_project.zip', recursive=True)[0]
     except:
-        try:
-            subj_zip = glob(f'/INPUTS/{subj}/*/*/CONN/conn_project.zip')[0]
-        except:
-            print(f'No conn_project.zip for subject:{subj}')
-            continue
+        print(f'No conn_project.zip for subject:{subj}')
+        continue
 
     os.makedirs(subj_dir, exist_ok=True)
 
