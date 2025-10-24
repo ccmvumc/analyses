@@ -169,68 +169,68 @@ def get_covariates(mat_file):
 
 
 def __main__():
-	ROOTDIR = '/OUTPUTS'
-	subjects_file = f'{ROOTDIR}/subjects.txt'
-	mat_file = f'{ROOTDIR}/conn.mat'
-	csv_file = f'{ROOTDIR}/network_means.csv'
-	conn_dir = f'{ROOTDIR}/conn'
-	results = []
+    ROOTDIR = '/OUTPUTS'
+    subjects_file = f'{ROOTDIR}/subjects.txt'
+    mat_file = f'{ROOTDIR}/conn.mat'
+    csv_file = f'{ROOTDIR}/network_means.csv'
+    conn_dir = f'{ROOTDIR}/conn'
+    results = []
 
-	# Load covariates
-	covars = get_covariates(mat_file)
+    # Load covariates
+    covars = get_covariates(mat_file)
 
-	# Load connectivity data
-	data = load_data(mat_file)
-	df = pd.DataFrame(data)
-	df = get_names(df)
-	print('loaded')
+    # Load connectivity data
+    data = load_data(mat_file)
+    df = pd.DataFrame(data)
+    df = get_names(df)
+    print('loaded')
 
-	# group by network, mean for each subject
-	dfx = df[['id', 'r2atlas', 'r2network', 'zvalue']]
-	dfx = dfx[dfx['r2network'].isin(NETWORKS)]
-	dfg = dfx.groupby(['id', 'r2atlas', 'r2network']).mean()
-	dfg.to_csv(csv_file)
-	print(dfg)
+    # group by network, mean for each subject
+    dfx = df[['id', 'r2atlas', 'r2network', 'zvalue']]
+    dfx = dfx[dfx['r2network'].isin(NETWORKS)]
+    dfg = dfx.groupby(['id', 'r2atlas', 'r2network']).mean()
+    dfg.to_csv(csv_file)
+    print(dfg)
 
-	# Get just s400
-	dfs = dfg.reset_index()
-	dfs = dfs[dfs['r2atlas'] == 'Schaefer400']
+    # Get just s400
+    dfs = dfg.reset_index()
+    dfs = dfs[dfs['r2atlas'] == 'Schaefer400']
 
-	# Merge with covars and make combined sex column
-	dff = pd.merge(covars, dfs)
-	dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
+    # Merge with covars and make combined sex column
+    dff = pd.merge(covars, dfs)
+    dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
 
-	# Get results without controlling for anything
-	results = []
-	for n in NETWORKS:
-    	formula = f'CCI ~ {n}'
-    	print(formula)
-    	model = smf.ols(formula, data=dff).fit()
+    # Get results without controlling for anything
+    results = []
+    for n in NETWORKS:
+        formula = f'CCI ~ {n}'
+        print(formula)
+        model = smf.ols(formula, data=dff).fit()
 
-    	beta = model.params[n]
-    	pval = model.pvalues[n]
-    	rsqd = model.rsquared
+        beta = model.params[n]
+        pval = model.pvalues[n]
+        rsqd = model.rsquared
 
-    	results.append({'network': n, 'beta': beta, 'pval': pval, 'r2': rsqd})
+        results.append({'network': n, 'beta': beta, 'pval': pval, 'r2': rsqd})
 
-	results = pd.DataFrame(results)
-	results['p_fdr'] =  multipletests(results['pval'], method='fdr_bh')[1]
-	results.to_csv('/OUTPUTS/results_no_covars.csv')
-	print(results)
+    results = pd.DataFrame(results)
+    results['p_fdr'] =  multipletests(results['pval'], method='fdr_bh')[1]
+    results.to_csv('/OUTPUTS/results_no_covars.csv')
+    print(results)
 
-	# With controlling for AGE/SEX/Edu
-	results = []
-	for n in networks:
-	    formula = f'CCI ~ {n} + AGE + SEX + Edu'
-	    print(formula)
-	    model = smf.ols(formula, data=dff).fit()
-	    results.append({
-	        'network': n, 
-	        'beta': model.params[n],
-	        'pval':  model.pvalues[n],
-	        'r2':  model.rsquared})
+    # With controlling for AGE/SEX/Edu
+    results = []
+    for n in networks:
+        formula = f'CCI ~ {n} + AGE + SEX + Edu'
+        print(formula)
+        model = smf.ols(formula, data=dff).fit()
+        results.append({
+            'network': n, 
+            'beta': model.params[n],
+            'pval':  model.pvalues[n],
+            'r2':  model.rsquared})
 
-	results = pd.DataFrame(results)
-	results['p_fdr'] =  multipletests(results['pval'], method='fdr_bh')[1]
-	results.to_csv('/OUTPUTS/results_with_covars.csv')
-	print(results)
+    results = pd.DataFrame(results)
+    results['p_fdr'] =  multipletests(results['pval'], method='fdr_bh')[1]
+    results.to_csv('/OUTPUTS/results_with_covars.csv')
+    print(results)
