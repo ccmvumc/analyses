@@ -5,10 +5,6 @@ from statsmodels.stats.multitest import multipletests
 import numpy as np
 
 
-NETWORKS = ['DorsAttn', 'SalVentAttn', 'Default']
-
-
-
 def get_names(df):
     # Get atlas name before first period
     df['r1atlas'] = df['r1name'].str.extract(r'([^.]*)')
@@ -133,7 +129,9 @@ def load_data(mat_file, subjects_file, conn_dir):
                         'zvalue': m['Z'][j][k][s]
                     })
 
-    return data
+    # Return as dataframe
+    df = pd.DataFrame(data)
+    return df
 
 
 def get_covariates(mat_file):
@@ -168,54 +166,32 @@ def get_covariates(mat_file):
     return pd.DataFrame(covariates)
 
 
-def __main__():
-    ROOTDIR = '/OUTPUTS'
-    subjects_file = f'{ROOTDIR}/subjects.txt'
-    mat_file = f'{ROOTDIR}/conn.mat'
-    csv_file = f'{ROOTDIR}/network_means.csv'
-    conn_dir = f'{ROOTDIR}/conn'
-    results = []
-
-    # Load covariates
-    covars = get_covariates(mat_file)
-
-    # Load connectivity data
-    data = load_data(mat_file)
-    df = pd.DataFrame(data)
-    df = get_names(df)
-    print('loaded')
-
+def get_network_means(df, networks):
     # group by network, mean for each subject
     dfx = df[['id', 'r2atlas', 'r2network', 'zvalue']]
-    dfx = dfx[dfx['r2network'].isin(NETWORKS)]
-    dfg = dfx.groupby(['id', 'r2atlas', 'r2network']).mean()
-    dfg.to_csv(csv_file)
-    print(dfg)
+    dfx = dfx[dfx['r2network'].isin(networks)]
+    dfn = dfx.groupby(['id', 'r2atlas', 'r2network']).mean()
+    dfn = dfn.reset_index()
+    return dfn
 
-    # Get just s400
-    dfs = dfg.reset_index()
-    dfs = dfs[dfs['r2atlas'] == 'Schaefer400']
 
-    # Merge with covars and make combined sex column
-    dff = pd.merge(covars, dfs)
-    dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
-
+def get_results(df, results_dir, networks):
     # Get results without controlling for anything
     results = []
-    for n in NETWORKS:
+    for n in networks:
         formula = f'CCI ~ {n}'
         print(formula)
-        model = smf.ols(formula, data=dff).fit()
-
-        beta = model.params[n]
-        pval = model.pvalues[n]
-        rsqd = model.rsquared
-
-        results.append({'network': n, 'beta': beta, 'pval': pval, 'r2': rsqd})
+        model = smf.ols(formula, data=df).fit()
+        results.append({
+            'network': n,
+            'beta': model.params[n],
+            'pval': model.pvalues[n],
+            'r2': model.rsquared
+        })
 
     results = pd.DataFrame(results)
-    results['p_fdr'] =  multipletests(results['pval'], method='fdr_bh')[1]
-    results.to_csv('/OUTPUTS/results_no_covars.csv')
+    results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
+    results.to_csv(f'{results_dir}/results_no_covars.csv')
     print(results)
 
     # With controlling for AGE/SEX/Edu
@@ -223,14 +199,45 @@ def __main__():
     for n in networks:
         formula = f'CCI ~ {n} + AGE + SEX + Edu'
         print(formula)
-        model = smf.ols(formula, data=dff).fit()
+        model = smf.ols(formula, data=df).fit()
         results.append({
             'network': n, 
             'beta': model.params[n],
-            'pval':  model.pvalues[n],
-            'r2':  model.rsquared})
+            'pval': model.pvalues[n],
+            'r2': model.rsquared
+        })
 
+    # Make a dataframe then get fdr-corrected pvals
     results = pd.DataFrame(results)
-    results['p_fdr'] =  multipletests(results['pval'], method='fdr_bh')[1]
-    results.to_csv('/OUTPUTS/results_with_covars.csv')
+    results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
+    results.to_csv(f'{results_dir}/results_with_covars.csv')
     print(results)
+
+
+if __name__ == '__main__':
+    NETWORKS = ['DorsAttn', 'SalVentAttn', 'Default']
+    ROOTDIR = '/OUTPUTS'
+    subjects_file = f'{ROOTDIR}/subjects.txt'
+    mat_file = f'{ROOTDIR}/conn.mat'
+    conn_dir = f'{ROOTDIR}/conn'
+
+    # Load covariates
+    covars = get_covariates(mat_file)
+
+    # Load connectivity data
+    df = load_data(mat_file, subjects_file, conn_dir)
+    df = get_names(df)
+    # Get just s400
+    df = df[df['r2atlas'] == 'Schaefer400']
+
+    # Calculate per network
+    dfn = get_network_means(df, NETWORKS)
+    dfn.to_csv(f'{results_dir}/network_means.csv')
+    print(dfn)
+
+    # Merge with covars and make combined sex column
+    dff = pd.merge(covars, dfn)
+    dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
+
+    # Calculate results
+    get_results(dff, ROOTDIR, NETWORKS)
