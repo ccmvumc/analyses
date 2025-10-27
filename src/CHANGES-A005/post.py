@@ -55,9 +55,6 @@ def get_names(df):
     extracted_values = df.loc[condition, 'r2name'].str.extract(r'[^.]*\.([^.]*)$')
     df.loc[condition, 'r2region'] = extracted_values[0]
 
-    #condition = df['r2atlas'] == 'Yeo2011'
-    #extracted_values = df.loc[condition, 'r2region']
-    #df.loc[condition, 'r2network'] = extracted_values
     condition = (df['r2atlas'] == 'Yeo2011') & (df['r2region'] == 'Default')
     df.loc[condition, 'r2network'] = 'Default'
     condition = (df['r2atlas'] == 'Yeo2011') & (df['r2region'] == 'Dorsal Attention')
@@ -125,7 +122,6 @@ def load_data(mat_file, subjects_file, conn_dir):
                         'r2num': k,
                         'r1name': names1[j],
                         'r2name': names2[k],
-                        #'r2name': names2[k].replace('\t','_'),
                         'zvalue': m['Z'][j][k][s]
                     })
 
@@ -142,8 +138,8 @@ def get_covariates(mat_file):
     nsubjects = int(m['CONN_x']['Setup'][0][0][0][0]['nsubjects'][0][0])
 
     # Get list of subject ids
-    subjects = [m['CONN_x']['Setup'][0][0][0][0]['structural'][0][i][0][0][0][0][0] for i in range(0, 85)]
-    subjects = [x.split('/')[6] for x in subjects]
+    subjects = [m['CONN_x']['Setup'][0][0][0][0]['structural'][0][i][0][0][0][0][0] for i in range(0, nsubjects)]
+    subjects = [x.split('/')[-2] for x in subjects]
     covariates['id'] = subjects
 
     # Get list of covariates
@@ -214,12 +210,7 @@ def get_results(df, results_dir, networks):
     print(results)
 
 
-if __name__ == '__main__':
-    NETWORKS = ['DorsAttn', 'SalVentAttn', 'Default']
-    ROOTDIR = '/OUTPUTS'
-    subjects_file = f'{ROOTDIR}/subjects.txt'
-    mat_file = f'{ROOTDIR}/conn.mat'
-    conn_dir = f'{ROOTDIR}/conn'
+def process(mat_file, subjects_file, conn_dir, networks, results_dir):
 
     # Load covariates
     covars = get_covariates(mat_file)
@@ -227,11 +218,12 @@ if __name__ == '__main__':
     # Load connectivity data
     df = load_data(mat_file, subjects_file, conn_dir)
     df = get_names(df)
+
     # Get just s400
     df = df[df['r2atlas'] == 'Schaefer400']
 
     # Calculate per network
-    dfn = get_network_means(df, NETWORKS)
+    dfn = get_network_means(df, networks)
     dfn.to_csv(f'{results_dir}/network_means.csv')
     print(dfn)
 
@@ -240,4 +232,14 @@ if __name__ == '__main__':
     dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
 
     # Calculate results
-    get_results(dff, ROOTDIR, NETWORKS)
+    get_results(dff, results_dir, networks)
+
+
+if __name__ == '__main__':
+    NETWORKS = ['DorsAttn', 'SalVentAttn', 'Default']
+    ROOTDIR = '/OUTPUTS'
+    subjects_file = f'{ROOTDIR}/subjects.txt'
+    mat_file = f'{ROOTDIR}/conn.mat'
+    conn_dir = f'{ROOTDIR}/conn'
+
+    process(mat_file, subjects_file, conn_dir, NETWORKS, ROOTDIR)
