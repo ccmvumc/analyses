@@ -240,6 +240,9 @@ def process(mat_file, subjects_file, conn_dir, networks, results_dir):
             formula = f'CCI ~ {n} + AGE + SEX + Edu'
             results.append(get_results(dff, n, formula))
 
+        # Convert list to dataframe
+        results = pd.DataFrame(results)
+
         # Get fdr-corrected pvals
         results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
 
