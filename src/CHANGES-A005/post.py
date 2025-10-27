@@ -171,43 +171,21 @@ def get_network_means(df, networks):
     return dfn
 
 
-def get_results(df, results_dir, networks):
-    # Get results without controlling for anything
+def get_results(df, network, formula):
     results = []
-    for n in networks:
-        formula = f'CCI ~ {n}'
-        print(formula)
-        model = smf.ols(formula, data=df).fit()
-        results.append({
-            'network': n,
-            'beta': model.params[n],
-            'pval': model.pvalues[n],
-            'r2': model.rsquared
-        })
 
-    results = pd.DataFrame(results)
-    results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
-    results.to_csv(f'{results_dir}/results_no_covars.csv')
-    print(results)
+    print(f'Fitting model:{formula}')
+    model = smf.ols(formula, data=df).fit()
 
-    # With controlling for AGE/SEX/Edu
-    results = []
-    for n in networks:
-        formula = f'CCI ~ {n} + AGE + SEX + Edu'
-        print(formula)
-        model = smf.ols(formula, data=df).fit()
-        results.append({
-            'network': n, 
-            'beta': model.params[n],
-            'pval': model.pvalues[n],
-            'r2': model.rsquared
-        })
+    print('Extracting results:{network}')
+    results.append({
+        'network': network,
+        'beta': model.params[network],
+        'pval': model.pvalues[network],
+        'r2': model.rsquared
+    })
 
-    # Make a dataframe then get fdr-corrected pvals
-    results = pd.DataFrame(results)
-    results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
-    results.to_csv(f'{results_dir}/results_with_covars.csv')
-    print(results)
+    return results
 
 
 def process(mat_file, subjects_file, conn_dir, networks, results_dir):
@@ -219,20 +197,54 @@ def process(mat_file, subjects_file, conn_dir, networks, results_dir):
     df = load_data(mat_file, subjects_file, conn_dir)
     df = get_names(df)
 
-    # Get just s400
-    df = df[df['r2atlas'] == 'Schaefer400']
-
     # Calculate per network
     dfn = get_network_means(df, networks)
-    dfn.to_csv(f'{results_dir}/network_means.csv')
-    print(dfn)
+    dfn.to_csv(f'{results_dir}/network_means.csv', index=False)
 
-    # Merge with covars and make combined sex column
-    dff = pd.merge(covars, dfn)
-    dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
+    for atlas in ['Yeo2011', 'Schaefer100', 'Schaefer200', 'Schaefer400']:
+        dfn = dfn[dfn['r2atlas'] == atlas]
 
-    # Calculate results
-    get_results(dff, results_dir, networks)
+        # Pivot to value column per network
+        dfs = dfn.pivot(index='id', columns=['r2network'], values='zvalue').reset_index()
+        print(dfs)
+
+        # Save values for atlas
+        dfs.to_csv(f'{results_dir}/network_means-{atlas}.csv', index=False)
+
+        # Merge with covars and make combined sex column
+        dff = pd.merge(covars, dfs)
+        dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
+        print(dff)
+
+        # Calculate results for each network with and without covars
+        results = []
+
+        # First without controlling
+        for n in networks:
+            formula = f'CCI ~ {n}'
+            results.append(get_results(dff, n, formula))
+
+        # Convert list to dataframe
+        results = pd.DataFrame(results)
+
+        # Get fdr-corrected pvals
+        results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
+
+        # Save for this no covars for this atlas
+        results.to_csv(f'{results_dir}/results_no_covars-{atlas}.csv', index=False)
+
+        # Now with covars
+        results = []
+        for n in networks:
+            # With controlling for AGE/SEX/Edu
+            formula = f'CCI ~ {n} + AGE + SEX + Edu'
+            results.append(get_results(dff, n, formula))
+
+        # Get fdr-corrected pvals
+        results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
+
+        # Save file with covars for this atlas
+        results.to_csv(f'{results_dir}/results_with_covars-{atlas}.csv', index=False)
 
 
 if __name__ == '__main__':
