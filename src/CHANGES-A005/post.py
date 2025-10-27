@@ -172,18 +172,18 @@ def get_network_means(df, networks):
 
 
 def get_results(df, network, formula):
-    results = []
-
     print(f'Fitting model:{formula}')
     model = smf.ols(formula, data=df).fit()
 
-    print('Extracting results:{network}')
-    results.append({
+    print(f'Extracting results:{network}')
+    
+    results = {
         'network': network,
         'beta': model.params[network],
         'pval': model.pvalues[network],
         'r2': model.rsquared
-    })
+    }
+    print(results)
 
     return results
 
