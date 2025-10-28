@@ -202,19 +202,19 @@ def process(mat_file, subjects_file, conn_dir, networks, results_dir):
     dfn.to_csv(f'{results_dir}/network_means.csv', index=False)
 
     for atlas in ['Yeo2011', 'Schaefer100', 'Schaefer200', 'Schaefer400']:
-        dfn = dfn[dfn['r2atlas'] == atlas]
+        print(f'{atlas}=')
 
         # Pivot to value column per network
-        dfs = dfn.pivot(index='id', columns=['r2network'], values='zvalue').reset_index()
-        print(dfs)
+        dfp = dfn[dfn['r2atlas'] == atlas].pivot(index='id', columns=['r2network'], values='zvalue').reset_index()
+        print(dfp)
 
         # Save values for atlas
-        dfs.to_csv(f'{results_dir}/network_means-{atlas}.csv', index=False)
+        dfp.to_csv(f'{results_dir}/network_means-{atlas}.csv', index=False)
 
         # Merge with covars and make combined sex column
-        dff = pd.merge(covars, dfs)
-        dff['SEX'] = np.where(dff['SEX_Male'] == 1, 'Male', 'Female')
-        print(dff)
+        dfp = pd.merge(covars, dfp)
+        dfp['SEX'] = np.where(dfp['SEX_Male'] == 1, 'Male', 'Female')
+        print(dfp)
 
         # Calculate results for each network with and without covars
         results = []
@@ -222,7 +222,7 @@ def process(mat_file, subjects_file, conn_dir, networks, results_dir):
         # First without controlling
         for n in networks:
             formula = f'CCI ~ {n}'
-            results.append(get_results(dff, n, formula))
+            results.append(get_results(dfp, n, formula))
 
         # Convert list to dataframe
         results = pd.DataFrame(results)
@@ -238,7 +238,7 @@ def process(mat_file, subjects_file, conn_dir, networks, results_dir):
         for n in networks:
             # With controlling for AGE/SEX/Edu
             formula = f'CCI ~ {n} + AGE + SEX + Edu'
-            results.append(get_results(dff, n, formula))
+            results.append(get_results(dfp, n, formula))
 
         # Convert list to dataframe
         results = pd.DataFrame(results)
