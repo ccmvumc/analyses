@@ -1,0 +1,23 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.sif
+    source: docker://bud42/ccmvumc_analyses:v2
+  - name: FS7
+    path: freesurfer_7.2.0.sif
+requirements:
+  walltime: 0-4
+  memory: 16G
+inputs:
+  xnat:
+    subjects:
+        assessors:
+          - types: FEOBVQA_v4
+            resources:
+            - resource: SUBJ
+command:
+  type: singularity_exec
+  container: FS7
+  args: /bin/bash /REPO/src/CHAMP-A011/write_hpc_suvr.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
+description: HPC FEOBV SUVR calculation
