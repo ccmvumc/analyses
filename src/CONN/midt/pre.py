@@ -15,7 +15,15 @@ def parse_behavior(df):
     data = {}
 
     # Initialize trial count
+    data['hit_reward_count'] = ((df.FBK == 'hit') & (df.TYPE == 'Reward')).sum()
+    data['miss_reward_count'] = ((df.FBK == 'miss') & (df.TYPE == 'Reward')).sum()
+    data['hit_noreward_count'] = ((df.FBK == 'hit') & (df.TYPE == 'NoReward')).sum()
+    data['miss_noreward_count'] = ((df.FBK == 'miss') & (df.TYPE == 'NoReward')).sum()
+    data['overall_hit_count'] = (df.FBK == 'hit').sum()
+    data['overall_miss_count'] = (df.FBK == 'miss').sum()
     data['overall_trial_count'] = len(df)
+    data['overall_reward_count'] = (df.TYPE == 'Reward').sum()
+    data['overall_noreward_count'] = (df.TYPE == 'NoReward').sum()
 
     return data
 
@@ -44,8 +52,6 @@ def load_midt(edat_file):
     df['Fbk_Onset1'] = (df['fbk_OnsetTime'] - start1_offset) / 1000.0
     df['Fbk_Onset2'] = (df['fbk_OnsetTime'] - start2_offset) / 1000.0
 
-    df['Rwd'] = df['Rwd'].astype(str)
-
     return df
 
 
@@ -61,13 +67,16 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
     # Load onsets and durations for each reward condition
     for cond_name in ['Reward', 'NoReward']:
         if cond_name == 'Reward':
-            val = '4'
+            val = 4
         else:
-            val = '0'
+            val = 0
 
         # Get the onsets that match the val
         cond1_onsets = list(df[(df['Rwd'] == val) & (df['Procedure_Trial_'] == 'RunBlk1')]['Cue_Onset1'])
         cond2_onsets = list(df[(df['Rwd'] == val) & (df['Procedure_Trial_'] == 'RunBlk2')]['Cue_Onset2'])
+
+        print(f'run1:{cond_name}:{cond1_onsets}')
+        print(f'run2:{cond_name}:{cond2_onsets}')
 
         # Append to onset list
         onsets1.append(cond1_onsets)
@@ -87,12 +96,15 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
             val = 'Miss!'
 
         # Get the onsets that match the val
-        cond1_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == '4') & (df['Procedure_Trial_'] == 'RunBlk1')]['Fbk_Onset1'])
-        cond2_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == '4') & (df['Procedure_Trial_'] == 'RunBlk2')]['Fbk_Onset2'])
+        cond3_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == 4) & (df['Procedure_Trial_'] == 'RunBlk1')]['Fbk_Onset1'])
+        cond4_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == 4) & (df['Procedure_Trial_'] == 'RunBlk2')]['Fbk_Onset2'])
+
+        print(f'run1:{cond_name}:{cond3_onsets}')
+        print(f'run2:{cond_name}:{cond4_onsets}')
 
         # Append to onset list
-        onsets1.append(cond1_onsets)
-        onsets2.append(cond2_onsets)
+        onsets1.append(cond3_onsets)
+        onsets2.append(cond4_onsets)
 
         # Set the name of the condition
         names.append(cond_name)
@@ -108,18 +120,19 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
 
 def apply_columns(row):
     # Map the type
-    row_type = row['Current_SubTrial_']
+    row_type = row['Rwd']
 
     row['INDEX'] = row['_TRIAL']
     row['RT'] = ''
     row['ACC'] = ''
     row['RESP'] = ''
+    row['FBK'] = ''
 
     row['BLOCK'] = row['Procedure_Trial_']
 
-    if row_type == '+$4':
+    if row_type == 4:
         row['TYPE'] = 'Reward'
-    elif row_type == '$0.00':
+    elif row_type == 0:
         row['TYPE'] = 'NoReward'
     else:
         row['TYPE'] = 'Other'
@@ -131,6 +144,12 @@ def apply_columns(row):
         row['ONSET'] = (row['ONSET'] - row['_START_OFFSET_']) / 1000.0
     except Exception as err:
         row['ONSET'] = ''
+
+    # Get trial result
+    if row['Chng'] == 'Hit!':
+        row['FBK'] = 'hit'
+    elif row['Chng'] == 'Miss!':
+        row['FBK'] = 'miss'
 
     return row
 
@@ -146,7 +165,7 @@ def parse_midt(df):
     df = df.apply(apply_columns, axis=1)
 
     # Get just the columns we need
-    df = df[['INDEX', 'BLOCK', 'TYPE', 'ONSET']]
+    df = df[['INDEX', 'BLOCK', 'TYPE', 'ONSET', 'FBK']]
 
     df = df[df.TYPE.isin(['Reward', 'NoReward'])]
 
