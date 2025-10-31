@@ -18,6 +18,8 @@ STEPS={
 SOURCES={
     'Effect of Reward',
     'Effect of NoReward',
+    'Effect of HitReward',
+    'Effect of MissReward',
 };
 
 anats = {};

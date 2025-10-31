@@ -7,9 +7,6 @@ import scipy.io
 from shared import save_behavior, load_trials, load_edat, write_spm_conditions, save_trials
 
 
-DURATION = 2.0  # duration of each trial
-
-
 def parse_behavior(df):
     # Initialize the summary data
     data = {}
@@ -86,7 +83,7 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
         names.append(cond_name)
 
         # Set the durations
-        durations.append(DURATION)
+        durations.append(2.0)
 
     # Load onsets and durations for hits and misses only only reward trials
     for cond_name in ['HitReward', 'MissReward']:
@@ -110,7 +107,7 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
         names.append(cond_name)
 
         # Set the durations
-        durations.append(DURATION)
+        durations.append(1.0)
 
 
     # Save to mat file for spm
