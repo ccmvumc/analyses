@@ -7,7 +7,6 @@ import scipy.io
 from shared import save_behavior, load_trials, load_edat, write_spm_conditions, save_trials
 
 
-CONDITIONS = ['Reward', 'NoReward']
 DURATION = 2.0  # duration of each trial
 
 
@@ -40,8 +39,12 @@ def load_midt(edat_file):
     start2_offset = df.iloc[27].starting1_OnsetTime
 
     # Subtract start time and convert to seconds
-    df['_Onset1'] = (df['Cue1_OnsetTime'] - start1_offset) / 1000.0
-    df['_Onset2'] = (df['Cue1_OnsetTime'] - start2_offset) / 1000.0
+    df['Cue_Onset1'] = (df['Cue1_OnsetTime'] - start1_offset) / 1000.0
+    df['Cue_Onset2'] = (df['Cue1_OnsetTime'] - start2_offset) / 1000.0
+    df['Fbk_Onset1'] = (df['fbk_OnsetTime'] - start1_offset) / 1000.0
+    df['Fbk_Onset2'] = (df['fbk_OnsetTime'] - start2_offset) / 1000.0
+
+    df['Rwd'] = df['Rwd'].astype(str)
 
     return df
 
@@ -55,16 +58,16 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
     # Load data from edat txt file to a pandas dataframe
     df = load_midt(edat_file)
 
-    # Load onsets and durations for each condition
-    for cond_name in CONDITIONS:
+    # Load onsets and durations for each reward condition
+    for cond_name in ['Reward', 'NoReward']:
         if cond_name == 'Reward':
-            val = '+$4'
+            val = '4'
         else:
-            val = '$0.00'
+            val = '0'
 
         # Get the onsets that match the val
-        cond1_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk1')]['_Onset1'])
-        cond2_onsets = list(df[(df['Current_SubTrial_'] == val) & (df['Procedure_Trial_'] == 'RunBlk2')]['_Onset2'])
+        cond1_onsets = list(df[(df['Rwd'] == val) & (df['Procedure_Trial_'] == 'RunBlk1')]['Cue_Onset1'])
+        cond2_onsets = list(df[(df['Rwd'] == val) & (df['Procedure_Trial_'] == 'RunBlk2')]['Cue_Onset2'])
 
         # Append to onset list
         onsets1.append(cond1_onsets)
@@ -75,6 +78,28 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
 
         # Set the durations
         durations.append(DURATION)
+
+    # Load onsets and durations for hits and misses only only reward trials
+    for cond_name in ['HitReward', 'MissReward']:
+        if cond_name == 'HitReward':
+            val = 'Hit!'
+        else:
+            val = 'Miss!'
+
+        # Get the onsets that match the val
+        cond1_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == '4') & (df['Procedure_Trial_'] == 'RunBlk1')]['Fbk_Onset1'])
+        cond2_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == '4') & (df['Procedure_Trial_'] == 'RunBlk2')]['Fbk_Onset2'])
+
+        # Append to onset list
+        onsets1.append(cond1_onsets)
+        onsets2.append(cond2_onsets)
+
+        # Set the name of the condition
+        names.append(cond_name)
+
+        # Set the durations
+        durations.append(DURATION)
+
 
     # Save to mat file for spm
     write_spm_conditions(names, onsets1, durations, conditions1_file)
@@ -123,7 +148,7 @@ def parse_midt(df):
     # Get just the columns we need
     df = df[['INDEX', 'BLOCK', 'TYPE', 'ONSET']]
 
-    df = df[df.TYPE.isin(CONDITIONS)]
+    df = df[df.TYPE.isin(['Reward', 'NoReward'])]
 
     # Return a dataframe of the results
     return df
