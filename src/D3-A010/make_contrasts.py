@@ -2,9 +2,9 @@ import numpy as np
 from scipy.io import savemat
 
 
-def make_contrast(subjects, subjectc, conditions, conditionc, sources, sourcec):
+def make_contrast(filename, subjects, subjectc, conditions, conditionc, sources, sourcec):
     return {
-        'filename': '/OUTPUTS/conn.mat',
+        'filename': filename,
         'done': 1,
         'Analysis': {'type': 2},
         'Results': {
@@ -23,27 +23,32 @@ def make_contrast(subjects, subjectc, conditions, conditionc, sources, sourcec):
         }
     }
 
-
-OUTFILE = '/OUTPUTS/contrasts.mat'
+# Build the batch in a format that will load correctly in matlab/CONN
+filename = '/OUTPUTS/conn.mat',
 mat = {}
 batch_data = []
 
-
-# Build the batch in a format that will load correctly in matlab/CONN
-
-
 # Reward minus NoReward, Main effect
-batch_data.append(make_contrast(['AllSubjects'],   [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
+batch_data.append(make_contrast(filename, ['AllSubjects'], [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
 
 # Main effect, controls only
-batch_data.append(make_contrast(['GROUP_Control'], [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
+batch_data.append(make_contrast(filename, ['GROUP_Control'], [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
 
 # Main effect, depressed only
-batch_data.append(make_contrast(['GROUP_Depress'], [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
+batch_data.append(make_contrast(filename, ['GROUP_Depress'], [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
 
+# Hit minus Miss for Rewards, Main effect
+batch_data.append(make_contrast(filename, ['AllSubjects'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
+
+# then controls only
+batch_data.append(make_contrast(filename ['GROUP_Control'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
+
+# then depressed only
+batch_data.append(make_contrast(filename, ['GROUP_Depress'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
 
 print(batch_data)
 
 # Create file
 mat['batch'] = np.array(batch_data)
+OUTFILE = '/OUTPUTS/contrasts.mat'
 savemat(OUTFILE, mat)
