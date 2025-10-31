@@ -41,7 +41,7 @@ batch_data.append(make_contrast(filename, ['GROUP_Depress'], [1], ['Baseline'], 
 batch_data.append(make_contrast(filename, ['AllSubjects'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
 
 # then controls only
-batch_data.append(make_contrast(filename ['GROUP_Control'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
+batch_data.append(make_contrast(filename, ['GROUP_Control'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
 
 # then depressed only
 batch_data.append(make_contrast(filename, ['GROUP_Depress'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
