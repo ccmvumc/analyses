@@ -24,7 +24,7 @@ def make_contrast(filename, subjects, subjectc, conditions, conditionc, sources,
     }
 
 # Build the batch in a format that will load correctly in matlab/CONN
-filename = '/OUTPUTS/conn.mat',
+filename = '/OUTPUTS/conn.mat'
 mat = {}
 batch_data = []
 
