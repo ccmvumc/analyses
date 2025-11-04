@@ -3,13 +3,25 @@
 in_dir='/INPUTS'
 out_dir='/OUTPUTS/DATA'
 
+#resample gtmseg to rbv space
+for subject in $in_dir/*; do
+    #get subject name
+    subject_name=$(basename $subject)
+    mkdir -p $out_dir/$subject_name
+    mri_vol2vol \
+        --mov "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/mri/gtmseg.mgz" \
+        --targ "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz" \
+        --regheader \
+        --o "${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz"
+
+
 #generate biolateral HPC
 for subject in $in_dir/*; do
     #get subject name
     subject_name=$(basename $subject)
     mkdir -p $out_dir/$subject_name
     mri_binarize \
-        --i $subject/assessors/*/*FEOBVQA_v4*/SUBJ/mri/gtmseg.mgz \
+        --i ${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz \
         --o $out_dir/$subject_name/bilat_hpc.nii.gz \
         --match 17 53   
 done
@@ -19,8 +31,8 @@ for subject in $in_dir/*; do
     subject_name=$(basename $subject)
     mkdir -p $out_dir/$subject_name
     mri_segstats --seg "${out_dir}/${subject_name}/bilat_hpc.nii.gz" --id 1 --i "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz" --avgwf "${out_dir}/${subject_name}/full_hpc.txt"
-    mri_segstats --seg "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/mri/gtmseg.mgz" --id 17 --i "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz" --avgwf "${out_dir}/${subject_name}/Left_hpc.txt"
-    mri_segstats --seg "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/mri/gtmseg.mgz" --id 53 --i "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz" --avgwf "${out_dir}/${subject_name}/Right_hpc.txt"
+    mri_segstats --seg "${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz" --id 17 --i "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz" --avgwf "${out_dir}/${subject_name}/Left_hpc.txt"
+    mri_segstats --seg "${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz" --id 53 --i "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz" --avgwf "${out_dir}/${subject_name}/Right_hpc.txt"
 done
 
 #combine all .txts into one csv
