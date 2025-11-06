@@ -13,7 +13,7 @@ for subject in $in_dir/*; do
         --targ "${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz" \
         --regheader \
         --o "${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz"
-
+done
 
 #generate biolateral HPC
 for subject in $in_dir/*; do
