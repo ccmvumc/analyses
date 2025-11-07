@@ -7,14 +7,14 @@ out_dir='/OUTPUTS/DATA'
 for subject in $in_dir/*; do
     #get subject name
     subject_name=$(basename $subject)
-    gtmseg_path="${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/mri/gtmseg.mgz"
-    rbv_path="${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz"
+    gtmseg_path=${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/mri/gtmseg.mgz
+    rbv_path=${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz
     mkdir -p $out_dir/$subject_name
     mri_vol2vol \
-        --mov "${gtmseg_path}" \
-        --targ "${rbv_path}" \
+        --mov ${gtmseg_path} \
+        --targ ${rbv_path} \
         --regheader \
-        --o "${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz"
+        --o ${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz
 done
 
 #generate biolateral HPC
@@ -31,11 +31,11 @@ done
 #calulate SUVRS in hippocampus and L/R HPC separately
 for subject in $in_dir/*; do
     subject_name=$(basename $subject)
-    rbv_path="${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz"
+    rbv_path=${subject}/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output/rbv.nii.gz
     mkdir -p $out_dir/$subject_name
-    mri_segstats --seg "${out_dir}/${subject_name}/bilat_hpc.nii.gz" --id 1 --i "${rbv_path}" --avgwf "${out_dir}/${subject_name}/full_hpc.txt"
-    mri_segstats --seg "${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz" --id 17 --i "${rbv_path}" --avgwf "${out_dir}/${subject_name}/Left_hpc.txt"
-    mri_segstats --seg "${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz" --id 53 --i "${rbv_path}" --avgwf "${out_dir}/${subject_name}/Right_hpc.txt"
+    mri_segstats --seg ${out_dir}/${subject_name}/bilat_hpc.nii.gz --id 1 --i ${rbv_path} --avgwf ${out_dir}/${subject_name}/full_hpc.txt
+    mri_segstats --seg ${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz --id 17 --i ${rbv_path} --avgwf ${out_dir}/${subject_name}/Left_hpc.txt
+    mri_segstats --seg ${out_dir}/${subject_name}/gtmseg_to_rbv.nii.gz --id 53 --i ${rbv_path} --avgwf ${out_dir}/${subject_name}/Right_hpc.txt
 done
 
 #combine all .txts into one csv
