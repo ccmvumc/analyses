@@ -14,10 +14,10 @@ df = pd.read_csv(CSVFILE)
 
 # Check for alternative columns naming
 if 'ID' not in df.columns and 'id' in df.columns:
-    df = df.rename(columns={'ID': 'id'})
+    df = df.rename(columns={'id': 'ID'})
 
 if 'AGE' not in df.columns and 'age_calc_demo' in df.columns:
-    df = df.rename(columns={'AGE': 'age_calc_demo'})
+    df = df.rename(columns={'age_calc_demo': 'AGE'})
 
 df['ID'] = df['ID'].astype(str)
 
