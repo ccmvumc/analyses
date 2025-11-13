@@ -11,6 +11,14 @@ mat = {}
 
 # Load subject data
 df = pd.read_csv(CSVFILE)
+
+# Check for alternative columns naming
+if 'ID' not in df.columns and 'id' in df.columns:
+    df = df.rename(columns={'ID': 'id'})
+
+if 'AGE' not in df.columns and 'age_calc_demo' in df.columns:
+    df = df.rename(columns={'AGE': 'age_calc_demo'})
+
 df['ID'] = df['ID'].astype(str)
 
 print(f'loaded {len(df)} subjects from {CSVFILE}')
