@@ -15,7 +15,7 @@ inputs:
       sessions:
         - types: Baseline
           assessors:
-          - types: fmri_midt_D3_v1
+          - types: fmri_midt_D3_v2
             resources:
               - resource: CONN
 pre:
