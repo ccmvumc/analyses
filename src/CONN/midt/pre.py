@@ -7,6 +7,11 @@ import scipy.io
 from shared import save_behavior, load_trials, load_edat, write_spm_conditions, save_trials
 
 
+# We want to assess response to cue and feedback.
+# Responses can be hits or misses for trial types of reward or noreward. 
+# Noreward means none was possible for that trial.
+
+
 def parse_behavior(df):
     # Initialize the summary data
     data = {}
@@ -53,10 +58,11 @@ def load_midt(edat_file):
 
 
 def make_conditions(edat_file, conditions1_file, conditions2_file):
-    names = []
-    onsets1 = []
-    onsets2 = []
-    durations = []
+    ''' Take single MIDT edat file to create 2 conditions files for the 2 runs in the EDAT'''
+    names = []   # Condition names, will be the same for both runs
+    onsets1 = [] # Run 1 onsets
+    onsets2 = [] # Run 2 onsets
+    durations = [] # Condition durations also same for both runs
 
     # Load data from edat txt file to a pandas dataframe
     df = load_midt(edat_file)
@@ -93,15 +99,15 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
             val = 'Miss!'
 
         # Get the onsets that match the val
-        cond3_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == 4) & (df['Procedure_Trial_'] == 'RunBlk1')]['Fbk_Onset1'])
-        cond4_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == 4) & (df['Procedure_Trial_'] == 'RunBlk2')]['Fbk_Onset2'])
+        cond1_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == 4) & (df['Procedure_Trial_'] == 'RunBlk1')]['Fbk_Onset1'])
+        cond2_onsets = list(df[(df['Chng'] == val) & (df['Rwd'] == 4) & (df['Procedure_Trial_'] == 'RunBlk2')]['Fbk_Onset2'])
 
-        print(f'run1:{cond_name}:{cond3_onsets}')
-        print(f'run2:{cond_name}:{cond4_onsets}')
+        print(f'run1:{cond_name}:{cond1_onsets}')
+        print(f'run2:{cond_name}:{cond2_onsets}')
 
-        # Append to onset list
-        onsets1.append(cond3_onsets)
-        onsets2.append(cond4_onsets)
+        # Append to onset list, per run
+        onsets1.append(cond1_onsets)
+        onsets2.append(cond2_onsets)
 
         # Set the name of the condition
         names.append(cond_name)
@@ -109,8 +115,14 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
         # Set the durations
         durations.append(1.0)
 
+    # Additional condition for Fbk when No reward whether Miss or not a reward trial, to contrast with HitReward
+    names.append('MissOrNoReward')
+    cond1_onsets = list(df[((df['Chng'] == 'Miss!') | (df['Rwd'] == 0)) & (df['Procedure_Trial_'] == 'RunBlk1')]['Fbk_Onset1'])
+    cond2_onsets = list(df[((df['Chng'] == 'Miss!') | (df['Rwd'] == 0)) & (df['Procedure_Trial_'] == 'RunBlk2')]['Fbk_Onset2'])
+    onsets1.append(cond1_onsets)
+    onsets2.append(cond2_onsets)
 
-    # Save to mat file for spm
+    # Save to mat file for spm, per run
     write_spm_conditions(names, onsets1, durations, conditions1_file)
     write_spm_conditions(names, onsets2, durations, conditions2_file)
 
