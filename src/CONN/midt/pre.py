@@ -121,6 +121,9 @@ def make_conditions(edat_file, conditions1_file, conditions2_file):
     cond2_onsets = list(df[((df['Chng'] == 'Miss!') | (df['Rwd'] == 0)) & (df['Procedure_Trial_'] == 'RunBlk2')]['Fbk_Onset2'])
     onsets1.append(cond1_onsets)
     onsets2.append(cond2_onsets)
+    durations.append(1.0)
+    print(f'run1:MissOrNoReward:{cond1_onsets}')
+    print(f'run1:MissOrNoReward:{cond2_onsets}')
 
     # Save to mat file for spm, per run
     write_spm_conditions(names, onsets1, durations, conditions1_file)
