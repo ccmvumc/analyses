@@ -20,7 +20,7 @@ def _add_results_page(pdf, result_dir, subjects, conditions, sources):
 
     fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(8.5, 11))
 
-    fig.suptitle(f'{subjects}\n{conditions}\n{sources}')
+    fig.suptitle(f'Between Subject Effects: {subjects}\nBetween Session Effects: {conditions}\nBetween Condition Effects: {sources}')
 
     _image = img.imread(volume_print)
     axes[0].imshow(_image)

@@ -5,6 +5,12 @@ from statsmodels.stats.multitest import multipletests
 import numpy as np
 
 
+# Loads CONN results for ROI-pairs, creates per network averages for 
+# Y7/S100/S200/S400.
+# Then loads demographic data and does per network group analysis of
+# CCI score with and without controlling for AGE/Sex/Edu.
+
+
 def get_names(df):
     # Get atlas name before first period
     df['r1atlas'] = df['r1name'].str.extract(r'([^.]*)')
@@ -175,6 +181,8 @@ def get_results(df, network, formula):
     print(f'Fitting model:{formula}')
     model = smf.ols(formula, data=df).fit()
 
+    print(model.summary())
+
     print(f'Extracting results:{network}')
     
     results = {
@@ -231,7 +239,7 @@ def process(mat_file, subjects_file, conn_dir, networks, results_dir):
         results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
 
         # Save for this no covars for this atlas
-        results.to_csv(f'{results_dir}/results_no_covars-{atlas}.csv', index=False)
+        results.to_csv(f'{results_dir}/cci_no_covars-{atlas}.csv', index=False)
 
         # Now with covars
         results = []
@@ -247,7 +255,7 @@ def process(mat_file, subjects_file, conn_dir, networks, results_dir):
         results['p_fdr'] = multipletests(results['pval'], method='fdr_bh')[1]
 
         # Save file with covars for this atlas
-        results.to_csv(f'{results_dir}/results_with_covars-{atlas}.csv', index=False)
+        results.to_csv(f'{results_dir}/cci_with_covars-{atlas}.csv', index=False)
 
 
 if __name__ == '__main__':
