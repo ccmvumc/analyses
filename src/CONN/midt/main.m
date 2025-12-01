@@ -20,6 +20,7 @@ SOURCES={
     'Effect of NoReward',
     'Effect of HitReward',
     'Effect of MissReward',
+    'Effect of MissOrNoReward'
 };
 
 anats = {};
