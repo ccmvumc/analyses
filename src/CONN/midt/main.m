@@ -19,7 +19,6 @@ SOURCES={
     'Effect of Reward',
     'Effect of NoReward',
     'Effect of HitReward',
-    'Effect of MissReward',
     'Effect of MissOrNoReward'
 };
 

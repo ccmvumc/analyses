@@ -28,7 +28,7 @@ filename = '/OUTPUTS/conn.mat'
 mat = {}
 batch_data = []
 
-# Reward minus NoReward, Main effect
+# Cue Reward minus Cue NoReward, Main effect
 batch_data.append(make_contrast(filename, ['AllSubjects'], [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
 
 # Main effect, controls only
@@ -37,16 +37,7 @@ batch_data.append(make_contrast(filename, ['GROUP_Control'], [1], ['Baseline'], 
 # Main effect, depressed only
 batch_data.append(make_contrast(filename, ['GROUP_Depress'], [1], ['Baseline'], [1], ['Effect of Reward', 'Effect of NoReward'], [1, -1]))
 
-# Hit minus Miss for Rewards, Main effect
-batch_data.append(make_contrast(filename, ['AllSubjects'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
-
-# then controls only
-batch_data.append(make_contrast(filename, ['GROUP_Control'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
-
-# then depressed only
-batch_data.append(make_contrast(filename, ['GROUP_Depress'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissReward'], [1, -1]))
-
-# Hit minus Miss for Rewards, Main effect
+# Feedback Hit minus Feedback other, Main effect
 batch_data.append(make_contrast(filename, ['AllSubjects'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissOrNoReward'], [1, -1]))
 
 # then controls only
@@ -54,7 +45,6 @@ batch_data.append(make_contrast(filename, ['GROUP_Control'], [1], ['Baseline'], 
 
 # then depressed only
 batch_data.append(make_contrast(filename, ['GROUP_Depress'], [1], ['Baseline'], [1], ['Effect of HitReward', 'Effect of MissOrNoReward'], [1, -1]))
-
 
 print(batch_data)
 
