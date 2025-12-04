@@ -1,0 +1,31 @@
+---
+containers:
+  - name: PRE
+    path: fs7_post_v1.sif
+    source: docker://bud42/fs7_post:v1
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+  - name: FS
+    path: freesurfer_7.2.0.sif
+    source: docker://freesurfer/freesurfer:7.2.0
+requirements:
+  walltime: 0-4
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+        assessors:
+          - types: FEOBVQA_v4
+            resources:
+            - resource: SUBJ
+pre:
+  type: singularity_exec
+  container: PRE
+  args: /bin/bash /REPO/src/CHAMP-A012/pre.sh
+command:
+  type: singularity_exec
+  container: FS
+  args: /bin/bash /REPO/src/CHAMP-A012/main.sh
+  extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
+description: FEOBV regional means extracted from Yeo and Schaefer parcels
