@@ -6,7 +6,7 @@ out_dir='/OUTPUTS/DATA'
 
 
 #cp fsaverage to inputs
-cp -r /usr/local/freesurfer/8.0.0-1/subjects/fsaverage $in_dir
+cp -r /usr/local/freesurfer/subjects/fsaverage $in_dir
 
 
 echo -n "" > $out_dir/subjects.txt
