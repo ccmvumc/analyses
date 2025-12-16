@@ -12,9 +12,7 @@ fsgd_file_gfap='/OUTPUTS/gfap.fsgd'
 fsgd_file_nfl='/OUTPUTS/nfl.fsgd'
 fsgd_file_ab4240='/OUTPUTS/abeta42_40_ratio.fsgd'
 fsgd_file_tau='/OUTPUTS/tau.fsgd'
-fsgd_file_age='/OUTPUTS/age_site_only.fsgd'
 matrix_file="${source}/matrix.mtx"
-matrix_age_file="${source}/matrix_age.mtx"
 
 #cp fsaverage to inputs
 cp -r /usr/local/freesurfer/subjects/fsaverage /INPUTS/
@@ -243,39 +241,6 @@ mri_glmfit-sim \
 echo "Running mri_glmfit-sim for right hemisphere for tau"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_tau \
---perm 1000 4.0 neg \
---cwp 0.05 \
---2spaces \
---bg 1
-
-#run mri_glm_fit for age
-echo "Running mri_glm_fit for left hemisphere for age"
-mri_glmfit \
---y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file_age \
---C $matrix_age_file \
---surf fsaverage lh \
---cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_age
-echo "Running mri_glm_fit for right hemisphere for age"
-mri_glmfit \
---y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file_age \
---C $matrix_age_file \
---surf fsaverage rh \
---cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_age
-#run with clusterwise corrections for negative correlations for age
-echo "Running mri_glmfit-sim for left hemisphere for age"
-mri_glmfit-sim \
---glmdir $out_dir/glm/lh.glm.glmdir_age \
---perm 1000 4.0 neg \
---cwp 0.05 \
---2spaces \
---bg 1
-echo "Running mri_glmfit-sim for right hemisphere for age"
-mri_glmfit-sim \
---glmdir $out_dir/glm/rh.glm.glmdir_age \
 --perm 1000 4.0 neg \
 --cwp 0.05 \
 --2spaces \
