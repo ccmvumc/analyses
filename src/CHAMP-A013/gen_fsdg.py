@@ -1,5 +1,4 @@
 import pandas as pd
-import os
 
 covariates_df = pd.read_csv('/INPUTS/covariates.csv')
 
@@ -11,7 +10,9 @@ def write_fsgd(df, output_file, title, activation):
         f.write(f"Class Main\n")
         f.write(f"Variables Age Site Activation\n")
         
-        # Write input lines for each subject
+        # Write input lines for each subject skipping missing activation values
+        if df[activation].isnull().any():
+            df = df.dropna(subset=[activation])
         for _, row in df.iterrows():
             subject = row['SUBJECT'].astype(str)
             age = row['Age']
@@ -21,5 +22,8 @@ def write_fsgd(df, output_file, title, activation):
         
 
 # Generate the FSGD file
-write_fsgd(covariates_df, '/OUTPUTS/dlpfc_fsdg.fsgd', 'dlpfc_fsdg', 'dlpfc')
-write_fsgd(covariates_df, '/OUTPUTS/ppc_fsdg.fsdg', 'ppc_fsdg', 'ppc')
+write_fsgd(covariates_df, '/OUTPUTS/gfap.fsgd', 'gfap_fsgd', 'GFAP_pgmL')
+write_fsgd(covariates_df, '/OUTPUTS/nfl.fsgd', 'nfl_fsgd', 'NFLight_pgmL')
+write_fsgd(covariates_df, '/OUTPUTS/abeta42_40_ratio.fsgd', 'abeta42_40_ratio_fsgd', 'Abeta42_40_ratio')
+write_fsgd(covariates_df, '/OUTPUTS/tau.fsgd', 'tau_fsgd', 'Tau_pgmL')
+
