@@ -18,10 +18,10 @@ inputs:
 pre:
   type: singularity_exec
   container: ANALYSES
-  args: python /REPO/src/CHAMP-A014/gen_fsdg.py
+  args: python /REPO/src/CHAMP-A013/gen_fsdg.py
 command:
   type: singularity_exec
   container: FS7
-  args: /bin/bash /REPO/src/CHAMP-A014/surfacebased.sh
+  args: /bin/bash /REPO/src/CHAMP-A013/surfacebased.sh
   extraopts: -B $HOME/freesurfer_license.txt:/usr/local/freesurfer/.license
-description: FEOBV age relationships
+description: FEOBV biomarker relationships
