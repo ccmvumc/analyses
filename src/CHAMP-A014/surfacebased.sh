@@ -118,7 +118,8 @@ mri_glmfit \
 --C $matrix_age_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_age
+--glmdir $out_dir/glm/lh.glm.glmdir_age \
+--eres-save
 echo "Running mri_glm_fit for right hemisphere for age"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
@@ -126,7 +127,8 @@ mri_glmfit \
 --C $matrix_age_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_age
+--glmdir $out_dir/glm/rh.glm.glmdir_age \
+--eres-save
 #run with clusterwise corrections for negative correlations for age
 echo "Running mri_glmfit-sim for left hemisphere for age"
 mri_glmfit-sim \

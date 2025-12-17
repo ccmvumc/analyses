@@ -121,7 +121,9 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_gfap
+--glmdir $out_dir/glm/lh.glm.glmdir_gfap \
+--eres-save
+
 echo "Running mri_glm_fit for right hemisphere for gfap"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
@@ -129,7 +131,8 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_gfap
+--glmdir $out_dir/glm/rh.glm.glmdir_gfap \
+--eres-save
 
 #run with clusterwise corrections for negative correlations for gfap
 echo "Running mri_glmfit-sim for left hemisphere for gfap"
@@ -155,7 +158,9 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_nfl
+--glmdir $out_dir/glm/lh.glm.glmdir_nfl \
+--eres-save
+
 echo "Running mri_glm_fit for right hemisphere for nfl"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
@@ -163,7 +168,8 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_nfl
+--glmdir $out_dir/glm/rh.glm.glmdir_nfl \
+--eres-save
 #run with clusterwise corrections for negative correlations for nfl
 echo "Running mri_glmfit-sim for left hemisphere for nfl"
 mri_glmfit-sim \
@@ -188,7 +194,8 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_ab4240_ratio
+--glmdir $out_dir/glm/lh.glm.glmdir_ab4240_ratio \
+--eres-save
 echo "Running mri_glm_fit for right hemisphere for ab4240_ratio"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
@@ -196,7 +203,8 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_ab4240_ratio
+--glmdir $out_dir/glm/rh.glm.glmdir_ab4240_ratio \
+--eres-save
 #run with clusterwise corrections for negative correlations for ab4240_ratio
 echo "Running mri_glmfit-sim for left hemisphere for ab4240_ratio"
 mri_glmfit-sim \
@@ -221,7 +229,8 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_tau
+--glmdir $out_dir/glm/lh.glm.glmdir_tau \
+--eres-save
 echo "Running mri_glm_fit for right hemisphere for tau"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
@@ -229,7 +238,8 @@ mri_glmfit \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_tau
+--glmdir $out_dir/glm/rh.glm.glmdir_tau \
+--eres-save
 #run with clusterwise corrections for negative correlations for tau
 echo "Running mri_glmfit-sim for left hemisphere for tau"
 mri_glmfit-sim \
