@@ -27,12 +27,12 @@ for subject in $in_dir/*; do
         continue
     fi
 
-    #skip if subject is fsaverage
-    if [ $subject == "fsaverage" ]; then
+    # derive subject name and skip fsaverage reliably
+    subject_name=$(basename "$subject")
+    if [ "$subject_name" = "fsaverage" ]; then
         continue
     fi
     
-    subject_name=$(basename $subject)
     mkdir -p $out_dir/$subject_name
 
     sub_feobv=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output
@@ -190,7 +190,7 @@ mri_glmfit-sim \
 echo "Running mri_glm_fit for left hemisphere for ab4240_ratio"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file_ab4240_ratio \
+--fsgd $fsgd_file_ab4240 \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
@@ -199,7 +199,7 @@ mri_glmfit \
 echo "Running mri_glm_fit for right hemisphere for ab4240_ratio"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file_ab4240_ratio \
+--fsgd $fsgd_file_ab4240 \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
