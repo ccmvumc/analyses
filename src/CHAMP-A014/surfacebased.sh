@@ -24,12 +24,12 @@ for subject in $in_dir/*; do
         continue
     fi
 
-    #skip if subject is fsaverage
-    if [ $subject == "fsaverage" ]; then
+    # derive subject name and skip fsaverage reliably
+    subject_name=$(basename "$subject")
+    if [ "$subject_name" = "fsaverage" ]; then
         continue
     fi
     
-    subject_name=$(basename $subject)
     mkdir -p $out_dir/$subject_name
 
     sub_feobv=$in_dir/$subject_name/assessors/*/*FEOBVQA_v4*/SUBJ/gtmpvc.esupravwm.output
