@@ -3,12 +3,13 @@
 
 in_dir='/INPUTS'
 out_dir='/OUTPUTS/DATA'
-source='/REPO/src/CHAMP-A015'
+source='/REPO/src/CHAMP-A016'
 
 mkdir -p $out_dir
 mkdir -p $out_dir/glm
 
 fsgd_file='/OUTPUTS/apoe.fsgd'
+matrix_file="${source}/matrix.mtx"
 
 #cp fsaverage to inputs
 cp -r /usr/local/freesurfer/subjects/fsaverage /INPUTS/
