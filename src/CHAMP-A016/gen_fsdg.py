@@ -8,7 +8,7 @@ def write_fsgd(df, output_file, title):
         f.write(f"GroupDescriptorFile 1\n")
         f.write(f"Title {title}\n")
         f.write(f"Class Group1\nClass Group2\n")
-        f.write(f"Variables Age Site Activation\n")
+        f.write(f"Variables Age Site\n")
         
         # Write input lines for each subject skipping missing activation values
         for _, row in df.iterrows():
