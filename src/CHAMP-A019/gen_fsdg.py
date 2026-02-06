@@ -22,7 +22,7 @@ def write_fsgd(df, output_file, title, activation):
         
 
 # Generate the FSGD file
-write_fsgd(covariates_df, '/OUTPUTS/srt_total.fsgd', 'srt_total_fsgd', 'srt_total_pgmL')
-write_fsgd(covariates_df, '/OUTPUTS/srt_total_cons.fsgd', 'srt_total_cons_fsgd', 'srt_total_cons_pgmL')
+write_fsgd(covariates_df, '/OUTPUTS/srt_total.fsgd', 'srt_total_fsgd', 'diff_srt_total')
+write_fsgd(covariates_df, '/OUTPUTS/srt_total_cons.fsgd', 'srt_total_cons_fsgd', 'diff_srt_total_cons')
 
 
