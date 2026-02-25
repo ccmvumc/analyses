@@ -8,7 +8,7 @@ def write_fsgd(df, output_file, title, activation):
         f.write(f"GroupDescriptorFile 1\n")
         f.write(f"Title {title}\n")
         f.write(f"Class Main\n")
-        f.write(f"Variables Age Site Activation\n")
+        f.write(f"Variables Age Activation\n")
         
         # Write input lines for each subject skipping missing activation values
         if df[activation].isnull().any():
@@ -16,12 +16,11 @@ def write_fsgd(df, output_file, title, activation):
         for _, row in df.iterrows():
             subject = row['SUBJECT'].astype(str)
             age = row['Age']
-            site = row['site'].astype(str)
             fmri = row[activation]
-            f.write(f"Input {subject} Main {age} {site} {fmri}\n")
+            f.write(f"Input {subject} Main {age} {fmri}\n")
         
 
 # Generate the FSGD file
-write_fsgd(covariates_df, '/OUTPUTS/p3_fz_amp.fsgd', 'p3_fz_amp_fsgd', 'p3_fz_alertdiff_amp')
+write_fsgd(covariates_df, '/OUTPUTS/p3_pz_mem_amp.fsgd', 'p3_pz_mem_amp_fsgd', 'p3_pz_memdiff_amp')
 
 
