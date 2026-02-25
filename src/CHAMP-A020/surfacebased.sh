@@ -8,7 +8,7 @@ source='/REPO/src/CHAMP-A019'
 mkdir -p $out_dir
 mkdir -p $out_dir/glm
 
-fsgd_file_eeg='/OUTPUTS/p3_fz_amp.fsgd'
+fsgd_file_eeg='/OUTPUTS/p3_pz_mem_amp.fsgd'
 matrix_file="${source}/matrix.mtx"
 
 #cp fsaverage to inputs
@@ -110,38 +110,38 @@ mris_fwhm \
 --hemi rh \
 --fwhm 5
 
-#run mri_glm_fit for eeg p3_fz_amp
-echo "Running mri_glm_fit for left hemisphere for p3_fz_amp"
+#run mri_glm_fit for eeg p3_pz_mem_amp
+echo "Running mri_glm_fit for left hemisphere for p3_pz_mem_amp"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_eeg \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_p3_fz_amp \
+--glmdir $out_dir/glm/lh.glm.glmdir_p3_pz_mem_amp \
 --eres-save
 
-echo "Running mri_glm_fit for right hemisphere for p3_fz_amp"
+echo "Running mri_glm_fit for right hemisphere for p3_pz_mem_amp"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_eeg \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_p3_fz_amp \
+--glmdir $out_dir/glm/rh.glm.glmdir_p3_pz_mem_amp \
 --eres-save
 
-#run with clusterwise corrections for negative correlations for p3_fz_amp
-echo "Running mri_glmfit-sim for left hemisphere for p3_fz_amp"
+#run with clusterwise corrections for negative correlations for p3_pz_mem_amp
+echo "Running mri_glmfit-sim for left hemisphere for p3_pz_mem_amp"
 mri_glmfit-sim \
---glmdir $out_dir/glm/lh.glm.glmdir_p3_fz_amp \
+--glmdir $out_dir/glm/lh.glm.glmdir_p3_pz_mem_amp \
 --perm 1000 4.0 neg \
 --cwp 0.05 \
 --2spaces \
 --bg 1
-echo "Running mri_glmfit-sim for right hemisphere for p3_fz_amp"
+echo "Running mri_glmfit-sim for right hemisphere for p3_pz_mem_amp"
 mri_glmfit-sim \
---glmdir $out_dir/glm/rh.glm.glmdir_p3_fz_amp \
+--glmdir $out_dir/glm/rh.glm.glmdir_p3_pz_mem_amp \
 --perm 1000 4.0 neg \
 --cwp 0.05 \
 --2spaces \
