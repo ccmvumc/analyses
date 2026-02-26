@@ -3,7 +3,7 @@
 
 in_dir='/INPUTS'
 out_dir='/OUTPUTS/DATA'
-source='/REPO/src/CHAMP-A019'
+source='/REPO/src/CHAMP-A020'
 
 mkdir -p $out_dir
 mkdir -p $out_dir/glm
