@@ -84,23 +84,30 @@ def extract_assr(conndir, roidir):
     mec_2back_file = f'{conndir}/BETA_Subject001_Condition005_Source003.nii'
     plc_0back_file = f'{conndir}/BETA_Subject001_Condition006_Source001.nii'
     plc_2back_file = f'{conndir}/BETA_Subject001_Condition006_Source003.nii'
-    contrast1_file = f'{conndir}/contrast1.nii.gz'
+    mec_contrast1_file = f'{conndir}/mec_contrast1.nii.gz'
+    plc_contrast1_file = f'{conndir}/plc_contrast1.nii.gz'
     masks = glob(f'{roidir}/*.nii.gz')
 
     # Make contrast images
-    contrast1_image = math_img(
-        "(img1 - img2) - (img3 - img4)",
+    mec_contrast1_image = math_img(
+        "img1 - img2",
         img1=mec_2back_file,
         img2=mec_0back_file,
-        img3=plc_2back_file,
-        img4=plc_0back_file,
     )
-    contrast1_image.to_filename(contrast1_file)
+    mec_contrast1_image.to_filename(mec_contrast1_file)
+
+    plc_contrast1_image = math_img(
+        "img1 - img2",
+        img1=plc_2back_file,
+        img2=plc_0back_file,
+    )
+    plc_contrast1_image.to_filename(plc_contrast1_file)
 
     # Extract mean of contrast per ROI
     for m in masks:
         r = os.path.basename(m).split('_mask.nii.gz')[0]
-        data[f'contrast1_{r}']  = _roi_mean(contrast1_file, m)
+        data[f'mec_contrast1_{r}']  = _roi_mean(mec_contrast1_file, m)
+        data[f'plc_contrast1_{r}']  = _roi_mean(plc_contrast1_file, m)
 
     return data
 
