@@ -10,7 +10,7 @@ inputs:
   xnat:
     subjects:
       sessions:
-        assessors:
+        - assessors:
           - types: t1t2ratio_roi_v1
             resources:
               - resource: DATA
