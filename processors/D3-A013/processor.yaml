@@ -1,0 +1,22 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-4
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        assessors:
+          - types: t1t2ratio_roi_v1
+            resources:
+              - resource: DATA
+                fmatch: segstats.txt
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash -c "set -x;mkdir /OUTPUTS/DATA && cp -r /INPUTS/* /OUTPUTS/DATA"
+description: Project-level T1/T2 ratio ROIs
