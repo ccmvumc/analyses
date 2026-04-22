@@ -1,0 +1,26 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-12
+  memory: 20G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - types: Baseline
+          assessors:
+          - types: fmri_midt_D3_v2
+            resources:
+              - resource: CONN
+pre:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/D3-A012/pre.sh
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/D3-A012/main.sh
+description: Project-level MIDT extract ROI mean contrast
