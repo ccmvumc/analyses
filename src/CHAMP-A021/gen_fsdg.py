@@ -22,7 +22,7 @@ def write_fsgd(df, output_file, title, activation):
         
 
 # Generate the FSGD file
-write_fsgd(covariates_df, '/OUTPUTS/dlpfc.fsgd', 'dlpfc_fsgd', 'dlpfc_activation')
-write_fsgd(covariates_df, '/OUTPUTS/ppc.fsgd', 'ppc_fsgd', 'ppc_activation')
+write_fsgd(covariates_df, '/OUTPUTS/dlpfc.fsgd', 'dlpfc_fsgd', 'dlpfc')
+write_fsgd(covariates_df, '/OUTPUTS/ppc.fsgd', 'ppc_fsgd', 'ppc')
 
 
