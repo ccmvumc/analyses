@@ -13,8 +13,16 @@ inputs:
         - types: fmri_nback_CHAMP_v3
           resources:
             - resource: CONN
-command:
+pre:
   type: singularity_exec
   container: ANALYSES
-  args: bash -c "PYTHONPATH=/REPO/src python -u -m CHAMP-A008 /INPUTS /OUTPUTS"
+  args: bash /REPO/src/CONN/merge-pre-task.sh
+command:
+  type: singularity_exec
+  container: CONN
+  args: bash /REPO/src/CONN/merge-main-task.sh
+post:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/CHAMP-A008/merge-post-nback.sh
 description: Project-level NBACK with CONN

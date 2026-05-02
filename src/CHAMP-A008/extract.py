@@ -140,5 +140,5 @@ def main(output_dir):
 
 
 if __name__ == "__main__":
-    ROOTDIR = '/Users/brian/TEST-CHAMP-A008/OUTPUTS'
+    ROOTDIR = '/OUTPUTS'
     main(ROOTDIR)

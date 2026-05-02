@@ -1,29 +1,51 @@
 import zipfile
 from glob import glob
-import os, shutil
+import os, shutil, sys
 
-subjects = [x for x in os.listdir('/INPUTS') if os.path.isdir(f'/INPUTS/{x}')]
 
-for subj in sorted(subjects):
-    print(f'Prep {subj}')
+def _prep(input_dir, output_dir):
+    subjects = [x for x in os.listdir(input_dir) if os.path.isdir(f'{input_dir}/{x}')]
 
-    subj_dir = f'/OUTPUTS/{subj}'
+    for subj in sorted(subjects):
+        subj_dir = f'{output_dir}/{subj}'
 
-    try:
-        subj_mat = glob(f'/INPUTS/{subj}/**/CONN/conn_project.mat', recursive=True)[0]
-    except:
-        print(f'No conn_project.mat for subject:{subj}')
-        continue
+        if os.path.exists(subj_dir):
+            print(f'Already prepped:{subj_dir}')
+            continue
 
-    try:
-        subj_zip = glob(f'/INPUTS/{subj}/**/CONN/conn_project.zip', recursive=True)[0]
-    except:
-        print(f'No conn_project.zip for subject:{subj}')
-        continue
+        print(f'Prep {subj}')
 
-    os.makedirs(subj_dir, exist_ok=True)
+        try:
+            subj_mat = glob(f'{input_dir}/{subj}/assessors/*/*/CONN/conn_project.mat')[0]
+        except:
+            try:    
+                subj_mat = glob(f'{input_dir}/{subj}/assessors/*/CONN/conn_project.mat')[0]
+            except:
+                print(f'No conn_project.mat for subject:{subj}')
+                continue
 
-    with zipfile.ZipFile(subj_zip, "r") as z:
-        z.extractall(subj_dir)
+        try:
+            subj_zip = glob(f'{input_dir}/{subj}/assessors/*/*/CONN/conn_project.zip')[0]
+        except:
+            try:
+                subj_zip = glob(f'{input_dir}/{subj}/assessors/*/CONN/conn_project.zip')[0]
+            except:
+                print(f'No conn_project.zip for subject:{subj}')
+                continue
 
-    shutil.copy(subj_mat, subj_dir)
+        # Extract from zip in inputs to subject folder in outputs
+        os.makedirs(subj_dir, exist_ok=True)
+        with zipfile.ZipFile(subj_zip, "r") as z:
+            z.extractall(subj_dir)
+
+        # Copy the mat to same folder
+        shutil.copy(subj_mat, subj_dir)
+
+
+if __name__ == '__main__':
+    print('Prep')
+    input_dir = sys.argv[1]
+    output_dir = sys.argv[2]
+
+    _prep(input_dir, output_dir)
+    print('DONE!')
