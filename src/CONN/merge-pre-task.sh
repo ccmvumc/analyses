@@ -1,4 +1,4 @@
-python -u /REPO/src/CONN/prep.py
+python -u /REPO/src/CONN/prep.py /INPUTS /OUTPUTS
 
 # Make mat files for covariates and contrasts
 if [ -f "/INPUTS/covariates.csv" ]; then
