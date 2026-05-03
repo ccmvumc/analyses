@@ -60,7 +60,7 @@ def make_contrast(subjects, subjectc, conditions, conditionc, sources, sourcec):
 batch_data.append(
     make_contrast(
         ['AllSubjects', 'AGE'],
-        [1, 0], 
+        [1, 0],
         ['MEC', 'PLC'],
         [1, -1],
         ['Effect of 2BACK', 'Effect of OBACK'], 
@@ -68,18 +68,51 @@ batch_data.append(
     )
 )
 
-# Build the batch in a format that will load correctly in matlab
-for c in conditions:
-    for s in sources:
-        # Main effect
-        batch_data.append(
-            make_contrast(['AllSubjects'], [1], c, [1], s, [1])
-        )
+batch_data.append(
+    make_contrast(
+        ['AllSubjects', 'AGE'],
+        [1, 0],
+        ['MEC', 'PLC'],
+        [1, -1],
+        ['Effect of 0BACK', 'Effect of 1BACK', 'Effect of 2BACK', 'Effect of 3BACK',], 
+        [-6, 1, 2, 3]
+    )
+)
 
-        # Age effect
-        batch_data.append(
-            make_contrast(['AllSubjects', 'AGE'], [0, 1], c, [1], s, [1])
-        )
+# Main effect of contrast
+batch_data.append(
+    make_contrast(
+        ['AllSubjects', 'AGE'],
+        [1, 0],
+        ['MEC', 'PLC'],
+        [1/2, 1/2],
+        ['Effect of 2BACK', 'Effect of OBACK'], 
+        [1, -1]
+    )
+)
+
+batch_data.append(
+    make_contrast(
+        ['AllSubjects', 'AGE'],
+        [1, 0],
+        ['MEC', 'PLC'],
+        [1/2, 1/2],
+        ['Effect of 0BACK', 'Effect of 1BACK', 'Effect of 2BACK', 'Effect of 3BACK',], 
+        [-6, 1, 2, 3]
+    )
+)
+
+# Without AGE
+batch_data.append(
+    make_contrast(
+        ['AllSubjects'],
+        [1],
+        ['MEC', 'PLC'],
+        [1/2, 1/2],
+        ['Effect of 0BACK', 'Effect of 2BACK',], 
+        [-1, 1]
+    )
+)
 
 print(batch_data)
 
