@@ -34,13 +34,13 @@ if [ -f "/OUTPUTS/covariates.mat" ]; then
 	rm /OUTPUTS/xvfb.*
 
 	# Run the results
-	#echo "Running 2nd level contrasts in CONN"
-	#xvfb-run \
-	#-e /OUTPUTS/xvfb.err -f /OUTPUTS/xvfb.auth \
-	#-a --server-args "-screen 0 1600x1200x24" \
-	#/opt/conn/run_conn.sh \
-	#/opt/mcr/v912 batch \
-	#/REPO/src/CONN/second_level.m
+	echo "Running 2nd level contrasts in CONN"
+	xvfb-run \
+	-e /OUTPUTS/xvfb.err -f /OUTPUTS/xvfb.auth \
+	-a --server-args "-screen 0 1600x1200x24" \
+	/opt/conn/run_conn.sh \
+	/opt/mcr/v912 batch \
+	/REPO/src/CONN/second_level.m
 
 	rm /OUTPUTS/xvfb.*
 
