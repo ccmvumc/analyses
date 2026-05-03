@@ -3,6 +3,9 @@ containers:
   - name: ANALYSES
     path: ccmvumc_analyses_v2.1.sif
     source: docker://bud42/ccmvumc_analyses:v2.1
+  - name: CONN
+    path: all_conn_rsfc_v1.4.3.sif
+    source: docker://bud42/all_conn_rsfc:v1.4.3
 requirements:
   walltime: 0-12
   memory: 20G
