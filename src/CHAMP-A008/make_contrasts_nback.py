@@ -20,8 +20,6 @@ print('make_contrast')
 # Load subject data
 df = pd.read_csv(COVFILE)
 
-print(df)
-
 # load conditions
 _file = glob.glob('/OUTPUTS/*/conn_project/results/preprocessing/_list_conditions.mat')[0]
 m = loadmat(_file)
@@ -63,7 +61,7 @@ batch_data.append(
         [1, 0],
         ['MEC', 'PLC'],
         [1, -1],
-        ['Effect of 2Back', 'Effect of OBack'], 
+        ['Effect of 2Back', 'Effect of 0Back'], 
         [1, -1]
     )
 )
@@ -86,7 +84,7 @@ batch_data.append(
         [1, 0],
         ['MEC', 'PLC'],
         [1/2, 1/2],
-        ['Effect of 2Back', 'Effect of OBack'], 
+        ['Effect of 2Back', 'Effect of 0Back'], 
         [1, -1]
     )
 )
