@@ -116,7 +116,11 @@ def main(output_dir):
     csv_file = os.path.join(output_dir, 'roi_means.csv')
     roi_dir = f'{output_dir}/ROIS'
     data = []
-    subjects = [x for x in os.listdir(output_dir) if not x.startswith('.')]
+    subjects = []
+
+    # Load subjects
+    with open(f'{output_dir}/subjects.txt', 'r') as f:
+        subjects = f.read().splitlines()
 
     print('making masks')
     os.makedirs(roi_dir, exist_ok=True)
