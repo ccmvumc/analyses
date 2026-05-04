@@ -9,7 +9,8 @@ xvfb-run \
 
 rm /OUTPUTS/xvfb.*
 
-# Delete individual subjects to prevent uploading
+
+# make subjects list
 cd /INPUTS
 for i in */;do
 	echo $i
@@ -17,9 +18,7 @@ for i in */;do
     # Append to subject list (removing last character slash)
     echo ${i%?} >> /OUTPUTS/subjects.txt
 
-	rm -r /OUTPUTS/${i}
 done
-
 
 # covars
 if [ -f "/OUTPUTS/covariates.mat" ]; then

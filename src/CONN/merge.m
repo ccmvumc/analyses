@@ -5,6 +5,8 @@ fileoutput='/OUTPUTS/conn.mat';
 
 % Load all conn.mat
 dirfiles = dir('/OUTPUTS/**/conn_project.mat');
+[~, idx] = sort({dirfiles.name});
+dirfiles = dirfiles(idx);
 
 % Get a list of full paths
 fileinputs = fullfile({dirfiles.folder}, {dirfiles.name});

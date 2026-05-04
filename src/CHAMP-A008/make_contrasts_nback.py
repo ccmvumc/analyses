@@ -72,7 +72,7 @@ batch_data.append(
         [1, 0],
         ['MEC', 'PLC'],
         [1, -1],
-        ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'], 
+        ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'],
         [-6, 1, 2, 3]
     )
 )
@@ -95,7 +95,7 @@ batch_data.append(
         [1, 0],
         ['MEC', 'PLC'],
         [1/2, 1/2],
-        ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'], 
+        ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'],
         [-6, 1, 2, 3]
     )
 )
@@ -107,7 +107,7 @@ batch_data.append(
         [1],
         ['MEC', 'PLC'],
         [1/2, 1/2],
-        ['Effect of 0Back', 'Effect of 2Back'], 
+        ['Effect of 0Back', 'Effect of 2Back'],
         [-1, 1]
     )
 )
