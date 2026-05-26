@@ -16,7 +16,7 @@ SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
 
 def _subject_page(pdf, subject_dir):
     subject = os.path.basename(subject_dir)
-    pet = f'{subject_dir}/esupravwm.output/rbv.nii.gz'
+    pet = f'{subject_dir}/gtmpvc.esupravwm.output/rbv.nii.gz'
     mri = f'{subject_dir}/mri/orig.mgz'
     label = f'{subject_dir}/esupravwm.nii.gz'
 
@@ -120,7 +120,7 @@ print('make pdf')
 with PdfPages('/OUTPUTS/report.pdf') as pdf:
 
     # Page for each subject
-    for s in subjects:
+    for s in sorted(subjects):
         _subject_page(pdf, f'{SUBJECTS_DIR}/{s}')
 
 
