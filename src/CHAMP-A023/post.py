@@ -22,6 +22,18 @@ def _subject_page(pdf, subject_dir):
 
     print(subject)
 
+    if not os.path.isfile(pet):
+        print(f'missing file:{pet}')
+        return
+
+    if not os.path.isfile(mri):
+        print(f'missing file:{mri}')
+        return
+
+    if not os.path.isfile(label):
+        print(f'missing file:{label}')
+        return 
+
     # Make a letter paper size figure with 6 plots in 1 column
     fig, ax = plt.subplots(6, 1, figsize=(8.5,11))
 
