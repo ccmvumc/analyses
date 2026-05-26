@@ -11,7 +11,7 @@ from nilearn.image import math_img, binarize_img, mean_img
 from nilearn.masking import apply_mask
 
 
-SUBJECTS_DIR = '/OUTPUTS/DATA/SUBJECTS'
+SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
 
 
 def _subject_page(subject_dir):
