@@ -14,7 +14,7 @@ from nilearn.masking import apply_mask
 SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
 
 
-def _subject_page(subject_dir):
+def _subject_page(pdf, subject_dir):
     subject = os.path.basename(subject_dir)
     pet = f'{subject_dir}/esupravwm.output/rbv.nii.gz'
     mri = f'{subject_dir}/mri/orig.mgz'
@@ -94,25 +94,6 @@ def _subject_page(subject_dir):
         cmap='turbo',
         alpha=1.0,
     )
-
-    # load data from subject image masked by
-    #df = pd.DataFrame({'LCR': apply_mask(cr, lh_mask)})
-    #df = pd.concat([df, pd.DataFrame({'RCR': apply_mask(cr, rh_mask)})])
-    #df = pd.concat([df, pd.DataFrame({'TCR': apply_mask(cr, tot_mask)})])
-    #df = df.rename(columns={
-    #    'LCR': f'Left CR\nmean={df.LCR.mean():.2f}',
-    #    'RCR': f'Right CR\nmean={df.RCR.mean():.2f}',
-    #    'TCR': f'Total CR\nmean={df.TCR.mean():.2f}',
-    #})
-
-    # Create the boxplot of CR values
-    #df.boxplot(ax=ax[5], showfliers=True, patch_artist=True)
-    #ax[5].set_ylim(-0.01, 0.5)
-
-    # Color each box
-    #colors = ['lawngreen', 'red', 'brown']
-    #for patch, color in zip(ax[5].patches, colors):
-    #    patch.set_facecolor(color)
 
     pdf.savefig(fig, dpi=300)
     plt.close(fig)
