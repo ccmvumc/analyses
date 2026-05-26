@@ -1,3 +1,3 @@
-cd /OUTPUTS/DATA/SUBJECTS
+cd /OUTPUTS/SUBJECTS
 
 # Convert files
