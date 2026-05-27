@@ -16,7 +16,7 @@ inputs:
         - types: FEOBVQA_v4
           resources:
           - resource: SUBJ
-            fmatch: mri/orig.mgz,gtmpvc.esupravwm.output/rbv.nii.gz,esupravwm.nii.gz
+            fmatch: mri/orig.mgz,mri/gtmseg.mgz,gtmpvc.esupravwm.output/rbv.nii.gz,esupravwm.nii.gz
 pre:
   type: singularity_exec
   container: ANALYSES

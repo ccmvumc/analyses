@@ -3,35 +3,38 @@ import os
 
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-import nibabel as nib
 from nilearn.plotting import plot_roi, plot_stat_map, plot_anat
-from nilearn.image import math_img, binarize_img, mean_img
-from nilearn.masking import apply_mask
 
 
 SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
+AXIAL_SLICES = (-40, -30, -20, -10, 0, 20, 40, 60)
+CUT_COORDS = (0, 0, 0)
 
 
 def _subject_page(pdf, subject_dir):
     subject = os.path.basename(subject_dir)
-    pet = f'{subject_dir}/gtmpvc.esupravwm.output/rbv.nii.gz'
-    mri = f'{subject_dir}/mri/orig.mgz'
-    label = f'{subject_dir}/esupravwm.nii.gz'
+    pet_file = f'{subject_dir}/gtmpvc.esupravwm.output/rbv.nii.gz'
+    mri_file = f'{subject_dir}/mri/orig.mgz'
+    ref_file = f'{subject_dir}/esupravwm.nii.gz'
+    gtm_file = f'{subject_dir}/mri/gtmseg.mgz'
 
     print(subject)
 
-    if not os.path.isfile(pet):
-        print(f'missing file:{pet}')
+    if not os.path.isfile(pet_file):
+        print(f'missing file:{pet_file}')
         return
 
-    if not os.path.isfile(mri):
-        print(f'missing file:{mri}')
+    if not os.path.isfile(mri_file):
+        print(f'missing file:{mri_file}')
         return
 
-    if not os.path.isfile(label):
-        print(f'missing file:{label}')
+    if not os.path.isfile(ref_file):
+        print(f'missing file:{ref_file}')
+        return 
+
+
+    if not os.path.isfile(gtm_file):
+        print(f'missing file:{gtm_file}')
         return 
 
     # Make a letter paper size figure with 6 plots in 1 column
@@ -50,61 +53,62 @@ def _subject_page(pdf, subject_dir):
         hspace=0.015,
     )
 
-    # Make plots
-    plot_stat_map(
-        label,
-        bg_img=pet,
+    # Plot PET only
+    plot_anat(
+        pet_file,
         draw_cross=False,
         axes=ax[0],
-        vmin=0,
-        vmax=0.5,
-        cmap='turbo',
-        alpha=1.0,
-    )
-
-    disp = plot_anat(
-        mri,
-        draw_cross=False,
-        axes=ax[1],
-        colorbar=False,
-        alpha=1.0,
-    )
-
-    # Show last 5 axial slices zoomed
-    disp = plot_anat(
-        pet,
-        draw_cross=False,
-        axes=ax[2],
         annotate=True,
         alpha=1.0,
+        cut_coords=CUT_COORDS,
     )
 
-    disp = plot_stat_map(
-        pet,
-        bg_img=mri,
+    # Plot reference region on mri
+    plot_stat_map(
+        ref_file,
+        bg_img=mri_file,
+        draw_cross=False,
+        axes=ax[1],
+        #vmin=0,
+        #vmax=0.5,
+        cmap='turbo',
+        alpha=1.0,
+        colorbar=False,
+        cut_coords=CUT_COORDS,
+    )
+
+    # Plot gtm labels on MRI
+    plot_anat(
+        mri_file,
+        draw_cross=False,
+        axes=ax[2],
+        colorbar=False,
+        alpha=1.0,
+        cut_coords=CUT_COORDS,
+    )
+
+    # Plot pet data on MRI
+    plot_stat_map(
+        pet_file,
+        bg_img=mri_file,
         draw_cross=False,
         display_mode='z',
         axes=ax[3],
         colorbar=False,
         annotate=True,
-        vmin=0,
-        vmax=0.5,
-        cmap='turbo',
-        alpha=1.0,
+        cut_coords=AXIAL_SLICES,
     )
 
-    disp = plot_stat_map(
-        pet,
-        bg_img=mri,
-        draw_cross=False,
+    # Plot gtm labels on PET
+    plot_roi(
+        gtm_file,
+        bg_img=pet_file,
         display_mode='z',
         axes=ax[4],
         colorbar=False,
         annotate=True,
-        vmin=0,
-        vmax=0.5,
-        cmap='turbo',
-        alpha=1.0,
+        cut_coords=AXIAL_SLICES,
+        alpha=0.5,
     )
 
     pdf.savefig(fig, dpi=300)

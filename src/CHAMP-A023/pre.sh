@@ -5,8 +5,6 @@ mkdir -p /OUTPUTS/SUBJECTS
 
 cd /INPUTS
 
-ls -ltrR
-
 # Copy subjects to outputs
 for i in */;do
     echo $i
