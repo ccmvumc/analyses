@@ -65,7 +65,7 @@ def _subject_page(pdf, subject_dir):
         axes=ax[0],
         annotate=True,
         #cut_coords=CUT_COORDS,
-        'MRI only',
+        title='MRI only',
     )
 
     # Plot PET only
