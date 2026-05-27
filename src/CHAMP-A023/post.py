@@ -7,16 +7,18 @@ from nilearn.plotting import plot_roi, plot_stat_map, plot_anat
 
 
 SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
-AXIAL_SLICES = (-75, -50, -25, 0, 25, 50, 75)
+AXIAL_SLICES = (-50, -25, 0, 25, 50)
 CUT_COORDS = (0, 0, 0)
 
 
 def _subject_page(pdf, subject_dir):
     subject = os.path.basename(subject_dir)
-    pet_file = f'{subject_dir}/gtmpvc.esupravwm.output/rbv.nii.gz'
+    pet_file = f'{subject_dir}/rPET.nii.gz'
     mri_file = f'{subject_dir}/mri/orig.mgz'
     ref_file = f'{subject_dir}/esupravwm.nii.gz'
     gtm_file = f'{subject_dir}/mri/gtmseg.mgz'
+    rbv_file = f'{subject_dir}/gtmpvc.esupravwm.output/rbv.nii.gz'
+    rescaled_file = f'{subject_dir}/gtmpvc.esupravwm.output/input.rescaled.nii.gz'
 
     print(subject)
 
@@ -56,10 +58,10 @@ def _subject_page(pdf, subject_dir):
     # Plot PET only
     plot_anat(
         pet_file,
-        #draw_cross=False,
+        draw_cross=False,
         axes=ax[0],
         annotate=True,
-        #cut_coords=CUT_COORDS,
+        cut_coords=CUT_COORDS,
     )
 
     # Plot MRI only
@@ -68,7 +70,7 @@ def _subject_page(pdf, subject_dir):
         draw_cross=False,
         axes=ax[1],
         annotate=True,
-        #cut_coords=CUT_COORDS,
+        cut_coords=CUT_COORDS,
     )
 
     # Plot reference region on mri
@@ -82,7 +84,7 @@ def _subject_page(pdf, subject_dir):
         cmap='turbo',
         alpha=1.0,
         colorbar=False,
-        #cut_coords=CUT_COORDS,
+        cut_coords=CUT_COORDS,
     )
 
     # Plot gtm labels on MRI
@@ -93,12 +95,12 @@ def _subject_page(pdf, subject_dir):
         axes=ax[3],
         colorbar=False,
         alpha=1.0,
-        #cut_coords=CUT_COORDS,
+        cut_coords=CUT_COORDS,
     )
 
     # Plot pet data on MRI
     plot_stat_map(
-        pet_file,
+        rescaled_file,
         bg_img=mri_file,
         draw_cross=False,
         display_mode='z',
@@ -106,20 +108,20 @@ def _subject_page(pdf, subject_dir):
         colorbar=False,
         annotate=True,
         cut_coords=AXIAL_SLICES,
-        alpha=0.8,
+        #alpha=0.8,
         cmap='jet',
     )
 
     # Plot gtm labels on PET
     plot_roi(
         gtm_file,
-        bg_img=pet_file,
+        bg_img=rbv_file,
         display_mode='z',
         axes=ax[5],
         colorbar=False,
         annotate=True,
         cut_coords=AXIAL_SLICES,
-        alpha=0.5,
+        #alpha=0.5,
     )
 
     pdf.savefig(fig, dpi=300)
