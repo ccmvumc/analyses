@@ -37,11 +37,10 @@ def _subject_page(pdf, subject_dir):
     # Make a letter paper size figure with 6 plots in 1 column
     fig, ax = plt.subplots(6, 1, figsize=(8.5,11))
 
+    print(plt.rcParams.get('font.size', 'Not Found'))
+
     # Show ID in title
     fig.suptitle(subject)
-
-    # Set font size for titles
-    plt.rcParams.update({'font.size': 9})
 
     # Reduce whitespace
     plt.subplots_adjust(
@@ -61,14 +60,12 @@ def _subject_page(pdf, subject_dir):
         axes=ax[3],
         colorbar=False,
         alpha=1.0,
-        title='GTM labels/MRI',
     )
+    disp.set_title('GTM labels/MR', size=8)
 
     gtm_coords = disp.cut_coords
-    print(gtm_coords)
 
     mid_axial = gtm_coords[2]
-    print(mid_axial)
 
     axial_slices = [
         mid_axial - 50,
@@ -77,32 +74,31 @@ def _subject_page(pdf, subject_dir):
         mid_axial + 25,
         mid_axial + 50,
     ]
-    print(axial_slices)
 
     # Plot MRI only
-    plot_anat(
+    disp = plot_anat(
         mri_file,
         draw_cross=False,
         axes=ax[0],
         annotate=True,
         cut_coords=gtm_coords,
-        title='MRI only',
         threshold='auto',
     )
+    disp.set_title('MRI only', size=9)
 
     # Plot PET only
-    plot_anat(
+    disp = plot_anat(
         pet_file,
         draw_cross=False,
         axes=ax[1],
         annotate=True,
         cut_coords=gtm_coords,
         threshold='auto',
-        title='Realigned PET'
     )
+    disp.set_title('Realigned PET', size=10)
 
     # Plot reference region on mri
-    plot_stat_map(
+    disp = plot_stat_map(
         ref_file,
         bg_img=mri_file,
         draw_cross=False,
@@ -113,11 +109,11 @@ def _subject_page(pdf, subject_dir):
         alpha=1.0,
         colorbar=False,
         cut_coords=gtm_coords,
-        title='esupravwm/MRI',
     )
+    disp.set_title('esupravwm/MRI', size=11)
 
     # Plot pet data on MRI
-    plot_stat_map(
+    disp = plot_stat_map(
         rbv_file,
         bg_img=mri_file,
         draw_cross=False,
@@ -127,12 +123,12 @@ def _subject_page(pdf, subject_dir):
         annotate=True,
         cut_coords=axial_slices,
         cmap='jet',
-        title='RBV/MRI',
         threshold='auto',
     )
+    disp.set_title('RBV/MRI', size=8)
 
     # Plot gtm labels on PET
-    plot_roi(
+    disp = plot_roi(
         gtm_file,
         bg_img=pet_file,
         display_mode='z',
@@ -142,8 +138,11 @@ def _subject_page(pdf, subject_dir):
         cut_coords=axial_slices,
         threshold='auto',
         cmap='gist_rainbow',
-        title='GTM labels/PET',
     )
+    disp.set_title('GTM labels/PET', size=8)
+
+    # Put page number in footer
+    fig.text(0.5, 0.05, f'Page {pdf.get_pagecount() + 1}', ha='center', fontsize=10, color='gray')
 
     pdf.savefig(fig, dpi=300)
     plt.close(fig)
