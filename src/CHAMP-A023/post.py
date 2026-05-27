@@ -54,11 +54,6 @@ def _subject_page(pdf, subject_dir):
         hspace=0.015,
     )
 
-
-    #display = plot_roi(roi_img, bg_img)
-    #coords = display.cut_coords
-
-
     # Plot MRI only
     plot_anat(
         mri_file,
@@ -67,6 +62,7 @@ def _subject_page(pdf, subject_dir):
         annotate=True,
         #cut_coords=CUT_COORDS,
         title='MRI only',
+        threshold='auto',
     )
 
     # Plot PET only
@@ -76,7 +72,7 @@ def _subject_page(pdf, subject_dir):
         axes=ax[1],
         annotate=True,
         #cut_coords=CUT_COORDS,
-        vmax='auto',
+        threshold='auto',
         title='Realigned PET'
     )
 
@@ -96,7 +92,7 @@ def _subject_page(pdf, subject_dir):
     )
 
     # Plot gtm labels on MRI
-    plot_roi(
+    disp = plot_roi(
         gtm_file,
         bg_img=mri_file,
         draw_cross=False,
@@ -106,6 +102,9 @@ def _subject_page(pdf, subject_dir):
         #cut_coords=CUT_COORDS,
         title='GTM labels/MRI',
     )
+
+    cut_coords = disp.cut_coords
+    print(cut_coords)
 
     # Plot pet data on MRI
     plot_stat_map(
@@ -118,8 +117,8 @@ def _subject_page(pdf, subject_dir):
         annotate=True,
         cut_coords=AXIAL_SLICES,
         cmap='jet',
-        vmax='auto',
         title='RBV/MRI',
+        threshold='auto',
     )
 
     # Plot gtm labels on PET
@@ -131,7 +130,7 @@ def _subject_page(pdf, subject_dir):
         colorbar=False,
         annotate=True,
         cut_coords=AXIAL_SLICES,
-        vmax='auto',
+        threshold='auto',
         cmap='gist_rainbow',
         title='GTM labels/PET',
     )
@@ -143,18 +142,15 @@ def _subject_page(pdf, subject_dir):
 def make_pdf(subject_dir, pdf_file):
 
     # Find data
-    subjects = os.listdir(subject_dir)
+    subjects = sorted(os.listdir(subject_dir))
     print(f'{subjects=}')
 
     # Make the PDF
     print('make pdf')
-    pdf_file
     with PdfPages(pdf_file) as pdf:
-
         # Page for each subject
-        for s in sorted(subjects):
+        for s in subjects:
             _subject_page(pdf, f'{subject_dir}/{s}')
-
 
     print('PDF complete!')
 
