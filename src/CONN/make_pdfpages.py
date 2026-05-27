@@ -11,16 +11,13 @@ import pandas as pd
 logger = logging.getLogger('make_pdfpages')
 
 
-def _add_results_page(pdf, result_dir, subjects, conditions, sources):
-    shutil.copyfile(f'{result_dir}/slice_print.png', f'{result_dir}/slice_print.jpg')
-    shutil.copyfile(f'{result_dir}/volume_print.png', f'{result_dir}/volume_print.jpg')
-
-    slice_print = os.path.join(result_dir, 'slice_print.jpg')
-    volume_print = os.path.join(result_dir, 'volume_print.jpg')
+def _add_results_page(pdf, subjects, conditions, sources, thresholds, prefix):
+    slice_print = f'{result_dir}/{prefix}_slice_print.jpg'
+    volume_print = f'{result_dir}/{prefix}_volume_print.jpg'
 
     fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(8.5, 11))
 
-    fig.suptitle(f'Between Subject Effects: {subjects}\nBetween Session Effects: {conditions}\nBetween Condition Effects: {sources}')
+    fig.suptitle(f'Between Subject Effects: {subjects}\nBetween Session Effects: {conditions}\nBetween Condition Effects: {sources}\nThresholds: {thresholds}')
 
     _image = img.imread(volume_print)
     axes[0].imshow(_image)
@@ -35,6 +32,17 @@ def _add_results_page(pdf, result_dir, subjects, conditions, sources):
     pdf.savefig(fig)
 
     plt.close(fig)
+
+
+def _add_results_pages(pdf, result_dir, subjects, conditions, sources):
+    # Copy png to jpg to allow read
+    [shutil.copyfile(f'{result_dir}/{p}', f'{result_dir}/{p[:-4]}.jpg') for p in os.listdir(result_dir) if p.endswith('.png')]
+
+    _add_result_page(pdf, subjects, conditions, sources, 'Preset1', 'preset1')
+    _add_result_page(pdf, subjects, conditions, sources, 'Preset2', 'preset2')
+    _add_result_page(pdf, subjects, conditions, sources, 'Preset3', 'preset3')
+    _add_result_page(pdf, subjects, conditions, sources, 'Preset2, p<0.005', 'preset2_p0.005')
+    _add_result_page(pdf, subjects, conditions, sources, 'Preset2, p<0.05', 'preset2_p0.05')
 
 
 def _add_pairplot_pages(pdf, df):

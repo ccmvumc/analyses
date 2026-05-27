@@ -66,16 +66,17 @@ batch_data.append(
     )
 )
 
-batch_data.append(
-    make_contrast(
-        ['AllSubjects', 'AGE'],
-        [1, 0],
-        ['MEC', 'PLC'],
-        [1, -1],
-        ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'],
-        [-6, 1, 2, 3]
+if False: # skip this
+    batch_data.append(
+        make_contrast(
+            ['AllSubjects', 'AGE'],
+            [1, 0],
+            ['MEC', 'PLC'],
+            [1, -1],
+            ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'],
+            [-6, 1, 2, 3]
+        )
     )
-)
 
 # Main effect of contrast
 batch_data.append(
@@ -89,28 +90,29 @@ batch_data.append(
     )
 )
 
-batch_data.append(
-    make_contrast(
-        ['AllSubjects', 'AGE'],
-        [1, 0],
-        ['MEC', 'PLC'],
-        [1/2, 1/2],
-        ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'],
-        [-6, 1, 2, 3]
+if False:  # skip
+    batch_data.append(
+        make_contrast(
+            ['AllSubjects', 'AGE'],
+            [1, 0],
+            ['MEC', 'PLC'],
+            [1/2, 1/2],
+            ['Effect of 0Back', 'Effect of 1Back', 'Effect of 2Back', 'Effect of 3Back'],
+            [-6, 1, 2, 3]
+        )
     )
-)
 
-# Without AGE
-batch_data.append(
-    make_contrast(
-        ['AllSubjects'],
-        [1],
-        ['MEC', 'PLC'],
-        [1/2, 1/2],
-        ['Effect of 0Back', 'Effect of 2Back'],
-        [-1, 1]
+    # Without AGE
+    batch_data.append(
+        make_contrast(
+            ['AllSubjects'],
+            [1],
+            ['MEC', 'PLC'],
+            [1/2, 1/2],
+            ['Effect of 0Back', 'Effect of 2Back'],
+            [-1, 1]
+        )
     )
-)
 
 print(batch_data)
 
