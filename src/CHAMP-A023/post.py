@@ -7,7 +7,7 @@ from nilearn.plotting import plot_roi, plot_stat_map, plot_anat
 
 
 SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
-AXIAL_SLICES = (-60, -45, -30, -15, 0, 15, 30, 45, 60)
+AXIAL_SLICES = (-75, -50, -25, 0, 25, 50, 75)
 CUT_COORDS = (0, 0, 0)
 
 
@@ -56,10 +56,10 @@ def _subject_page(pdf, subject_dir):
     # Plot PET only
     plot_anat(
         pet_file,
-        draw_cross=False,
+        #draw_cross=False,
         axes=ax[0],
         annotate=True,
-        cut_coords=CUT_COORDS,
+        #cut_coords=CUT_COORDS,
     )
 
     # Plot MRI only
@@ -68,7 +68,7 @@ def _subject_page(pdf, subject_dir):
         draw_cross=False,
         axes=ax[1],
         annotate=True,
-        cut_coords=CUT_COORDS,
+        #cut_coords=CUT_COORDS,
     )
 
     # Plot reference region on mri
@@ -82,17 +82,18 @@ def _subject_page(pdf, subject_dir):
         cmap='turbo',
         alpha=1.0,
         colorbar=False,
-        cut_coords=CUT_COORDS,
+        #cut_coords=CUT_COORDS,
     )
 
     # Plot gtm labels on MRI
-    plot_anat(
-        mri_file,
+    plot_roi(
+        gtm_file,
+        bg_img=mri_file,
         draw_cross=False,
         axes=ax[3],
         colorbar=False,
         alpha=1.0,
-        cut_coords=CUT_COORDS,
+        #cut_coords=CUT_COORDS,
     )
 
     # Plot pet data on MRI
