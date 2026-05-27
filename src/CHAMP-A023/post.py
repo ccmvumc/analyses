@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from nilearn.plotting import plot_roi, plot_stat_map, plot_anat
 
 
-SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
 AXIAL_SLICES = (-50, -25, 0, 25, 50)
 CUT_COORDS = (0, 0, 0)
 
@@ -18,7 +17,6 @@ def _subject_page(pdf, subject_dir):
     ref_file = f'{subject_dir}/esupravwm.nii.gz'
     gtm_file = f'{subject_dir}/mri/gtmseg.mgz'
     rbv_file = f'{subject_dir}/gtmpvc.esupravwm.output/rbv.nii.gz'
-    rescaled_file = f'{subject_dir}/gtmpvc.esupravwm.output/input.rescaled.nii.gz'
 
     print(subject)
 
@@ -55,22 +53,30 @@ def _subject_page(pdf, subject_dir):
         hspace=0.015,
     )
 
-    # Plot PET only
-    plot_anat(
-        pet_file,
-        draw_cross=False,
-        axes=ax[0],
-        annotate=True,
-        cut_coords=CUT_COORDS,
-    )
+
+    #display = plot_roi(roi_img, bg_img)
+    #coords = display.cut_coords
+
 
     # Plot MRI only
     plot_anat(
         mri_file,
         draw_cross=False,
+        axes=ax[0],
+        annotate=True,
+        #cut_coords=CUT_COORDS,
+        'MRI only',
+    )
+
+    # Plot PET only
+    plot_anat(
+        pet_file,
+        draw_cross=False,
         axes=ax[1],
         annotate=True,
-        cut_coords=CUT_COORDS,
+        #cut_coords=CUT_COORDS,
+        vmax='auto',
+        title='Realigned PET'
     )
 
     # Plot reference region on mri
@@ -84,7 +90,8 @@ def _subject_page(pdf, subject_dir):
         cmap='turbo',
         alpha=1.0,
         colorbar=False,
-        cut_coords=CUT_COORDS,
+        #cut_coords=CUT_COORDS,
+        title='esupravwm/MRI',
     )
 
     # Plot gtm labels on MRI
@@ -95,12 +102,13 @@ def _subject_page(pdf, subject_dir):
         axes=ax[3],
         colorbar=False,
         alpha=1.0,
-        cut_coords=CUT_COORDS,
+        #cut_coords=CUT_COORDS,
+        title='GTM labels/MRI',
     )
 
     # Plot pet data on MRI
     plot_stat_map(
-        rescaled_file,
+        rbv_file,
         bg_img=mri_file,
         draw_cross=False,
         display_mode='z',
@@ -108,37 +116,52 @@ def _subject_page(pdf, subject_dir):
         colorbar=False,
         annotate=True,
         cut_coords=AXIAL_SLICES,
-        #alpha=0.8,
         cmap='jet',
+        vmax='auto',
+        title='RBV/MRI',
     )
 
     # Plot gtm labels on PET
     plot_roi(
         gtm_file,
-        bg_img=rbv_file,
+        bg_img=pet_file,
         display_mode='z',
         axes=ax[5],
         colorbar=False,
         annotate=True,
         cut_coords=AXIAL_SLICES,
-        #alpha=0.5,
+        vmax='auto',
+        cmap='gist_rainbow',
+        title='GTM labels/PET',
     )
 
     pdf.savefig(fig, dpi=300)
     plt.close(fig)
 
 
-# Find data
-subjects = os.listdir(SUBJECTS_DIR)
-print(f'{subjects=}')
+def make_pdf(subject_dir, pdf_file):
 
-# Make the PDF
-print('make pdf')
-with PdfPages('/OUTPUTS/report.pdf') as pdf:
+    # Find data
+    subjects = os.listdir(subject_dir)
+    print(f'{subjects=}')
 
-    # Page for each subject
-    for s in sorted(subjects):
-        _subject_page(pdf, f'{SUBJECTS_DIR}/{s}')
+    # Make the PDF
+    print('make pdf')
+    pdf_file
+    with PdfPages(pdf_file) as pdf:
+
+        # Page for each subject
+        for s in sorted(subjects):
+            _subject_page(pdf, f'{subject_dir}/{s}')
 
 
-print('PDF complete!')
+    print('PDF complete!')
+
+
+if __name__ == '__main__':
+    subject_dir = sys.argv[1]
+    pdf_file = sys.argv[2]
+
+    print(f'Making pdf:{pdf_file}:subjects={subject_dir}')
+    make_pdf(subject_dir, pdf_file)
+    print('DONE!')

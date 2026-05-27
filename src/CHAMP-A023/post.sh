@@ -6,7 +6,7 @@ echo "POST!"
 cd /OUTPUTS/SUBJECTS
 
 # Run post steps
-python -u /REPO/src/CHAMP-A023/post.py
+python -u /REPO/src/CHAMP-A023/post.py /OUTPUTS/SUBJECTS /OUTPUTS/report.pdf
 
 # Remove subjects folder so we avoid uploading
 rm -r /OUTPUTS/SUBJECTS
