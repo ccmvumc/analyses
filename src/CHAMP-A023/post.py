@@ -61,7 +61,7 @@ def _subject_page(pdf, subject_dir):
         colorbar=False,
         alpha=1.0,
     )
-    disp.set_title('GTM labels/MR', size=8)
+    disp.title('GTM labels/MR', size=6)
 
     gtm_coords = disp.cut_coords
 
@@ -84,7 +84,7 @@ def _subject_page(pdf, subject_dir):
         cut_coords=gtm_coords,
         threshold='auto',
     )
-    disp.set_title('MRI only', size=9)
+    disp.title('MRI only', size=6)
 
     # Plot PET only
     disp = plot_anat(
@@ -95,7 +95,7 @@ def _subject_page(pdf, subject_dir):
         cut_coords=gtm_coords,
         threshold='auto',
     )
-    disp.set_title('Realigned PET', size=10)
+    disp.title('Realigned PET', size=6)
 
     # Plot reference region on mri
     disp = plot_stat_map(
@@ -110,7 +110,7 @@ def _subject_page(pdf, subject_dir):
         colorbar=False,
         cut_coords=gtm_coords,
     )
-    disp.set_title('esupravwm/MRI', size=11)
+    disp.title('esupravwm/MRI', size=6)
 
     # Plot pet data on MRI
     disp = plot_stat_map(
@@ -125,7 +125,7 @@ def _subject_page(pdf, subject_dir):
         cmap='jet',
         threshold='auto',
     )
-    disp.set_title('RBV/MRI', size=8)
+    disp.title('RBV/MRI', size=6)
 
     # Plot gtm labels on PET
     disp = plot_roi(
@@ -139,10 +139,10 @@ def _subject_page(pdf, subject_dir):
         threshold='auto',
         cmap='gist_rainbow',
     )
-    disp.set_title('GTM labels/PET', size=8)
+    disp.title('GTM labels/PET', size=6)
 
     # Put page number in footer
-    fig.text(0.5, 0.05, f'Page {pdf.get_pagecount() + 1}', ha='center', fontsize=10, color='gray')
+    fig.text(0.5, 0.05, f'Page {pdf.get_pagecount() + 1}', ha='center', fontsize=8, color='gray')
 
     pdf.savefig(fig, dpi=300)
     plt.close(fig)
