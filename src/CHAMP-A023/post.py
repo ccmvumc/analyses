@@ -7,10 +7,6 @@ import matplotlib.pyplot as plt
 from nilearn.plotting import plot_roi, plot_stat_map, plot_anat
 
 
-AXIAL_SLICES = (-50, -25, 0, 25, 50)
-CUT_COORDS = (0, 0, 0)
-
-
 def _subject_page(pdf, subject_dir):
     subject = os.path.basename(subject_dir)
     pet_file = f'{subject_dir}/rPET.nii.gz'
@@ -44,6 +40,9 @@ def _subject_page(pdf, subject_dir):
     # Show ID in title
     fig.suptitle(subject)
 
+    # Set font size for titles
+    plt.rcParams.update({'font.size': 9})
+
     # Reduce whitespace
     plt.subplots_adjust(
         left=0.07,
@@ -54,13 +53,36 @@ def _subject_page(pdf, subject_dir):
         hspace=0.015,
     )
 
+    # Plot gtm labels on MRI
+    disp = plot_roi(
+        gtm_file,
+        bg_img=mri_file,
+        draw_cross=False,
+        axes=ax[3],
+        colorbar=False,
+        alpha=1.0,
+        title='GTM labels/MRI',
+    )
+
+    gtm_coords = disp.cut_coords
+    print(gtm_coords)
+
+    axial_slices = [
+        gtm_coords(3) - 50,
+        gtm_coords(3) - 25,
+        gtm_coords(3),
+        gtm_coords(3) + 25,
+        gtm_coords(3) + 50,
+    ]
+    print(axial_slices)
+
     # Plot MRI only
     plot_anat(
         mri_file,
         draw_cross=False,
         axes=ax[0],
         annotate=True,
-        #cut_coords=CUT_COORDS,
+        cut_coords=gtm_coords,
         title='MRI only',
         threshold='auto',
     )
@@ -71,7 +93,7 @@ def _subject_page(pdf, subject_dir):
         draw_cross=False,
         axes=ax[1],
         annotate=True,
-        #cut_coords=CUT_COORDS,
+        cut_coords=gtm_coords,
         threshold='auto',
         title='Realigned PET'
     )
@@ -87,24 +109,9 @@ def _subject_page(pdf, subject_dir):
         cmap='turbo',
         alpha=1.0,
         colorbar=False,
-        #cut_coords=CUT_COORDS,
+        cut_coords=gtm_coords,
         title='esupravwm/MRI',
     )
-
-    # Plot gtm labels on MRI
-    disp = plot_roi(
-        gtm_file,
-        bg_img=mri_file,
-        draw_cross=False,
-        axes=ax[3],
-        colorbar=False,
-        alpha=1.0,
-        #cut_coords=CUT_COORDS,
-        title='GTM labels/MRI',
-    )
-
-    cut_coords = disp.cut_coords
-    print(cut_coords)
 
     # Plot pet data on MRI
     plot_stat_map(
@@ -115,7 +122,7 @@ def _subject_page(pdf, subject_dir):
         axes=ax[4],
         colorbar=False,
         annotate=True,
-        cut_coords=AXIAL_SLICES,
+        cut_coords=axial_slices,
         cmap='jet',
         title='RBV/MRI',
         threshold='auto',
@@ -129,7 +136,7 @@ def _subject_page(pdf, subject_dir):
         axes=ax[5],
         colorbar=False,
         annotate=True,
-        cut_coords=AXIAL_SLICES,
+        cut_coords=axial_slices,
         threshold='auto',
         cmap='gist_rainbow',
         title='GTM labels/PET',
