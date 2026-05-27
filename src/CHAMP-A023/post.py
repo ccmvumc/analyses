@@ -7,7 +7,7 @@ from nilearn.plotting import plot_roi, plot_stat_map, plot_anat
 
 
 SUBJECTS_DIR = '/OUTPUTS/SUBJECTS'
-AXIAL_SLICES = (-40, -30, -20, -10, 0, 20, 40, 60)
+AXIAL_SLICES = (-60, -45, -30, -15, 0, 15, 30, 45, 60)
 CUT_COORDS = (0, 0, 0)
 
 
@@ -59,7 +59,15 @@ def _subject_page(pdf, subject_dir):
         draw_cross=False,
         axes=ax[0],
         annotate=True,
-        alpha=1.0,
+        cut_coords=CUT_COORDS,
+    )
+
+    # Plot MRI only
+    plot_anat(
+        mri_file,
+        draw_cross=False,
+        axes=ax[1],
+        annotate=True,
         cut_coords=CUT_COORDS,
     )
 
@@ -68,9 +76,9 @@ def _subject_page(pdf, subject_dir):
         ref_file,
         bg_img=mri_file,
         draw_cross=False,
-        axes=ax[1],
-        #vmin=0,
-        #vmax=0.5,
+        axes=ax[2],
+        vmin=0,
+        vmax=0.5,
         cmap='turbo',
         alpha=1.0,
         colorbar=False,
@@ -81,7 +89,7 @@ def _subject_page(pdf, subject_dir):
     plot_anat(
         mri_file,
         draw_cross=False,
-        axes=ax[2],
+        axes=ax[3],
         colorbar=False,
         alpha=1.0,
         cut_coords=CUT_COORDS,
@@ -93,10 +101,12 @@ def _subject_page(pdf, subject_dir):
         bg_img=mri_file,
         draw_cross=False,
         display_mode='z',
-        axes=ax[3],
+        axes=ax[4],
         colorbar=False,
         annotate=True,
         cut_coords=AXIAL_SLICES,
+        alpha=0.8,
+        cmap='jet',
     )
 
     # Plot gtm labels on PET
@@ -104,7 +114,7 @@ def _subject_page(pdf, subject_dir):
         gtm_file,
         bg_img=pet_file,
         display_mode='z',
-        axes=ax[4],
+        axes=ax[5],
         colorbar=False,
         annotate=True,
         cut_coords=AXIAL_SLICES,
