@@ -14,6 +14,7 @@ def _subject_page(pdf, subject_dir):
     ref_file = f'{subject_dir}/esupravwm.nii.gz'
     gtm_file = f'{subject_dir}/mri/gtmseg.mgz'
     rbv_file = f'{subject_dir}/gtmpvc.esupravwm.output/rbv.nii.gz'
+    title_size = 7
 
     print(subject)
 
@@ -37,8 +38,6 @@ def _subject_page(pdf, subject_dir):
     # Make a letter paper size figure with 6 plots in 1 column
     fig, ax = plt.subplots(6, 1, figsize=(8.5,11))
 
-    print(plt.rcParams.get('font.size', 'Not Found'))
-
     # Show ID in title
     fig.suptitle(subject)
 
@@ -61,7 +60,7 @@ def _subject_page(pdf, subject_dir):
         colorbar=False,
         alpha=1.0,
     )
-    disp.title('GTM labels/MR', size=6)
+    disp.title('GTM labels/MR', size=title_size)
 
     gtm_coords = disp.cut_coords
 
@@ -84,7 +83,7 @@ def _subject_page(pdf, subject_dir):
         cut_coords=gtm_coords,
         threshold='auto',
     )
-    disp.title('MRI only', size=6)
+    disp.title('MRI only', size=title_size)
 
     # Plot PET only
     disp = plot_anat(
@@ -110,7 +109,7 @@ def _subject_page(pdf, subject_dir):
         colorbar=False,
         cut_coords=gtm_coords,
     )
-    disp.title('esupravwm/MRI', size=6)
+    disp.title('esupravwm/MRI', size=title_size)
 
     # Plot pet data on MRI
     disp = plot_stat_map(
@@ -125,7 +124,7 @@ def _subject_page(pdf, subject_dir):
         cmap='jet',
         threshold='auto',
     )
-    disp.title('RBV/MRI', size=6)
+    disp.title('RBV/MRI', size=title_size)
 
     # Plot gtm labels on PET
     disp = plot_roi(
@@ -139,12 +138,12 @@ def _subject_page(pdf, subject_dir):
         threshold='auto',
         cmap='gist_rainbow',
     )
-    disp.title('GTM labels/PET', size=6)
+    disp.title('GTM labels/PET', size=title_size)
 
     # Put page number in footer
     fig.text(0.5, 0.05, f'Page {pdf.get_pagecount() + 1}', ha='center', fontsize=8, color='gray')
 
-    pdf.savefig(fig, dpi=300)
+    pdf.savefig(fig)   #, dpi=300)
     plt.close(fig)
 
 
