@@ -67,12 +67,15 @@ def _subject_page(pdf, subject_dir):
     gtm_coords = disp.cut_coords
     print(gtm_coords)
 
+    mid_axial = gtm_coords[2]
+    print(mid_axial)
+
     axial_slices = [
-        gtm_coords(3) - 50,
-        gtm_coords(3) - 25,
-        gtm_coords(3),
-        gtm_coords(3) + 25,
-        gtm_coords(3) + 50,
+        mid_axial - 50,
+        mid_axial - 25,
+        mid_axial,
+        mid_axial + 25,
+        mid_axial + 50,
     ]
     print(axial_slices)
 
