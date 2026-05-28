@@ -44,9 +44,11 @@ for i=1:length(filelist)
     conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_p0.05_volume.png'));
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset1_p0.05_slice.png'));
 
+    conn_display(h, 'close');
+
     % Then preset 2
     display('preset 2');
-    conn_display(h, 'fwec.option', 2);
+    h = conn_display(mat_file, 1, 2);
     conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_volume.png'));
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_slice.png'));
 
