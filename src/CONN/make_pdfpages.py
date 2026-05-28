@@ -34,15 +34,15 @@ def _add_results_page(pdf, subjects, conditions, sources, thresholds, prefix):
     plt.close(fig)
 
 
-def _add_results_pages(pdf, result_dir, subjects, conditions, sources):
+def _add_results(pdf, result_dir, subjects, conditions, sources):
     # Copy png to jpg to allow read
     [shutil.copyfile(f'{result_dir}/{p}', f'{result_dir}/{p[:-4]}.jpg') for p in os.listdir(result_dir) if p.endswith('.png')]
 
-    _add_result_page(pdf, subjects, conditions, sources, 'Preset1', 'preset1')
-    _add_result_page(pdf, subjects, conditions, sources, 'Preset2', 'preset2')
-    _add_result_page(pdf, subjects, conditions, sources, 'Preset3', 'preset3')
-    _add_result_page(pdf, subjects, conditions, sources, 'Preset2, p<0.005', 'preset2_p0.005')
-    _add_result_page(pdf, subjects, conditions, sources, 'Preset2, p<0.05', 'preset2_p0.05')
+    _add_results_page(pdf, subjects, conditions, sources, 'Preset1', 'preset1')
+    _add_results_page(pdf, subjects, conditions, sources, 'Preset2', 'preset2')
+    _add_results_page(pdf, subjects, conditions, sources, 'Preset3', 'preset3')
+    _add_results_page(pdf, subjects, conditions, sources, 'Preset2, p<0.005', 'preset2_p0.005')
+    _add_results_page(pdf, subjects, conditions, sources, 'Preset2, p<0.05', 'preset2_p0.05')
 
 
 def _add_pairplot_pages(pdf, df):
@@ -84,7 +84,7 @@ def make_report(results_dir, pdf_file, csv_file, subjects_file):
 
                     logger.info(f'add_results:{subj}:{cond}:{sources}')
                     _dir = os.path.join(results_dir, subj, cond, sources)
-                    _add_results_page(pdf, _dir, subj, cond, sources)
+                    _add_results(pdf, _dir, subj, cond, sources)
 
         # Covariate plots
         if not os.path.exists(csv_file):
