@@ -1,5 +1,8 @@
 clear batch;
 
+% Manual for the conn_display tool 
+% https://sites.google.com/view/conn/resources/conn-manual/conn_display
+
 % Load contrasts from .mat file
 load('/OUTPUTS/contrasts.mat');
 disp(batch);
@@ -48,7 +51,7 @@ for i=1:length(filelist)
     % Then p<0.005
     display('preset 2, p<0.005');
     h = conn_display(mat_file, 1, 2);
-    conn_display(h, 'fwec.clusterlevel.value', '0.005');
+    conn_display(h, 'fwec.clusterlevel.value', 0.005);
     conn_display(h, 'volume_print', fullfile(filelist(i).folder, 'preset2_p0.005_volume.png'));
     conn_display(h, 'slice_print', fullfile(filelist(i).folder, 'preset2_p0.005_slice.png'));
     conn_display(h, 'close');
@@ -56,7 +59,7 @@ for i=1:length(filelist)
     % Then p<0.05
     display('preset 2, p<0.05');
     h = conn_display(mat_file, 1, 2);
-    conn_display(h, 'fwec.clusterlevel.value', '0.05');
+    conn_display(h, 'fwec.clusterlevel.value', 0.05);
     conn_display(h, 'volume_print', fullfile(filelist(i).folder, 'preset2_p0.05_volume.png'));
     conn_display(h, 'slice_print', fullfile(filelist(i).folder, 'preset2_p0.05_slice.png'));
     conn_display(h, 'close');
