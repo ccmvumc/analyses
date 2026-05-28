@@ -22,26 +22,34 @@ for i=1:length(filelist)
 
     % Load result, contrast 1, presets=2 for permutation
     disp('open display');
-    h = conn_display(mat_file, 1, 2);
+
+    h = conn_display(mat_file, 1, 1);
+
+    display('preset 1');
 
     % Print views
     disp('volume_print');
-    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_volume.png'));
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_volume.png'));
 
     disp('slice_print');
-    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_slice.png'));
-
-    % Then preset 1
-    display('preset 1');
-    conn_display(h, 'fwec.option', 1);
-    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_volume.png'));
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset1_slice.png'));
 
-    % Then preset 3
-    display('preset 3');
-    conn_display(h, 'fwec.option', 3);
-    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_volume.png'));
-    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_slice.png'));
+    display('preset 1, p<0.005');
+    conn_display(h, 'fwec.option', 1);
+    conn_display(h, 'fwec.clusterlevel.value', 0.005);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_p0.005_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset1_p0.005_slice.png'));
+
+    display('preset 1, p<0.05');
+    conn_display(h, 'fwec.option', 1);
+    conn_display(h, 'fwec.clusterlevel.value', 0.05);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_p0.05_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset1_p0.05_slice.png'));
+
+    % Then preset 2
+    conn_display(h, 'fwec.option', 2);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_slice.png'));
 
     % Then p<0.005
     display('preset 2, p<0.005');
@@ -56,7 +64,7 @@ for i=1:length(filelist)
     conn_display(h, 'fwec.clusterlevel.value', 0.05);
     conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_p0.05_volume.png'));
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_p0.05_slice.png'));
-    
+
     % Finish up
     conn_display(h, 'close');
 end
