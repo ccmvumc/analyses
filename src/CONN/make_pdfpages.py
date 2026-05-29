@@ -11,7 +11,7 @@ import pandas as pd
 logger = logging.getLogger('make_pdfpages')
 
 
-def _add_results_page(pdf, subjects, conditions, sources, thresholds, prefix):
+def _add_results_page(pdf, result_dir, subjects, conditions, sources, thresholds, prefix):
     slice_print = f'{result_dir}/{prefix}_slice_print.jpg'
     volume_print = f'{result_dir}/{prefix}_volume_print.jpg'
 
@@ -38,12 +38,12 @@ def _add_results(pdf, result_dir, subjects, conditions, sources):
     # Copy png to jpg to allow read
     [shutil.copyfile(f'{result_dir}/{p}', f'{result_dir}/{p[:-4]}.jpg') for p in os.listdir(result_dir) if p.endswith('.png')]
 
-    _add_results_page(pdf, subjects, conditions, sources, 'Preset1', 'preset1')
-    _add_results_page(pdf, subjects, conditions, sources, 'Preset1', 'preset1_p0.005')
-    _add_results_page(pdf, subjects, conditions, sources, 'Preset1', 'preset1_p0.05')
-    _add_results_page(pdf, subjects, conditions, sources, 'Preset2', 'preset2')
-    _add_results_page(pdf, subjects, conditions, sources, 'Preset2, p<0.005', 'preset2_p0.005')
-    _add_results_page(pdf, subjects, conditions, sources, 'Preset2, p<0.05', 'preset2_p0.05')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset1', 'preset1')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset1', 'preset1_p0.005')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset1', 'preset1_p0.05')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset2', 'preset2')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset2, p<0.005', 'preset2_p0.005')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset2, p<0.05', 'preset2_p0.05')
 
 
 def _add_pairplot_pages(pdf, df):
