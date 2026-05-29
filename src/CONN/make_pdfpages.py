@@ -38,12 +38,15 @@ def _add_results(pdf, result_dir, subjects, conditions, sources):
     # Copy png to jpg to allow read
     [shutil.copyfile(f'{result_dir}/{p}', f'{result_dir}/{p[:-4]}.jpg') for p in os.listdir(result_dir) if p.endswith('.png')]
 
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset1', 'preset1')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset1', 'preset1_p0.005')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset1', 'preset1_p0.05')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset2', 'preset2')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset2, p<0.005', 'preset2_p0.005')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Preset2, p<0.05', 'preset2_p0.05')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #1, vox p<0.001', 'preset1')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #1, vox p<0.005', 'preset1_p0.005')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #1, vox p<0.05', 'preset1_p0.05')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.001', 'preset2')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.005', 'preset2_p0.005')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.05', 'preset2_p0.05')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.001', 'preset3')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.005', 'preset3_p0.005')
+    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.05', 'preset3_p0.05')
 
 
 def _add_pairplot_pages(pdf, df):

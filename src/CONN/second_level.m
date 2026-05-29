@@ -64,6 +64,24 @@ for i=1:length(filelist)
     conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_p0.05_volume.png'));
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_p0.05_slice.png'));
 
+    % Finally preset 3
+    display('preset 3');
+    h = conn_display(mat_file, 1, 3);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_slice.png'));
+
+    % Then p<0.005
+    display('preset 3, p<0.005');
+    conn_display(h, 'fwec.clusterlevel.value', 0.005);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_p0.005_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_p0.005_slice.png'));
+
+    % Then p<0.05
+    display('preset 3, p<0.05');
+    conn_display(h, 'fwec.clusterlevel.value', 0.05);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_p0.05_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_p0.05_slice.png'));
+
     % Finish up
     conn_display(h, 'close');
 end
