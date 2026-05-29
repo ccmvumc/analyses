@@ -12,8 +12,8 @@ logger = logging.getLogger('make_pdfpages')
 
 
 def _add_results_page(pdf, result_dir, subjects, conditions, sources, thresholds, prefix):
-    slice_print = f'{result_dir}/{prefix}_slice_print.jpg'
-    volume_print = f'{result_dir}/{prefix}_volume_print.jpg'
+    slice_print = f'{result_dir}/{prefix}_slice.jpg'
+    volume_print = f'{result_dir}/{prefix}_volume.jpg'
 
     fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(8.5, 11))
 
