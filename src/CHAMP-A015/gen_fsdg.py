@@ -25,5 +25,5 @@ def write_fsgd(df, output_file, title, activation):
 write_fsgd(covariates_df, '/OUTPUTS/gfap.fsgd', 'gfap_fsgd', 'GFAP_pgmL')
 write_fsgd(covariates_df, '/OUTPUTS/nfl.fsgd', 'nfl_fsgd', 'NFLight_pgmL')
 write_fsgd(covariates_df, '/OUTPUTS/abeta42_40_ratio.fsgd', 'abeta42_40_ratio_fsgd', 'Abeta42_40_ratio')
-write_fsgd(covariates_df, '/OUTPUTS/tau.fsgd', 'tau_fsgd', 'Tau_pgmL')
+write_fsgd(covariates_df, '/OUTPUTS/ptau217.fsgd', 'ptau217_fsgd', 'pTau217_pgmL')
 

@@ -110,8 +110,8 @@ mris_fwhm \
 --hemi rh \
 --fwhm 5
 
-#run mri_glm_fit for age
-echo "Running mri_glm_fit for left hemisphere for age"
+#run mri_glmfit for age
+echo "Running mri_glmfit for left hemisphere for age"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_age \
@@ -120,7 +120,7 @@ mri_glmfit \
 --cortex \
 --glmdir $out_dir/glm/lh.glm.glmdir_age \
 --eres-save
-echo "Running mri_glm_fit for right hemisphere for age"
+echo "Running mri_glmfit for right hemisphere for age"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_age \
@@ -133,14 +133,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for age"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_age \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for age"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_age \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1

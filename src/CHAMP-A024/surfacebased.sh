@@ -3,13 +3,14 @@
 
 in_dir='/INPUTS'
 out_dir='/OUTPUTS/DATA'
-source='/REPO/src/CHAMP-A016'
+source='/REPO/src/CHAMP-A024'
 
 mkdir -p $out_dir
 mkdir -p $out_dir/glm
 
-fsgd_file='/OUTPUTS/apoe.fsgd'
-matrix_file="${source}/matrix.mtx"
+fsgd_file_d='/OUTPUTS/chrfam7.fsgd'
+matrix_dir_vs_indir="${source}/matrix_dir_vs_in.mtx"
+matrix_ftest="${source}/matrix_ftest.mtx"
 
 #cp fsaverage to inputs
 cp -r /usr/local/freesurfer/subjects/fsaverage /INPUTS/
@@ -110,40 +111,77 @@ mris_fwhm \
 --hemi rh \
 --fwhm 5
 
-#run mri_glmfit for gfap
-echo "Running mri_glmfit for left hemisphere for apoe"
+#run mri_glm_fit for comparison of dir vs indir
+echo "Running mri_glm_fit for left hemisphere for comparison of dir vs indir"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file \
---C $matrix_file \
+--fsgd $fsgd_file_d \
+--C $matrix_dir_vs_indir \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_apoe \
+--glmdir $out_dir/glm/lh.glm.glmdir_dir_vs_indir \
 --eres-save
 
-echo "Running mri_glmfit for right hemisphere for apoe"
+echo "Running mri_glm_fit for right hemisphere for comparison of dir vs indir"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file \
---C $matrix_file \
+--fsgd $fsgd_file_d \
+--C $matrix_dir_vs_indir \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_apoe \
+--glmdir $out_dir/glm/rh.glm.glmdir_dir_vs_indir \
 --eres-save
 
-#run with clusterwise corrections for negative correlations for apoe
-echo "Running mri_glmfit-sim for left hemisphere for apoe"
+#run with clusterwise corrections for 2-sided correlations for dlpfc
+echo "Running mri_glmfit-sim for left hemisphere for dlpfc"
 mri_glmfit-sim \
---glmdir $out_dir/glm/lh.glm.glmdir_apoe \
+--glmdir $out_dir/glm/lh.glm.glmdir_dir_vs_indir \
 --perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
-echo "Running mri_glmfit-sim for right hemisphere for apoe"
+echo "Running mri_glmfit-sim for right hemisphere for dlpfc"
 mri_glmfit-sim \
---glmdir $out_dir/glm/rh.glm.glmdir_apoe \
+--glmdir $out_dir/glm/rh.glm.glmdir_dir_vs_indir \
 --perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 
+
+#run mri_glm_fit for comparison of ftest for all 3 groups
+echo "Running mri_glm_fit for left hemisphere for comparison of dir vs indir"
+mri_glmfit \
+--y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
+--fsgd $fsgd_file_d \
+--C $matrix_ftest \
+--surf fsaverage lh \
+--cortex \
+--glmdir $out_dir/glm/lh.glm.glmdir_ftest \
+--eres-save
+
+echo "Running mri_glm_fit for right hemisphere for comparison of dir vs indir"
+mri_glmfit \
+--y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
+--fsgd $fsgd_file_d \
+--C $matrix_ftest \
+--surf fsaverage rh \
+--cortex \
+--glmdir $out_dir/glm/rh.glm.glmdir_ftest \
+--eres-save
+
+#run with clusterwise corrections for 2-sided correlations for dlpfc
+echo "Running mri_glmfit-sim for left hemisphere for dlpfc"
+mri_glmfit-sim \
+--glmdir $out_dir/glm/lh.glm.glmdir_ftest \
+--perm 1000 2.3 abs \
+--cwp 0.05 \
+--2spaces \
+--bg 1
+echo "Running mri_glmfit-sim for right hemisphere for dlpfc"
+mri_glmfit-sim \
+--glmdir $out_dir/glm/rh.glm.glmdir_ftest \
+--perm 1000 2.3 abs \
+--cwp 0.05 \
+--2spaces \
+--bg 1
