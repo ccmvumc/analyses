@@ -138,20 +138,20 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for gfap"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_gfap \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for gfap"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_gfap \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 
-#run mri_glm_fit for nfl
-echo "Running mri_glm_fit for left hemisphere for nfl"
+#run mri_glmfit for nfl
+echo "Running mri_glmfit for left hemisphere for nfl"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_nfl \
@@ -161,7 +161,7 @@ mri_glmfit \
 --glmdir $out_dir/glm/lh.glm.glmdir_nfl \
 --eres-save
 
-echo "Running mri_glm_fit for right hemisphere for nfl"
+echo "Running mri_glmfit for right hemisphere for nfl"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_nfl \
@@ -174,20 +174,20 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for nfl"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_nfl \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for nfl"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_nfl \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 
-#run mri_glm_fit for ab4240_ratio
-echo "Running mri_glm_fit for left hemisphere for ab4240_ratio"
+#run mri_glmfit for ab4240_ratio
+echo "Running mri_glmfit for left hemisphere for ab4240_ratio"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_ab4240 \
@@ -196,7 +196,7 @@ mri_glmfit \
 --cortex \
 --glmdir $out_dir/glm/lh.glm.glmdir_ab4240_ratio \
 --eres-save
-echo "Running mri_glm_fit for right hemisphere for ab4240_ratio"
+echo "Running mri_glmfit for right hemisphere for ab4240_ratio"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_ab4240 \
@@ -209,14 +209,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for ab4240_ratio"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_ab4240_ratio \
---perm 1000 4.0 pos \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for ab4240_ratio"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_ab4240_ratio \
---perm 1000 4.0 pos \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
@@ -244,14 +244,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for tau"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_tau \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for tau"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_tau \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1

@@ -11,7 +11,7 @@ mkdir -p $out_dir/glm
 fsgd_file_gfap='/OUTPUTS/gfap.fsgd'
 fsgd_file_nfl='/OUTPUTS/nfl.fsgd'
 fsgd_file_ab4240='/OUTPUTS/abeta42_40_ratio.fsgd'
-fsgd_file_tau='/OUTPUTS/tau.fsgd'
+fsgd_file_tau='/OUTPUTS/ptau217.fsgd'
 matrix_file="${source}/matrix.mtx"
 
 #cp fsaverage to inputs
@@ -113,8 +113,8 @@ mris_fwhm \
 --hemi rh \
 --fwhm 5
 
-#run mri_glm_fit for gfap
-echo "Running mri_glm_fit for left hemisphere for gfap"
+#run mri_glmfit for gfap
+echo "Running mri_glmfit for left hemisphere for gfap"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_gfap \
@@ -124,7 +124,7 @@ mri_glmfit \
 --glmdir $out_dir/glm/lh.glm.glmdir_gfap \
 --eres-save
 
-echo "Running mri_glm_fit for right hemisphere for gfap"
+echo "Running mri_glmfit for right hemisphere for gfap"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_gfap \
@@ -150,8 +150,8 @@ mri_glmfit-sim \
 --2spaces \
 --bg 1
 
-#run mri_glm_fit for nfl
-echo "Running mri_glm_fit for left hemisphere for nfl"
+#run mri_glmfit for nfl
+echo "Running mri_glmfit for left hemisphere for nfl"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_nfl \
@@ -209,49 +209,49 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for ab4240_ratio"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_ab4240_ratio \
---perm 1000 4.0 pos \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for ab4240_ratio"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_ab4240_ratio \
---perm 1000 4.0 pos \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 
-#run mri_glm_fit for tau
-echo "Running mri_glm_fit for left hemisphere for tau"
+#run mri_glmfit for ptau217
+echo "Running mri_glmfit for left hemisphere for ptau217"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file_tau \
+--fsgd $fsgd_file_ptau217 \
 --C $matrix_file \
 --surf fsaverage lh \
 --cortex \
---glmdir $out_dir/glm/lh.glm.glmdir_tau \
+--glmdir $out_dir/glm/lh.glm.glmdir_ptau217 \
 --eres-save
-echo "Running mri_glm_fit for right hemisphere for tau"
+echo "Running mri_glmfit for right hemisphere for ptau217"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
---fsgd $fsgd_file_tau \
+--fsgd $fsgd_file_ptau217 \
 --C $matrix_file \
 --surf fsaverage rh \
 --cortex \
---glmdir $out_dir/glm/rh.glm.glmdir_tau \
+--glmdir $out_dir/glm/rh.glm.glmdir_ptau217 \
 --eres-save
-#run with clusterwise corrections for negative correlations for tau
-echo "Running mri_glmfit-sim for left hemisphere for tau"
+#run with clusterwise corrections for negative correlations for ptau217
+echo "Running mri_glmfit-sim for left hemisphere for ptau217"
 mri_glmfit-sim \
---glmdir $out_dir/glm/lh.glm.glmdir_tau \
---perm 1000 4.0 neg \
+--glmdir $out_dir/glm/lh.glm.glmdir_ptau217 \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
-echo "Running mri_glmfit-sim for right hemisphere for tau"
+echo "Running mri_glmfit-sim for right hemisphere for ptau217"
 mri_glmfit-sim \
---glmdir $out_dir/glm/rh.glm.glmdir_tau \
---perm 1000 4.0 neg \
+--glmdir $out_dir/glm/rh.glm.glmdir_ptau217 \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1

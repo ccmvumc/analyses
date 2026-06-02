@@ -135,14 +135,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for p3_pz_mem_amp"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_p3_pz_mem_amp \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for p3_pz_mem_amp"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_p3_pz_mem_amp \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
