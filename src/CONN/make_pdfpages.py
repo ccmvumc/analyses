@@ -41,12 +41,12 @@ def _add_results(pdf, result_dir, subjects, conditions, sources):
     _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #1, vox p<0.001', 'preset1')
     _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #1, vox p<0.005', 'preset1_p0.005')
     _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #1, vox p<0.05', 'preset1_p0.05')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.001', 'preset2')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.005', 'preset2_p0.005')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.05', 'preset2_p0.05')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.001', 'preset3')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.005', 'preset3_p0.005')
-    _add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.05', 'preset3_p0.05')
+    #_add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.001', 'preset2')
+    #_add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.005', 'preset2_p0.005')
+    #_add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #2, vox p<0.05', 'preset2_p0.05')
+    #_add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.001', 'preset3')
+    #_add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.005', 'preset3_p0.005')
+    #_add_results_page(pdf, result_dir, subjects, conditions, sources, 'Default #3, vox p<0.05', 'preset3_p0.05')
 
 
 def _add_pairplot_pages(pdf, df):
