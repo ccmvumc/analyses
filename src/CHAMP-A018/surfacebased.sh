@@ -137,20 +137,20 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for sdmt_corr"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_sdmt_corr \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for sdmt_corr"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_sdmt_corr \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 
 #run mri_glm_fit for sdmt_num
-echo "Running mri_glm_fit for left hemisphere for sdmt_num"
+echo "Running mri_glmfit for left hemisphere for sdmt_num"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_sdmt_num \
@@ -160,7 +160,7 @@ mri_glmfit \
 --glmdir $out_dir/glm/lh.glm.glmdir_sdmt_num \
 --eres-save
 
-echo "Running mri_glm_fit for right hemisphere for sdmt_num"
+echo "Running mri_glmfit for right hemisphere for sdmt_num"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_sdmt_num \
@@ -173,20 +173,20 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for sdmt_num"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_sdmt_num \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for sdmt_num"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_sdmt_num \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 
 #run mri_glm_fit for srt_recall_delay
-echo "Running mri_glm_fit for left hemisphere for srt_recall_delay"
+echo "Running mri_glmfit for left hemisphere for srt_recall_delay"
 mri_glmfit \
 --y $out_dir/all.lh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_srt_recall_delay \
@@ -195,7 +195,7 @@ mri_glmfit \
 --cortex \
 --glmdir $out_dir/glm/lh.glm.glmdir_srt_recall_delay \
 --eres-save
-echo "Running mri_glm_fit for right hemisphere for srt_recall_delay"
+echo "Running mri_glmfit for right hemisphere for srt_recall_delay"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_srt_recall_delay \
@@ -208,14 +208,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for srt_recall_delay"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_srt_recall_delay \
---perm 1000 4.0 pos \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for srt_recall_delay"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_srt_recall_delay \
---perm 1000 4.0 pos \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1

@@ -122,7 +122,7 @@ mri_glmfit \
 --glmdir $out_dir/glm/lh.glm.glmdir_srt_total \
 --eres-save
 
-echo "Running mri_glm_fit for right hemisphere for srt_totals"
+echo "Running mri_glm_fit for right hemisphere for srt_total"
 mri_glmfit \
 --y $out_dir/all.rh.mgx.ctx.fsaverage.sm05.nii.gz \
 --fsgd $fsgd_file_srt_total \
@@ -136,14 +136,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for srt_total"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_srt_total \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for srt_total"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_srt_total \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
@@ -172,14 +172,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for srt_total_cons"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_srt_total_cons \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for srt_total_cons"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_srt_total_cons \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1

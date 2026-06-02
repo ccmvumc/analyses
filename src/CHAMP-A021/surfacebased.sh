@@ -136,14 +136,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for dlpfc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_dlpfc \
---perm 1000 4.0 neg \
+--perm 1000 3.0 neg \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for dlpfc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_dlpfc \
---perm 1000 4.0 neg \
+--perm 1000 3.0 neg \
 --cwp 0.05 \
 --2spaces \
 --bg 1
@@ -174,14 +174,14 @@ mri_glmfit \
 echo "Running mri_glmfit-sim for left hemisphere for ppc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/lh.glm.glmdir_ppc \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
 echo "Running mri_glmfit-sim for right hemisphere for ppc"
 mri_glmfit-sim \
 --glmdir $out_dir/glm/rh.glm.glmdir_ppc \
---perm 1000 4.0 neg \
+--perm 1000 2.3 abs \
 --cwp 0.05 \
 --2spaces \
 --bg 1
