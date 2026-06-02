@@ -20,69 +20,42 @@ for i=1:length(filelist)
 
     disp(mat_file);
 
-    % Load result, contrast 1, presets=2 for permutation
-    disp('open display');
-
+    % Load result, contrast 1    
     h = conn_display(mat_file, 1, 1);
-
     display('preset 1');
-
-    % Print views
-    disp('volume_print');
     conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_volume.png'));
-
-    disp('slice_print');
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset1_slice.png'));
 
-    display('preset 1, p<0.005');
+    display('preset 1, vox p<0.005');
     conn_display(h, 'fwec.voxellevel.value', 0.005);
     conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_p0.005_volume.png'));
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset1_p0.005_slice.png'));
 
-    display('preset 1, p<0.05');
+    display('preset 1, vox p<0.05');
     conn_display(h, 'fwec.voxellevel.value', 0.05);
     conn_display(h, 'volume_print', fullfile(mat_dir, 'preset1_p0.05_volume.png'));
     conn_display(h, 'slice_print', fullfile(mat_dir, 'preset1_p0.05_slice.png'));
 
+    % Finished preset 1
     conn_display(h, 'close');
 
     % Then preset 2
-    %display('preset 2');
-    %h = conn_display(mat_file, 1, 2);
-    %conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_volume.png'));
-    %conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_slice.png'));
+    display('preset 2, vox p<0.05');
+    h = conn_display(mat_file, 1, 2);
+    conn_display(h, 'fwec.voxellevel.value', 0.05);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_slice.png'));
 
-    % Then p<0.005
-    %display('preset 2, p<0.005');
-    %conn_display(h, 'fwec.voxellevel.value', 0.005);
-    %conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_p0.005_volume.png'));
-    %conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_p0.005_slice.png'));
-
-    % Then p<0.05
-    %display('preset 2, p<0.05');
-    %conn_display(h, 'fwec.voxellevel.value', 0.05);
-    %conn_display(h, 'volume_print', fullfile(mat_dir, 'preset2_p0.05_volume.png'));
-    %conn_display(h, 'slice_print', fullfile(mat_dir, 'preset2_p0.05_slice.png'));
-
-    %conn_display(h, 'close');
+    % Finished preset 2
+    conn_display(h, 'close');
 
     % Then preset 3
-    %display('preset 3');
-    %h = conn_display(mat_file, 1, 3);
-    %conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_volume.png'));
-    %conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_slice.png'));
+    display('preset 3, vox p<0.05');
+    h = conn_display(mat_file, 1, 3);
+    conn_display(h, 'fwec.voxellevel.value', 0.05);
+    conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_volume.png'));
+    conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_slice.png'));
 
-    % Then p<0.005
-    %display('preset 3, p<0.005');
-    %conn_display(h, 'fwec.voxellevel.value', 0.005);
-    %conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_p0.005_volume.png'));
-    %conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_p0.005_slice.png'));
-
-    % Then p<0.05
-    %display('preset 3, p<0.05');
-    %conn_display(h, 'fwec.voxellevel.value', 0.05);
-    %conn_display(h, 'volume_print', fullfile(mat_dir, 'preset3_p0.05_volume.png'));
-    %conn_display(h, 'slice_print', fullfile(mat_dir, 'preset3_p0.05_slice.png'));
-
+    % Finished preset 3
     conn_display(h, 'close');
 end
