@@ -85,16 +85,18 @@ def _subject_page(pdf, subject_dir):
     )
     disp.title('MRI only', size=title_size)
 
-    # Plot PET only
-    disp = plot_anat(
+    # Plot PET on MRI
+    disp = plot_stat_map(
         pet_file,
+        bg_img=mri_file,
         draw_cross=False,
         axes=ax[1],
         annotate=True,
         cut_coords=gtm_coords,
         threshold='auto',
+        cmap='jet',
     )
-    disp.title('Realigned PET', size=6)
+    disp.title('MRI/Realigned PET', size=6)
 
     # Plot reference region on mri
     disp = plot_stat_map(
