@@ -6,7 +6,7 @@ containers:
   - name: FS7
     path: freesurfer_7.2.0.sif
 requirements:
-  walltime: 0-6
+  walltime: 0-10
   memory: 16G
 inputs:
   xnat:
