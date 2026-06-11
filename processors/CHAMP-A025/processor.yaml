@@ -3,9 +3,6 @@ containers:
   - name: ANALYSES
     path: ccmvumc_analyses_v2.1.sif
     source: docker://bud42/ccmvumc_analyses:v2.1
-  - name: CONN
-    path: all_conn_rsfc_v1.2.0.sif
-    source: docker://bud42/all_conn_rsfc:v1.2.0
 requirements:
   walltime: 0-12
   memory: 20G
@@ -22,7 +19,7 @@ pre:
   args: bash /REPO/src/CHAMP-A025/pre.sh
 command:
   type: singularity_exec
-  container: CONN
+  container: ANALYSES
   args: bash /REPO/src/CHAMP-A025/main.sh
 post:
   type: singularity_exec

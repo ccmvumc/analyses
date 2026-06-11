@@ -1,1 +1,3 @@
-python -u /REPO/src/CONN/prep.py /INPUTS /OUTPUTS
+mkdir -p /OUTPUTS/SUBJECTS
+
+python -u /REPO/src/CONN/prep.py /INPUTS /OUTPUTS/SUBJECTS
