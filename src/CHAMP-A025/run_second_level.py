@@ -12,7 +12,7 @@ from nilearn.reporting import make_glm_report
 from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 
-from .params import CONTRASTS, CUT_COORDS, THRESHOLD, COLORMAP, VMAX, ROIS
+from params import CONTRASTS, CUT_COORDS, THRESHOLD, COLORMAP, VMAX
 
 
 TITLE = 'CHAMP N-Back Task'

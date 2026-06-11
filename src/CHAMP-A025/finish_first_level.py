@@ -14,7 +14,7 @@ from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 from nilearn.masking import apply_mask
 
-from .params import TR, CONTRASTS, CUT_COORDS, THRESHOLD, COLORMAP, VMAX, ROIS
+from params import CUT_COORDS, THRESHOLD, COLORMAP, VMAX, ROIS
 
 
 TITLE='CHAMP N-Back Task'
