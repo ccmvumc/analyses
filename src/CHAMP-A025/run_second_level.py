@@ -64,7 +64,7 @@ def _single(subjects_dir, group_dir, roi_dir):
             cut_coords=CUT_COORDS,
             display_mode='z',
             cmap=COLORMAP,
-            title=f'{TITLE} (n={len(zmaps)}) 2nd-Level single-t contrast_{cid}:{c}',
+            title=f'{TITLE} (n={len(cmaps)}) 2nd-Level single-t contrast_{cid}:{c}',
             vmax=VMAX
         )
 
