@@ -89,6 +89,7 @@ def _contrast_images(conn_dir):
         img1=mec_2back_file,
         img2=mec_0back_file,
     )
+    print(f'Saving MEC contrast1:{mec_contrast1_file}')
     mec_contrast1_image.to_filename(mec_contrast1_file)
 
     plc_contrast1_image = math_img(
@@ -96,6 +97,7 @@ def _contrast_images(conn_dir):
         img1=plc_2back_file,
         img2=plc_0back_file,
     )
+    print(f'Saving PLC contrast1:{plc_contrast1_file}')
     plc_contrast1_image.to_filename(plc_contrast1_file)
 
 

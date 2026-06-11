@@ -42,7 +42,7 @@ def _single(subjects_dir, group_dir, roi_dir):
         cid = str(i+1)
         print(f'Getting single t for contrast:{cid}')
 
-        cmaps = glob(f'{subjects_dir}/*/*_contrast{cid}.nii.gz')
+        cmaps = glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/*_contrast{cid}.nii.gz')
 
         design_matrix = pd.DataFrame([1] * len(cmaps), columns=["intercept"])
 
@@ -93,8 +93,10 @@ def _paired(subjects_dir, paired_dir, roi_dir):
         cid = str(i+1)
         print(f'Getting paired-t for contrast:{cid}')
 
-        mec_cmaps = sorted(glob(f'{subjects_dir}/*/mec_contrast{cid}.nii.gz'))
-        plc_cmaps = sorted(glob(f'{subjects_dir}/*/plc_contrast{cid}.nii.gz'))
+        mec_cmaps = sorted(glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/mec_contrast{cid}.nii.gz'))
+        print(mec_cmaps)
+        plc_cmaps = sorted(glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/plc_contrast{cid}.nii.gz'))
+        print(plc_cmaps)
 
         n_subjects = len(mec_cmaps)
 
@@ -107,7 +109,7 @@ def _paired(subjects_dir, paired_dir, roi_dir):
         design_matrix = pd.get_dummies(design_matrix, columns=['subject'], drop_first=True).astype(float)
 
         plot_design_matrix(design_matrix)
-        print('Save design matrix')
+        print(f'Save design matrix:{design_matrix}')
         plt.savefig(f'{paired_dir}/design.pdf', bbox_inches='tight')
 
         cmaps = mec_cmaps + plc_cmaps
