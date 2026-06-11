@@ -116,7 +116,7 @@ def _extract_rois(conn_dir, roi_dir):
 
 def _plot_contrasts(conn_dir, roi_dir):
 
-    for sess in ['mec', '[plc']:
+    for sess in ['mec', 'plc']:
         display = plot_stat_map(
             f'{conn_dir}/{sess}_contrast1.nii.gz',
             threshold=THRESHOLD,
