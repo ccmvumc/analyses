@@ -39,7 +39,7 @@ def _single(subjects_dir, group_dir, roi_dir):
     # Single t for each contrast
     for i, c in enumerate(CONTRASTS):
         #cid = f'{i+1:04d}'
-        cid = str(i)
+        cid = str(i+1)
         print(f'Getting single t for contrast:{cid}')
 
         cmaps = glob(f'{subjects_dir}/*/*_contrast{cid}.nii.gz')
@@ -90,7 +90,7 @@ def _paired(subjects_dir, paired_dir, roi_dir):
     # Single t for each contrast
     for i, c in enumerate(CONTRASTS):
         #cid = f'{i+1:04d}'
-        cid = str(i)
+        cid = str(i+1)
         print(f'Getting paired-t for contrast:{cid}')
 
         mec_cmaps = sorted(glob(f'{subjects_dir}/*/mec_contrast{cid}.nii.gz'))
