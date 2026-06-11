@@ -81,7 +81,7 @@ def _contrast_images(conn_dir):
     plc_0back_file = f'{conn_dir}/BETA_Subject001_Condition006_Source001.nii'
     plc_2back_file = f'{conn_dir}/BETA_Subject001_Condition006_Source003.nii'
     mec_contrast1_file = f'{conn_dir}/mec_contrast1.nii.gz'
-    plc_contrast1_file = f'{conn_dir}/plc_cntrast1.nii.gz'
+    plc_contrast1_file = f'{conn_dir}/plc_contrast1.nii.gz'
 
     # Make contrast images
     mec_contrast1_image = math_img(
