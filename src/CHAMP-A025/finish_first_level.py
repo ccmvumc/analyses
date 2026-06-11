@@ -168,7 +168,7 @@ def main(input_dir, output_dir):
         include_subjects.append(subj)
 
         print(f'Running:{subj}')
-        _contrast_images(conn_dir, roi_dir)
+        _contrast_images(conn_dir)
         _plot_contrasts(conn_dir, roi_dir)
         data.append(_extract_rois(conn_dir, roi_dir))
 
