@@ -1,4 +1,4 @@
-convert /OUTPUTS/GROUPS/*/*.pdf /OUTPUTS/SUBJECTS/*/conn_project/results/firstlevel/SBC_01/*.pdf /OUTPUTS/report.pdf
+convert /OUTPUTS/GROUP/*/*.pdf /OUTPUTS/SUBJECTS/*/conn_project/results/firstlevel/SBC_01/*.pdf /OUTPUTS/report.pdf
 
 rm -r /OUTPUTS/SUBJECTS
 
