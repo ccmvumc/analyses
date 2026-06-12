@@ -1,20 +1,16 @@
-import os, shutil
+import os
 from glob import glob
 
 import pandas as pd
 import numpy as np
-import scipy.io
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-from nilearn.glm.first_level import FirstLevelModel
 from nilearn.plotting import plot_stat_map
-from nilearn.plotting import plot_design_matrix
-from nilearn.reporting import make_glm_report
 from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 from nilearn.masking import apply_mask
 
-from params import CUT_COORDS, THRESHOLD, COLORMAP, VMAX, ROIS
+from params import CUT_COORDS, COLORMAP, ROIS
 
 
 TITLE='CHAMP N-Back Task'
@@ -117,17 +113,17 @@ def _extract_rois(conn_dir, roi_dir):
 
 
 def _plot_contrasts(conn_dir, roi_dir):
-    subj = conn_dir.split('/')[-6]
+    subj = conn_dir.split('/')[-5]
 
     for sess in ['mec', 'plc']:
         display = plot_stat_map(
             f'{conn_dir}/{sess}_contrast1.nii.gz',
-            threshold=THRESHOLD,
+            #threshold=THRESHOLD,
             display_mode='z',
             cut_coords=CUT_COORDS,
             title=f'{TITLE} 1st-Level contrast:{sess}:{subj}',
-            cmap=COLORMAP,
-            vmax=VMAX
+            #cmap=COLORMAP,
+            #vmax=VMAX
         )
 
         # Trace ROI outline

@@ -1,4 +1,4 @@
-import os, shutil
+import os
 from glob import glob
 
 import pandas as pd
