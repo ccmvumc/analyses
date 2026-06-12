@@ -16,7 +16,7 @@ THRESHOLD = 1.96
 VMAX = 4
 
 # Colormap used to display zmaps
-COLORMAP = 'cold_hot'
+COLORMAP = 'RdBu_r'
 
 # Regions of interest for beta value extraction
 ROIS = [
