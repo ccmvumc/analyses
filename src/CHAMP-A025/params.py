@@ -13,7 +13,7 @@ CUT_COORDS = [-15, 0, 15, 30, 45]
 THRESHOLD = 1.96
 
 # Maximum for colorbar
-#VMAX = 6
+VMAX = 4
 
 # Colormap used to display zmaps
 COLORMAP = 'cold_hot'
