@@ -3,6 +3,8 @@ containers:
   - name: ANALYSES
     path: ccmvumc_analyses_v2.1.sif
     source: docker://bud42/ccmvumc_analyses:v2.1
+  - name: FS7POST
+    path: /data/mcr/centos7/singularity/fs7_post_v2.sif
 requirements:
   walltime: 0-12
   memory: 20G
@@ -23,6 +25,6 @@ command:
   args: bash /REPO/src/CHAMP-A025/main.sh
 post:
   type: singularity_exec
-  container: ANALYSES
+  container: FS7POST
   args: bash /REPO/src/CHAMP-A025/post.sh
 description: Project-level NBACK with CONN 1st-level, nilearn 2nd-level
