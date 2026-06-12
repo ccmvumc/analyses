@@ -117,6 +117,7 @@ def _extract_rois(conn_dir, roi_dir):
 
 
 def _plot_contrasts(conn_dir, roi_dir):
+    subj = conn_dir.split('/')[-6]
 
     for sess in ['mec', 'plc']:
         display = plot_stat_map(
@@ -124,7 +125,7 @@ def _plot_contrasts(conn_dir, roi_dir):
             threshold=THRESHOLD,
             display_mode='z',
             cut_coords=CUT_COORDS,
-            title=f'{TITLE} 1st-Level contrast:{sess}',
+            title=f'{TITLE} 1st-Level contrast:{sess}:{subj}',
             cmap=COLORMAP,
             vmax=VMAX
         )
