@@ -118,12 +118,12 @@ def _plot_contrasts(conn_dir, roi_dir):
     for sess in ['mec', 'plc']:
         display = plot_stat_map(
             f'{conn_dir}/{sess}_contrast1.nii.gz',
-            #threshold=THRESHOLD,
+            threshold=0.2,
             display_mode='z',
             cut_coords=CUT_COORDS,
             title=f'{TITLE} 1st-Level contrast:{sess}:{subj}',
-            #cmap=COLORMAP,
-            #vmax=VMAX
+            cmap=COLORMAP,
+            vmax=1.0,
         )
 
         # Trace ROI outline
