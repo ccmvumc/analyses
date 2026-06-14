@@ -12,7 +12,7 @@ from nilearn.reporting import make_glm_report
 from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 
-from params import CONTRASTS, CUT_COORDS, THRESHOLD, COLORMAP, VMAX
+from params import CONTRASTS, CUT_COORDS, THRESHOLDS, COLORMAP
 
 
 TITLE = 'CHAMP N-Back Task'
@@ -57,19 +57,25 @@ def _single(subjects_dir, group_dir, roi_dir):
 
         zmap.to_filename(f'{group_dir}/contrast{cid}_zmap.nii.gz')
 
-        # Plot
-        display = plot_stat_map(
-            zmap,
-            threshold=THRESHOLD,
-            cut_coords=CUT_COORDS,
-            display_mode='z',
-            cmap=COLORMAP,
-            title=f'{TITLE} (n={len(cmaps)}) 2nd-Level single-t contrast_{cid}:{c}',
-            vmax=VMAX
-        )
+        # Make a letter paper size figure with rows of plots in 1 column
+        fig, ax = plt.subplots(3, 1, figsize=(8.5,11))
 
-        for r in glob(f'{roi_dir}/*.nii.gz'):
-            display.add_contours(r, levels=[0.5], colors="g")
+        # Plot each t value
+        for a, t in enumerate(THRESHOLDS):
+            display = plot_stat_map(
+                zmap,
+                threshold=THRESHOLD,
+                cut_coords=CUT_COORDS,
+                display_mode='z',
+                cmap=COLORMAP,
+                title=f'{TITLE} (n={len(cmaps)}) 2nd-Level single-t contrast_{cid}:{c}:{t=}',
+                vmax=t*2,
+                ax=ax[a],
+            )
+
+            # Trace ROIs on stats map
+            for r in glob(f'{roi_dir}/*.nii.gz'):
+                display.add_contours(r, levels=[0.5], colors="g")
 
         # Save plot
         plt.savefig(f'{group_dir}/singlet_contrast{cid}_report.pdf')
@@ -127,16 +133,23 @@ def _paired(subjects_dir, paired_dir, roi_dir):
         print(f'Saving:{zmap}')
         zmap.to_filename(f'{paired_dir}/contrast{cid}_zmap.nii.gz')
 
-        print(f'Plotting:{zmap}')
-        display = plot_stat_map(
-            zmap,
-            threshold=THRESHOLD,
-            cut_coords=CUT_COORDS,
-            display_mode='z',
-            cmap=COLORMAP,
-            title=f'{TITLE} (n={n_subjects}) 2nd-Level paired-t contrast_{cid}:{c}',
-            vmax=VMAX
-        )
+        # Make a letter paper size figure
+        fig, ax = plt.subplots(3, 1, figsize=(8.5,11))
+
+        # Plot each t value
+        for a, t in enumerate(THRESHOLDS):
+
+            print(f'Plotting:{zmap}')
+            display = plot_stat_map(
+                zmap,
+                threshold=THRESHOLD,
+                cut_coords=CUT_COORDS,
+                display_mode='z',
+                cmap=COLORMAP,
+                title=f'{TITLE} (n={n_subjects}) 2nd-Level paired-t contrast_{cid}:{c}:{t=}',
+                vmax=t*2,
+                ax=ax[a]
+            )
 
         for r in glob(f'{roi_dir}/*.nii.gz'):
             display.add_contours(r, levels=[0.5], colors="green")

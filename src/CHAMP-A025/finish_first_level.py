@@ -78,6 +78,8 @@ def _contrast_images(conn_dir):
     plc_2back_file = f'{conn_dir}/BETA_Subject001_Condition006_Source003.nii'
     mec_contrast1_file = f'{conn_dir}/mec_contrast1.nii.gz'
     plc_contrast1_file = f'{conn_dir}/plc_contrast1.nii.gz'
+    diff_contrast1_file = f'{conn_dir}/diff_contrast1.nii.gz'
+    avg_contrast1_file = f'{conn_dir}/avg_contrast1.nii.gz'
 
     # Make contrast images
     mec_contrast1_image = math_img(
@@ -95,6 +97,26 @@ def _contrast_images(conn_dir):
     )
     print(f'Saving PLC contrast1:{plc_contrast1_file}')
     plc_contrast1_image.to_filename(plc_contrast1_file)
+
+    diff_contrast1_image = math_img(
+        "(img1 - img2) - (img3 - img4)",
+        img1=mec_2back_file,
+        img2=mec_0back_file,
+        img3=plc_2back_file,
+        img4=plc_0back_file,
+    )
+    print(f'Saving (MEC - PLC) contrast1:{diff_contrast1_file}')
+    diff_contrast1_image.to_filename(diff_contrast1_file)
+
+    avg_contrast1_image = math_img(
+        "((img1 - img2) + (img3 - img4))/2",
+        img1=mec_2back_file,
+        img2=mec_0back_file,
+        img3=plc_2back_file,
+        img4=plc_0back_file,
+    )
+    print(f'Saving avg contrast1:{avg_contrast1_file}')
+    avg_contrast1_image.to_filename(avg_contrast1_file)
 
 
 def _extract_rois(conn_dir, roi_dir):
@@ -115,25 +137,60 @@ def _extract_rois(conn_dir, roi_dir):
 def _plot_contrasts(conn_dir, roi_dir):
     subj = conn_dir.split('/')[-5]
 
-    for sess in ['mec', 'plc']:
+    # Make a letter paper size figure with 6 plots in 1 column
+    fig, ax = plt.subplots(4, 1, figsize=(8.5,11))
+
+    # Separate MEC, PLC
+    for i, sess in enumerate(['mec', 'plc']):
+
         display = plot_stat_map(
             f'{conn_dir}/{sess}_contrast1.nii.gz',
-            #threshold=0.05,
             display_mode='z',
             cut_coords=CUT_COORDS,
             title=f'{TITLE} 1st-Level contrast:{sess}:{subj}',
             cmap=COLORMAP,
-            #vmax=1.0,
+            vmax=0.5,
+            ax=ax[i],
         )
 
         # Trace ROI outline
         for r in glob(f'{roi_dir}/*.nii.gz'):
             display.add_contours(r, levels=[0.5], colors="g")
 
-        # Save plot
-        plt.savefig(f'{conn_dir}/{sess}_contrast1_report.pdf')
+    # diff
+    display = plot_stat_map(
+        f'{conn_dir}/diff_contrast1.nii.gz',
+        display_mode='z',
+        cut_coords=CUT_COORDS,
+        title=f'{TITLE} 1st-Level contrast:diff:{subj}',
+        cmap=COLORMAP,
+        vmax=0.5,
+        ax=ax[2],
+    )
 
-        plt.close()
+    # Trace ROI outline
+    for r in glob(f'{roi_dir}/*.nii.gz'):
+        display.add_contours(r, levels=[0.5], colors="g")
+
+    # avg
+    display = plot_stat_map(
+        f'{conn_dir}/avg_contrast1.nii.gz',
+        display_mode='z',
+        cut_coords=CUT_COORDS,
+        title=f'{TITLE} 1st-Level contrast:avg:{subj}',
+        cmap=COLORMAP,
+        vmax=0.5,
+        ax=ax[3],
+    )
+
+    # Trace ROI outline
+    for r in glob(f'{roi_dir}/*.nii.gz'):
+        display.add_contours(r, levels=[0.5], colors="g")
+        
+    # Save plot
+    plt.savefig(f'{conn_dir}/{sess}_contrast1_report.pdf')
+
+    plt.close()
 
 
 def _write_subjects(subjects, filename):
