@@ -70,7 +70,7 @@ def _single(subjects_dir, group_dir, roi_dir):
                 cmap=COLORMAP,
                 title=f'{TITLE} (n={len(cmaps)}) 2nd-Level single-t contrast_{cid}:{c}:{t=}',
                 vmax=t*2,
-                ax=ax[a],
+                axes=ax[a],
             )
 
             # Trace ROIs on stats map
@@ -148,7 +148,7 @@ def _paired(subjects_dir, paired_dir, roi_dir):
                 cmap=COLORMAP,
                 title=f'{TITLE} (n={n_subjects}) 2nd-Level paired-t contrast_{cid}:{c}:{t=}',
                 vmax=t*2,
-                ax=ax[a]
+                axes=ax[a]
             )
 
         for r in glob(f'{roi_dir}/*.nii.gz'):

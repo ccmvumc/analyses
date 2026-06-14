@@ -150,7 +150,7 @@ def _plot_contrasts(conn_dir, roi_dir):
             title=f'{TITLE} 1st-Level contrast:{sess}:{subj}',
             cmap=COLORMAP,
             vmax=0.5,
-            ax=ax[i],
+            axes=ax[i],
         )
 
         # Trace ROI outline
@@ -165,7 +165,7 @@ def _plot_contrasts(conn_dir, roi_dir):
         title=f'{TITLE} 1st-Level contrast:diff:{subj}',
         cmap=COLORMAP,
         vmax=0.5,
-        ax=ax[2],
+        axes=ax[2],
     )
 
     # Trace ROI outline
@@ -180,7 +180,7 @@ def _plot_contrasts(conn_dir, roi_dir):
         title=f'{TITLE} 1st-Level contrast:avg:{subj}',
         cmap=COLORMAP,
         vmax=0.5,
-        ax=ax[3],
+        axes=ax[3],
     )
 
     # Trace ROI outline
