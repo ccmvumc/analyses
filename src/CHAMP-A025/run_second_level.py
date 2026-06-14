@@ -97,12 +97,8 @@ def _paired(subjects_dir, paired_dir, roi_dir):
         print(f'Getting paired-t for contrast:{cid}')
 
         mec_cmaps = sorted(glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/mec_contrast{cid}.nii.gz'))
-        print(mec_cmaps)
         plc_cmaps = sorted(glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/plc_contrast{cid}.nii.gz'))
-        print(plc_cmaps)
-
         n_subjects = len(mec_cmaps)
-
         subjects = [f'-{i+1:02d}' for i in range(n_subjects)] * 2
         conditions = ['MEC'] * n_subjects + ['PLC'] * n_subjects
         design_matrix = pd.DataFrame({
@@ -112,7 +108,7 @@ def _paired(subjects_dir, paired_dir, roi_dir):
         design_matrix = pd.get_dummies(design_matrix, columns=['subject'], drop_first=True).astype(float)
 
         plot_design_matrix(design_matrix)
-        print(f'Save design matrix:{design_matrix}')
+        print(f'Save design matrix')
         plt.savefig(f'{paired_dir}/design.pdf', bbox_inches='tight')
 
         cmaps = mec_cmaps + plc_cmaps
