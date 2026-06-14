@@ -12,7 +12,7 @@ from nilearn.reporting import make_glm_report
 from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 
-from params import CONTRASTS, CUT_COORDS, THRESHOLDS, COLORMAP, TITLE
+from params import CONTRASTS, CUT_COORDS, THRESHOLDS, COLORMAP, TITLE, TITLE_SIZE
 
 
 def _run(subjects_dir, group_dir, roi_dir):
@@ -39,7 +39,9 @@ def _single(subjects_dir, group_dir, roi_dir):
         cid = str(i+1)
         print(f'Getting single t for contrast:{cid}')
 
-        cmaps = glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/*_contrast{cid}.nii.gz')
+        mec_cmaps = sorted(glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/mec_contrast{cid}.nii.gz'))
+        plc_cmaps = sorted(glob(f'{subjects_dir}/*/conn_project/results/firstlevel/SBC_01/plc_contrast{cid}.nii.gz'))
+        cmaps = mec_cmaps + plc_cmaps
 
         design_matrix = pd.DataFrame([1] * len(cmaps), columns=["intercept"])
 
@@ -65,9 +67,13 @@ def _single(subjects_dir, group_dir, roi_dir):
                 cut_coords=CUT_COORDS,
                 display_mode='z',
                 cmap=COLORMAP,
-                title=f'{TITLE} (n={len(cmaps)}) 2nd-Level single-t contrast_{cid}:{c}:{t=}',
                 vmax=t*2,
                 axes=ax[a],
+            )
+
+            display.title(
+                f'{TITLE} (n={len(cmaps)}) 2nd-Level single-t contrast_{cid}:{c}:{t=}',
+                size=TITLE_SIZE
             )
 
             # Trace ROIs on stats map
@@ -139,9 +145,13 @@ def _paired(subjects_dir, paired_dir, roi_dir):
                 cut_coords=CUT_COORDS,
                 display_mode='z',
                 cmap=COLORMAP,
-                title=f'{TITLE} (n={n_subjects}) 2nd-Level paired-t contrast_{cid}:{c}:{t=}',
                 vmax=t*2,
                 axes=ax[a]
+            )
+
+            display.title(
+                f'{TITLE} (n={n_subjects}) 2nd-Level paired-t contrast_{cid}:{c}:{t=}',
+                size=TITLE_SIZE
             )
 
         for r in glob(f'{roi_dir}/*.nii.gz'):

@@ -10,7 +10,7 @@ from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 from nilearn.masking import apply_mask
 
-from params import CUT_COORDS, COLORMAP, ROIS, TITLE
+from params import CUT_COORDS, COLORMAP, ROIS, TITLE, TITLE_SIZE
 
 
 #BETA_Subject00X_Condition00Y_Source00Z.nii
@@ -144,10 +144,14 @@ def _plot_contrasts(conn_dir, roi_dir):
             f'{conn_dir}/{sess}_contrast1.nii.gz',
             display_mode='z',
             cut_coords=CUT_COORDS,
-            title=f'{TITLE} 1st-Level contrast:{sess}:{subj}',
             cmap=COLORMAP,
             vmax=0.5,
             axes=ax[i],
+        )
+
+        display.title(
+            f'{TITLE} 1st-Level contrast:{sess}:{subj}',
+            size=TITLE_SIZE
         )
 
         # Trace ROI outline
@@ -159,10 +163,14 @@ def _plot_contrasts(conn_dir, roi_dir):
         f'{conn_dir}/diff_contrast1.nii.gz',
         display_mode='z',
         cut_coords=CUT_COORDS,
-        title=f'{TITLE} 1st-Level contrast:diff:{subj}',
         cmap=COLORMAP,
         vmax=0.5,
         axes=ax[2],
+    )
+
+    display.title(
+        f'{TITLE} 1st-Level contrast:diff:{subj}',
+        size=TITLE_SIZE
     )
 
     # Trace ROI outline
@@ -174,10 +182,14 @@ def _plot_contrasts(conn_dir, roi_dir):
         f'{conn_dir}/avg_contrast1.nii.gz',
         display_mode='z',
         cut_coords=CUT_COORDS,
-        title=f'{TITLE} 1st-Level contrast:avg:{subj}',
         cmap=COLORMAP,
         vmax=0.5,
         axes=ax[3],
+    )
+
+    display.title(
+        f'{TITLE} 1st-Level contrast:avg:{subj}',
+        size=TITLE_SIZE
     )
 
     # Trace ROI outline
