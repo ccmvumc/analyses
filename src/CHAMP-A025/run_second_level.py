@@ -12,10 +12,7 @@ from nilearn.reporting import make_glm_report
 from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 
-from params import CONTRASTS, CUT_COORDS, THRESHOLDS, COLORMAP
-
-
-TITLE = 'CHAMP N-Back Task'
+from params import CONTRASTS, CUT_COORDS, THRESHOLDS, COLORMAP, TITLE
 
 
 def _run(subjects_dir, group_dir, roi_dir):
@@ -64,7 +61,7 @@ def _single(subjects_dir, group_dir, roi_dir):
         for a, t in enumerate(THRESHOLDS):
             display = plot_stat_map(
                 zmap,
-                threshold=THRESHOLD,
+                threshold=t,
                 cut_coords=CUT_COORDS,
                 display_mode='z',
                 cmap=COLORMAP,
@@ -142,7 +139,7 @@ def _paired(subjects_dir, paired_dir, roi_dir):
             print(f'Plotting:{zmap}')
             display = plot_stat_map(
                 zmap,
-                threshold=THRESHOLD,
+                threshold=t,
                 cut_coords=CUT_COORDS,
                 display_mode='z',
                 cmap=COLORMAP,

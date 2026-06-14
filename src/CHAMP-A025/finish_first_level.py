@@ -10,10 +10,7 @@ from nilearn.datasets import fetch_atlas_schaefer_2018
 from nilearn.image import load_img, math_img, new_img_like
 from nilearn.masking import apply_mask
 
-from params import CUT_COORDS, COLORMAP, ROIS
-
-
-TITLE='CHAMP N-Back Task'
+from params import CUT_COORDS, COLORMAP, ROIS, TITLE
 
 
 #BETA_Subject00X_Condition00Y_Source00Z.nii

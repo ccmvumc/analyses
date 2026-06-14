@@ -1,3 +1,5 @@
+TITLE='CHAMP N-Back Task'
+
 # First Level Contrasts of Task Conditions 0,1,2,3 (last column is nilearn constant)
 CONTRASTS = [
     [[-1, 0, 1, 0, 0]],
