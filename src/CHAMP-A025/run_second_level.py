@@ -154,8 +154,8 @@ def _paired(subjects_dir, paired_dir, roi_dir):
                 size=TITLE_SIZE
             )
 
-        for r in glob(f'{roi_dir}/*.nii.gz'):
-            display.add_contours(r, levels=[0.5], colors="green")
+            for r in glob(f'{roi_dir}/*.nii.gz'):
+                display.add_contours(r, levels=[0.5], colors="green")
 
         # Save plot
         plt.savefig(f'{paired_dir}/pairedt_contrast{cid}_report.pdf')
