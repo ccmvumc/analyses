@@ -1,0 +1,26 @@
+---
+containers:
+  - name: BASH
+    path: bash_latest.sif
+requirements:
+  walltime: 2-0
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - assessors:
+          - types: fmri_rest_denoise_v1
+            resources:
+              - resource: PREPROC
+command:
+  type: singularity_exec
+  container: BASH
+  args: >-
+    bash -c "set -x;
+    mkdir /OUTPUTS/REST-Month08-UIC;
+    mkdir /OUTPUTS/REST-Month08-UPMC;
+    mkdir /OUTPUTS/REST-Month08-VUMC;
+    mv /INPUTS/*/*/*/REM*-x-3*b-x-* /OUTPUTS/REST-Month08-UIC;
+    mv /INPUTS/*/*/*/REM*-x-2*b-x-* /OUTPUTS/REST-Month08-UPMC;
+    mv /INPUTS/*/*/*/REM*-x-1*b-x-* /OUTPUTS/REST-Month08-VUMC;"
