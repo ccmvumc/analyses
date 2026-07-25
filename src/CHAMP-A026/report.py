@@ -96,6 +96,8 @@ def _subject_page(pdf, subject_dir):
         threshold='auto',
         cmap='jet',
         alpha=0.5,
+        vmin=0.5,
+        vmax=3.0,
     )
     disp.title('MRI/Realigned PET', size=6)
 
