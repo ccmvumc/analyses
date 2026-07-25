@@ -1,0 +1,23 @@
+---
+containers:
+  - name: BASH
+    path: bash_latest.sif
+requirements:
+  walltime: 2-0
+  memory: 8G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - assessors:
+          - types: fmri_roi_v2
+            resources:
+              - resource: DATA
+          - types: fmri_rest_v4
+            resources:
+              - resource: PREPROC
+                fmatch: rp_taREST.txt
+command:
+  type: singularity_exec
+  container: BASH
+  args: bash -c "set -x;mkdir -p /OUTPUTS/DATA && cp -r /INPUTS/* /OUTPUTS/DATA/"
