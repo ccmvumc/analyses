@@ -7,11 +7,12 @@ requirements:
   memory: 8G
 inputs:
   xnat:
-    sessions:
-      - assessors:
-        - types: fmri_ts_schaefer200_v1
-          resources:
-            - resource: DATA
+    subjects:
+      sessions:
+        - assessors:
+          - types: fmri_ts_schaefer200_v1
+            resources:
+              - resource: DATA
 command:
   type: singularity_exec
   container: BASH
