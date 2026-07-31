@@ -16,8 +16,6 @@ def _subject_page(pdf, subject_dir):
     rbv_file = f'{subject_dir}/gtmpvc.cblmgmwm.output/rbv.nii.gz'
     title_size = 7
 
-    print(subject)
-
     if not os.path.isfile(pet_file):
         print(f'missing file:{pet_file}')
         return
@@ -163,6 +161,7 @@ def make_pdf(subject_dir, pdf_file):
     with PdfPages(pdf_file) as pdf:
         # Page for each subject
         for s in subjects:
+            print(f'subject page:{subject_dir}:{s}')
             _subject_page(pdf, f'{subject_dir}/{s}')
 
     print('PDF complete!')

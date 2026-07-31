@@ -5,8 +5,8 @@ import pandas as pd
 
 
 def load_subject(subj_dir):
-    dfv = pd.read_csv(f'{subj_dir}/stats/gtmseg.stats', comment='#', header=None, sep='\s+', usecols=[3,4], names=['VOL' ,'ROI'])
     dfg = pd.read_csv(f'{subj_dir}/gtmpvc.cblmgmwm.output/gtm.stats.dat', header=None, sep='\s+', usecols=[2,6], names=['ROI', 'SUVR-GTM'])
+    dfv = pd.read_csv(f'{subj_dir}/stats/gtmseg.stats', comment='#', header=None, sep='\s+', usecols=[3,4], names=['VOL' ,'ROI'])
 
     # Get a new dataframe with ROI first
     df = dfg[['ROI', 'SUVR-GTM']]
