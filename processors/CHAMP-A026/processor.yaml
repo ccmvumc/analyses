@@ -16,7 +16,7 @@ inputs:
         - types: AMYLOIDQA_v4
           resources:
           - resource: SUBJ
-            fmatch: rPET.nii.gz,mri/orig.mgz,mri/gtmseg.mgz,gtmpvc.cblmgmwm.output/rbv.nii.gz,esupravwm.nii.gz,gtmpvc.cblmgmwm.output/input.rescaled.nii.gz,gtmpvc.cblmgmwm.output/gtm.stats.dat
+            fmatch: stats/gtmseg.stats,rPET.nii.gz,mri/orig.mgz,mri/gtmseg.mgz,gtmpvc.cblmgmwm.output/rbv.nii.gz,esupravwm.nii.gz,gtmpvc.cblmgmwm.output/input.rescaled.nii.gz,gtmpvc.cblmgmwm.output/gtm.stats.dat
 pre:
   type: singularity_exec
   container: ANALYSES
