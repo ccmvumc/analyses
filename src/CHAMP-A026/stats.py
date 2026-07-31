@@ -6,7 +6,7 @@ import pandas as pd
 
 def load_subject(subj_dir):
     dfv = pd.read_csv(f'{subj_dir}/stats/gtmseg.stats', comment='#', header=None, sep='\s+', usecols=[3,4], names=['VOL' ,'ROI'])
-    dfg = pd.read_csv(f'{subj_dir}/gtmpvc.esupravwm.output/gtm.stats.dat', header=None, sep='\s+', usecols=[2,6], names=['ROI', 'SUVR-GTM'])
+    dfg = pd.read_csv(f'{subj_dir}/gtmpvc.cblmgmwm.output/gtm.stats.dat', header=None, sep='\s+', usecols=[2,6], names=['ROI', 'SUVR-GTM'])
 
     # Get a new dataframe with ROI first
     df = dfg[['ROI', 'SUVR-GTM']]
@@ -28,6 +28,7 @@ def make_stats(subject_dir, csv_file):
 
     # Append each subject
     for s in subjects:
+        print(f'Loading subject:{subject_dir}:{s}')
         subj = load_subject(f'{subject_dir}/{s}')
         subj['SUBJECT'] = s
         df = pd.concat([df, subj])
