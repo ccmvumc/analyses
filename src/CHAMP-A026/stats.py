@@ -1,9 +1,7 @@
-import glob
+import os
+import sys
 
 import pandas as pd
-
-
-ROOTDIR = '/OUTPUTS'
 
 
 def load_subject(subj_dir):
@@ -19,37 +17,30 @@ def load_subject(subj_dir):
     return df
 
 
-def save_volumes(df):
-    dfp = df[['ROI', 'VOL', 'SUBJECT']].pivot(
-        columns='ROI',
-        values='VOL',
-        index='SUBJECT')
+def make_stats(subject_dir, csv_file):
 
-    dfp.to_csv(f'{ROOTDIR}/volumes.csv')
+    # Start an empty dataframe
+    df = pd.DataFrame()
+
+    # Find data
+    subjects = sorted(os.listdir(subject_dir))
+    print(f'{subjects=}')
+
+    # Append each subject
+    for s in subjects:
+        subj = load_subject(f'{subject_dir}/{s}')
+        subj['SUBJECT'] = s
+        df = pd.concat([df, subj])
+
+    # Sort and save
+    df = df.sort_values(['SUBJECT', 'ROI'])
+    df.to_csv(csv_file, index=False)
 
 
-def save_suvr(df):
-    dfp = df[['ROI', 'SUVR-NOPVC', 'SUBJECT']].pivot(
-        columns='ROI',
-        values='SUVR-NOPVC', 
-        index='SUBJECT')
-    
-    dfp.to_csv(f'{ROOTDIR}/suvr.csv')
+if __name__ == '__main__':
+    subject_dir = sys.argv[1]
+    stats_file = sys.argv[2]
 
-
-# Start an empty dataframe
-df = pd.DataFrame()
-
-# Append each subject
-for s in glob.glob(f'{ROOTDIR}/DATA/SUBJECTS/*'):
-    subj = load_subject(s)
-    subj['SUBJECT'] = s.rsplit('/', 1)[1]
-    df = pd.concat([df, subj])
-
-# Sort and save
-df = df.sort_values(['SUBJECT', 'ROI'])
-df.to_csv(f'{ROOTDIR}/all.csv', index=False)
-save_volumes(df)
-save_suvr(df)
-
-print('DONE!')
+    print(f'Making stats:{stats_file}:subjects={subject_dir}')
+    make_stats(subject_dir, stats_file)
+    print('DONE!')

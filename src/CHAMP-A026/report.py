@@ -96,8 +96,6 @@ def _subject_page(pdf, subject_dir):
         threshold='auto',
         cmap='jet',
         alpha=0.5,
-        vmin=0.5,
-        vmax=3.0,
     )
     disp.title('MRI/Realigned PET', size=6)
 
@@ -123,11 +121,13 @@ def _subject_page(pdf, subject_dir):
         draw_cross=False,
         display_mode='z',
         axes=ax[4],
-        colorbar=False,
+        colorbar=True,
         annotate=True,
         cut_coords=axial_slices,
         cmap='jet',
         threshold='auto',
+        vmin=0.5,
+        vmax=3.0,
     )
     disp.title('RBV/MRI', size=title_size)
 
