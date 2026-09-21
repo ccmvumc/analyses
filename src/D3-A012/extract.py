@@ -8,6 +8,7 @@ import pandas as pd
 
 # garjus download -p D3 -t fmri_midt_D3_v2 -r CONN download-fmri_midt_D3_v2-CONN 
 # garjus download -p D3 -t assemblynet_v1 -r DATA -f mni_structures_T1.nii.gz download-ASSEMBLYNET
+# for i in *;cd $i/CONN;unzip conn_project.zip;cd ../..;done
 
 
 #BETA_Subject001_Condition006_Source004.nii
