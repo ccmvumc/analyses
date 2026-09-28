@@ -1,0 +1,36 @@
+---
+containers:
+  - name: ANALYSES
+    path: ccmvumc_analyses_v2.1.sif
+    source: docker://bud42/ccmvumc_analyses:v2.1
+requirements:
+  walltime: 0-12
+  memory: 20G
+inputs:
+  xnat:
+    subjects:
+      sessions:
+        - assessors:
+          - types: fmri_midt_D3_v2
+            resources:
+              - resource: CONN
+                fmatch: conn_project.zip,conn_project.mat
+              - resource: PREPROC
+                fmatch: wcANAT.nii.gz
+          - types: assemblynet_v1
+            resources:
+              - resource: DATA
+                fmatch: mni_structures_T1.nii.gz
+pre:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/D3-A014/pre.sh
+command:
+  type: singularity_exec
+  container: ANALYSES
+  args: bash /REPO/src/D3-A014/main.sh
+post:
+  type: singularity_exec
+  container: FS7POST
+  args: bash /REPO/src/D3-A014/post.sh
+description: Project-level MIDT voxelwise

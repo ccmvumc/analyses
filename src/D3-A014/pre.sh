@@ -1,0 +1,3 @@
+mkdir -p /OUTPUTS/SUBJECTS
+
+python -u /REPO/src/D3-A014/prep.py /INPUTS /OUTPUTS/SUBJECTS
