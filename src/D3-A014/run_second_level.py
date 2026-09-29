@@ -7,13 +7,9 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from nilearn.glm.second_level import SecondLevelModel
 from nilearn.plotting import plot_stat_map
-from nilearn.plotting import plot_design_matrix
-from nilearn.reporting import make_glm_report
 
 from params import CUT_COORDS, THRESHOLDS, COLORMAP, TITLE, TITLE_SIZE
 
-
-PTHRESH = 0.05
 
 CONTRAST_COUNT = 2
 
@@ -64,10 +60,9 @@ def _run(subjects_dir, group_dir, roi_dir):
 
 
 def _single(subjects_dir, group_dir, roi_dir):
-    contrast_count = CONTRAST_COUNT
 
     # Single t for each contrast
-    for i in range(contrast_count):
+    for i in range(_contrast_count()):
         cid = str(i+1)
         print(f'Getting single t for contrast:{cid}')
 
@@ -121,8 +116,8 @@ def _single(subjects_dir, group_dir, roi_dir):
         plt.close()
 
         # Get the default report
-        print('Second Level make_glm_report()')
-        report = make_glm_report(model, contrasts=np.array([1]), cut_coords=CUT_COORDS)
+        print('Second Level generate_report()')
+        report = model.generate_report(contrasts=np.array([1]), two_sided=True)
         print(f'Saving report to: {group_dir}/contrast{cid}_glm_report.html')
         report.save_as_html(f'{group_dir}/contrast{cid}_glm_report.html')
 
@@ -138,14 +133,19 @@ def _single(subjects_dir, group_dir, roi_dir):
 def _glm_report(df, images, filename):
     sex_all, sex_all_key = pd.factorize(df['SEX'])
     group_all, group_all_key = pd.factorize(df['GROUP'])
+    hilo_all, hilo_all_key = pd.factorize(df['InflamLNHighLowMed'])
+    crp2_all, crp2_all_key = pd.factorize(df['CRP_2'])
+    score_all, score_all_key = pd.factorize(df['InflamScoreLN'])
 
-    # Comparing age
     subject_count = len(df)
     df['AGE'] = df['AGE'].astype(float)
     design_matrix = pd.DataFrame({
         "AGE": (df['AGE'] - df['AGE'].mean()) / df['AGE'].std(),
         "SEX": sex_all,
         "GROUP": group_all,
+        "InflamLNHighLowMed": hilo_all,
+        "CRP_2": crp2_all,
+        "InflamScoreLN": score_all,
         "intercept": [1] * subject_count,
     })
 
@@ -155,15 +155,19 @@ def _glm_report(df, images, filename):
         design_matrix=design_matrix
     )
 
-    print('make_glm_report() with covariates')
-    report = make_glm_report(
-        model=second_level_model,
-        alpha=PTHRESH,
-        contrasts=["AGE", "GROUP", "SEX"],
+    print('generate_report() with contrasts')
+
+    report = second_level_model.generate_report(
+        contrasts=["AGE", "GROUP", "SEX", "InflamLNHighLowMed", "CRP_2", "InflamScoreLN"],
+        two_sided=True,
     )
 
-    print('save report')
+    print(f'save report:{filename}')
     report.save_as_html(filename)
+
+
+def _contrast_count():
+    return CONTRAST_COUNT
 
 
 def glm_reports(subjects_dir, group_dir):
@@ -172,28 +176,26 @@ def glm_reports(subjects_dir, group_dir):
 
     # Make reports
     print('Making nilearn.glm reports')
+    for i in range(_contrast_count()):
+        cid = str(i+1)
+        report_file = f'{group_dir}/covars_contrast{cid}_report.html'
 
-    cid = 1
-    report_file = f'{group_dir}/covars_contrast{cid}_report.html'
+        # Get Baseline only *a
+        cmaps = sorted(glob(f'{subjects_dir}/*/*a/conn_project/results/firstlevel/SBC_01/contrast{cid}.nii.gz'))
+        if len(cmaps) == 0:
+            print(f'no cmaps found for contrast:{cid}')
+            return
 
-    # Get Baseline only *a
-    cmaps = sorted(glob(f'{subjects_dir}/*/*a/conn_project/results/firstlevel/SBC_01/contrast{cid}.nii.gz'))
-    if len(cmaps) == 0:
-        print(f'no cmaps found for contrast:{cid}')
-        return
+        # Filter covars to only subjects with images
+        image_subjects = [x.split('/')[-7] for x in cmaps]
+        df = df[df["ID"].isin(image_subjects)]
 
-    # Filter covars to only subjects with images
-    image_subjects = [x.split('/')[-7] for x in cmaps]
-    df = df[df["ID"].isin(image_subjects)]
+        # Filter images to only subjects with all covars
+        covar_subjects = df.ID.unique()
+        cmaps = [x for x in cmaps if x.split('/')[-7] in covar_subjects]
 
-    # Filter images to only subjects with all covars
-    covar_subjects = df.ID.unique()
-    # [x.split('/')[-7] for x in cmaps]
-    #df = df[df["ID"].isin(covar_subjects)]
-    cmaps = [x for x in cmaps if x.split('/')[-7] in covar_subjects]
-    print(len(covar_subjects), len(cmaps))
-
-    _glm_report(df, cmaps, report_file)
+        # Make report of filtered images with corresponding dataframe
+        _glm_report(df, cmaps, report_file)
 
 
 def main(root_dir):
@@ -201,7 +203,8 @@ def main(root_dir):
     group_dir = os.path.join(root_dir, 'GROUP')
     roi_dir = os.path.join(root_dir, 'ROIS')
 
-    #_run(subjects_dir, group_dir, roi_dir)
+    _run(subjects_dir, group_dir, roi_dir)
+
     glm_reports(subjects_dir, group_dir)
 
 
